@@ -1,0 +1,74 @@
+configuration {
+    lines: 10;
+    columns: 2;
+    display-combi: "Type To Search: ";
+    show-icons: true;
+    combi-modi: "drun,window";
+   /*kb-remove-word-back: "Control+BackSpace,Alt+d,Alt+BackSpace";*/
+   /*kb-accept-entry: "Control+m,Return,KP_Enter,Alt+m";*/
+   /*kb-mode-next: "Shift+Right,Control+Tab,Alt+l,Alt+Tab";*/
+   /*kb-mode-previous: "Shift+Left,Control+ISO_Left_Tab,Alt+h";*/
+   /*kb-row-left: "Alt+l";*/
+   /*kb-row-right: "Alt+h";*/
+   /*kb-row-up: "Up,Control+p,ISO_Left_Tab,Alt+k";*/
+   /*kb-row-down: "Down,Control+n,Alt+j";*/
+   /*kb-select-1: "";*/
+   /*kb-select-2: "";*/
+   /*kb-select-3: "";*/
+   /*kb-select-4: "";*/
+   /*kb-select-5: "";*/
+   /*kb-select-6: "";*/
+   /*kb-select-7: "";*/
+   /*kb-select-8: "";*/
+   /*kb-select-9: "";*/
+   /*kb-select-10: "";*/
+   /*me-select-entry: "";*/
+   /*me-accept-entry: "MousePrimary";*/
+   /*me-accept-custom: "MouseMiddle";*/
+}
+
+* {
+    xbs: #1a73e8;
+    xfs: #f8f8f8;
+    xfg: #c8c8c8;
+    xbg: #333333;
+    background-color:     @xbg;
+    border-color:         @xbg;
+    text-color:           @xfg;
+    font:                 "Cascadia Code 12";
+}
+
+window {
+    border: 0;
+    border-radius: 4px;
+    padding: 40;
+    width:50%;
+    height:50%;
+}
+
+mainbox{
+    background-color:       @xbg;
+    children: [inputbar, listview];
+    spacing: 10px;
+    /*margin: 20%;*/
+    padding: 30px 0;
+    border: 1px;
+    border-color: @base0D;
+}
+
+listview {
+    fixed-height: 0;
+    border: 0px;
+    spacing: 2px;
+    scrollbar: false;
+    padding: 2px 0px 0px;
+}
+element {
+    border: 0;
+    border-radius: 4px;
+    padding: 5px;
+}
+element selected.normal {
+    background-color: @xbs;
+    text-color:       @xfs;
+}

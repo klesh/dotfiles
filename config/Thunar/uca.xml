@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+<action>
+	<icon>utilities-terminal</icon>
+	<name>Open Terminal Here</name>
+	<unique-id>1579630084552764-1</unique-id>
+	<command>alacritty</command>
+	<description></description>
+	<patterns>*</patterns>
+	<startup-notify/>
+	<directories/>
+</action>
+<action>
+	<icon>mpv</icon>
+	<name>Play by mpv</name>
+	<unique-id>1581168624343614-1</unique-id>
+	<command>mpv %f</command>
+	<description></description>
+	<patterns>*</patterns>
+	<directories/>
+	<audio-files/>
+	<other-files/>
+	<video-files/>
+</action>
+<action>
+	<icon>mpv</icon>
+	<name>Play by mpv as Bluray</name>
+	<unique-id>1582431564566587-2</unique-id>
+	<command>mpv bd:// --bluray-device=%f</command>
+	<description></description>
+	<patterns>*</patterns>
+	<directories/>
+	<image-files/>
+	<other-files/>
+</action>
+<action>
+	<icon></icon>
+	<name>Copy path</name>
+	<unique-id>1582431389708408-1</unique-id>
+	<command>echo -n %f | xsel -b</command>
+	<description></description>
+	<patterns>*</patterns>
+	<directories/>
+	<audio-files/>
+	<image-files/>
+	<other-files/>
+	<text-files/>
+	<video-files/>
+</action>
+<action>
+	<icon></icon>
+	<name>Copy name</name>
+	<unique-id>1582431656976994-3</unique-id>
+	<command>echo -n %n | xsel -b</command>
+	<description></description>
+	<patterns>*</patterns>
+	<directories/>
+	<audio-files/>
+	<image-files/>
+	<other-files/>
+	<text-files/>
+	<video-files/>
+</action>
+</actions>

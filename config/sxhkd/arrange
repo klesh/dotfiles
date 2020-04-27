@@ -1,0 +1,85 @@
+#!/usr/bin/env fish
+
+function ensure-desktop
+  if not bspc query --desktops $argv > /dev/null
+    bspc monitor --add-desktops $argv
+  end
+end
+
+function cleanup-empty-desktops
+  for desktop in (bspc query --desktops)
+    if not bspc query --nodes --desktop $desktop --node .!hidden
+      bspc desktop $desktop.!active --remove
+    end
+  end
+end
+
+function sort-desktops
+  set desktops (bspc query --desktops --monitor --names | sort)
+  bspc monitor --reorder-desktops $desktops
+end
+
+function popterm
+  set popterm_id (xdo id -n popterm)
+  if test -z "$popterm_id"
+    echo popterm not found, creating one
+    bspc rule --remove '*:popterm'
+    bspc rule --add '*:popterm' state=floating hidden=on border=off
+    alacritty --class popterm --config-file ~/.config/alacritty/alacritty-pop.yml -e tmux new-session -A -s P &
+    while test -z "$popterm_id"
+      set popterm_id (xdo id -n popterm)
+      sleep 0.01
+      echo sleep until popterm is ready
+    end
+  end
+  set monitor (bspc query --monitors --names --monitor focused)
+  if bspc query --nodes --desktop focused --node .!hidden | grep $popterm_id
+    bspc node $popterm_id --flag hidden=on
+  else
+    set whxy (xrandr | grep "^$monitor " | grep -oP '\d+x\d+\+\d+\+\d+' | string replace -a -r '\D' ' ' | string split ' ')
+    set bw (bspc config border_width)
+    set w (math -s0 "$whxy[1] - $bw * 2")
+    set h (math -s0 "$whxy[2] / 2")
+    set x $whxy[3]
+    set y (math -s0 "$h - $bw * 2")
+    #set w 800
+    #set h (math -s0 "$whxy[2]/2")
+    #set x (math "($whxy[1] - $w) / 2 + $whxy[3]")
+    #set y $h
+    xdo resize -w $w -h $h $popterm_id
+    xdo move -x $x -y $y $popterm_id
+    bspc node $popterm_id --to-desktop focused
+    bspc node $popterm_id --flag hidden=off --focus
+  end
+end
+
+function swap-current-node
+  set sel $argv[1]
+  #if not bspc node --swap $sel --follow
+  bspc node --to-monitor $sel --follow
+  #end
+end
+
+
+switch "$argv[1]"
+  case 'move-current-window-to-desktop'
+    ensure-desktop $argv[2]
+    bspc node --to-desktop $argv[2] --follow
+    sort-desktops
+    cleanup-empty-desktops
+  case 'focus-desktop'
+    ensure-desktop $argv[2]
+    bspc desktop --focus $argv[2]
+    cleanup-empty-desktops
+    sort-desktops
+  case 'move-current-desktop-to-monitor'
+    bspc desktop --to-monitor $argv[2] --follow
+    bspc desktop --focus
+    sort-desktops
+  case 'popterm'
+    popterm
+  case 'swap-current-node'
+    swap-current-node $argv[2]
+  case '*'
+    cleanup-empty-desktops
+end

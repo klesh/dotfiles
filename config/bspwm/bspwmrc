@@ -1,0 +1,34 @@
+#!/usr/bin/env fish
+
+bspc config focus_follows_pointer       true
+bspc config pointer_follows_focus       true
+bspc config pointer_follows_monitor     true
+bspc config remove_disabled_monitors    true
+bspc config remove_unplugged_monitors   true
+bspc config pointer_modifier            control
+bspc config pointer_action1             none
+bspc config pointer_action2             resize_corner
+bspc config pointer_action3             move
+bspc config border_width                2
+bspc config focused_border_color        '#5b97f7'
+
+
+
+# set default cursor
+xsetroot -cursor_name left_ptr
+bspc rule --add Zathura state=tiled
+
+
+$HOME/.config/bspwm/postswitch
+$HOME/.config/polybar/launch.sh
+$HOME/.config/picom/launch.sh
+$HOME/.config/sxhkd/launch.sh
+$HOME/.config/bspwm/arrange-desktops
+xss-lock ~/.config/i3/lock.fish &
+nm-applet &
+blueman-applet &
+numlockx &
+dunst &
+flameshot &
+fcitx &
+nextcloud &

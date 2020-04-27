@@ -1,0 +1,17 @@
+prev_img
+prev_img BackSpace
+next_img
+next_img space
+
+zoom_in
+zoom_in equal
+zoom_out
+zoom_out minus
+
+
+toggle_pause
+toggle_keep_vp
+scroll_left h
+scroll_down k
+scroll_up j
+scroll_right l

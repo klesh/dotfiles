@@ -1,0 +1,56 @@
+#!/usr/bin/env fish
+
+# start compositor
+$HOME/.config/picom/launch.sh
+
+# start dwmbar
+$HOME/.config/dwm/dwmbar
+
+# setup screen locker
+killall xss-lock
+xss-lock --ignore-sleep (which slock) &
+
+# start network applet
+pgrep -x nm-applet || nm-applet &
+
+# start bluetooth applet
+pgrep -x blueman-applet || blueman-applet &
+
+# start desktop notification
+pgrep -x dunst || dunst &
+
+# start screenshot tool
+pgrep -x flameshot || flameshot &
+
+# start input method
+#pgrep -x fcitx || fcitx &
+pgrep -x ibus-daemon || ibus-daemon -drx &
+
+# restart wallpaper
+nitrogen --restore
+
+# start password manager
+pgrep -x keepassxc || keepassxc &
+
+# start a terminal with tmux
+if not xdotool search --onlyvisible --class term && not xdotool search --onlyvisible --class Alacritty
+  if tmux has-session -t 0
+    st -c term -n autostart -e tmux a -t 0 &
+    #alacritty --class autostart,term -e tmux a -t 0 &
+  else
+    st -c term -n autostart -e tmux new -s 0 &
+    #alacritty --class autostart,term -e tmux new -s 0 &
+  end
+end
+
+# start browser
+pgrep -x chrome || google-chrome-stable &
+
+# start nextcloud
+if not pgrep -x nextcloud
+  nextcloud &
+  while not xdotool search --onlyvisible --name Nextcloud
+    sleep 0.5
+  end
+  xdotool windowunmap (xdotool search --onlyvisible --name Nextcloud)
+end
