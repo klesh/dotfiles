@@ -3,6 +3,11 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
     exit;
 }
 
+Function ExitOnError ([string]$message) {
+    Write-Error $message
+    Read-Host -Prompt "Press Enter to continue"
+    exit -1
+}
 
 $Supported = @{
     "B3448BF077665F2E1CA67094BCF2A7C5" = 0x14DE1;
@@ -18,7 +23,7 @@ $ChsImeExePath = "$env:windir\System32\InputMethod\CHS\$ChsIMEExe"
 $ChsIMEHash = (Get-FileHash $ChsImeExePath -Algorithm MD5).Hash
 $offsetAddr = $Supported[$ChsIMEHash]
 if (-not $offsetAddr) {
-    throw [System.Exception] "Unsupported ChsIme.exe"
+    ExitOnError 'Unsupported ChsIme.exe'
 }
 
 Add-Type -MemberDefinition @'
@@ -33,8 +38,7 @@ Add-Type -MemberDefinition @'
 
 
 $i = 0
-while ($i++ -lt 10) {
-
+while ($i++ -lt 30) {
     $ps = Get-Process -Name $ChsIME
     foreach ($p in $ps) {
         $hModule = $p.Modules | Where-Object {$_.ModuleName -eq $ChsIMEExe}
@@ -46,9 +50,9 @@ while ($i++ -lt 10) {
         [Int32]$n = 0
         $pidd = $p.id
         if ([Pinvoke.Kernel32]::WriteProcessMemory($p.Handle[0], $addr, @(0x31, 0xc0), 2, [ref]$n)) {
-            echo "$pidd is patched"
+            Write-Output "$pidd is patched"
         } else {
-            throw [System.Exception] "Failed to patch $pidd"
+            ExitOnError "Failed to patch $pidd"
         }
     }
     if ($ps) {
