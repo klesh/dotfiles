@@ -32,19 +32,27 @@ Add-Type -MemberDefinition @'
 '@ -Name Kernel32 -Namespace Pinvoke
 
 
-$ps = Get-Process -Name $ChsIME
-foreach ($p in $ps) {
-    $hModule = $p.Modules | Where-Object {$_.ModuleName -eq $ChsIMEExe}
-    if (!$hModule) {
-        continue
+$i = 0
+while ($i++ -lt 10) {
+
+    $ps = Get-Process -Name $ChsIME
+    foreach ($p in $ps) {
+        $hModule = $p.Modules | Where-Object {$_.ModuleName -eq $ChsIMEExe}
+        if (!$hModule) {
+            continue
+        }
+        $hModule = $hModule[0]
+        $addr = [IntPtr]::Add($hModule.BaseAddress, $offsetAddr)
+        [Int32]$n = 0
+        $pidd = $p.id
+        if ([Pinvoke.Kernel32]::WriteProcessMemory($p.Handle[0], $addr, @(0x31, 0xc0), 2, [ref]$n)) {
+            echo "$pidd is patched"
+        } else {
+            throw [System.Exception] "Failed to patch $pidd"
+        }
     }
-    $hModule = $hModule[0]
-    $addr = [IntPtr]::Add($hModule.BaseAddress, $offsetAddr)
-    [Int32]$n = 0
-    $pidd = $p.id
-    if ([Pinvoke.Kernel32]::WriteProcessMemory($p.Handle[0], $addr, @(0x31, 0xc0), 2, [ref]$n)) {
-        echo "$pidd is patched"
-    } else {
-        throw [System.Exception] "Failed to patch $pidd"
+    if ($ps) {
+        break
     }
+    Start-Sleep -Milliseconds 100
 }

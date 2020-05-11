@@ -20,5 +20,4 @@ if (Test-Path $sshconf -PathType Leaf) {
 $wubiAction = New-ScheduledTaskAction -Execute 'Powershell.exe' `
   -Argument "-NoProfile -WindowStyle Hidden -File $PSScriptRoot\wubi-no-shift.ps1"
 $wubiTrigger = New-ScheduledTaskTrigger -AtLogOn
-$wubiTrigger.Delay = 'PT3S'
 Register-ScheduledTask -Action $wubiAction -Trigger $wubiTrigger -TaskName "Wubi No Shift" -Description "Disable Shift key toggling CN/EN" -RunLevel Highest
