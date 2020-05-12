@@ -108,5 +108,12 @@ if test -z "$DISPLAY" -a -n "$XDG_VTNR" -a "$XDG_VTNR" -eq "1" -a -z "$STARTED"
 end
 
 alias k=kubectl
+alias kcc="k config get-contexts"
+alias kcu="k config use-context"
+alias kgd="k get deployment"
+alias ked="k edit deployment"
+alias kgp="k get pod -o 'custom-columns=NAME:.metadata.name,IMG:.spec.containers[*].image,STATUS:.status.phase'"
+alias kl="k logs -f --all-containers"
+
 
 source-file-if-exists ~/.profile.fish
