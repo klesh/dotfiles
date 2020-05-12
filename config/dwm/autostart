@@ -52,5 +52,5 @@ if not pgrep -x nextcloud
   while not xdotool search --onlyvisible --name Nextcloud
     sleep 0.5
   end
-  xdotool windowunmap (xdotool search --onlyvisible --name Nextcloud)
+  xdotool windowclose (xdotool search --onlyvisible --name Nextcloud)
 end
