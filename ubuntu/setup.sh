@@ -19,7 +19,7 @@ sudo apt-get update
 sudo apt-get upgrade --fix-missing
 sudo apt-get install vim fish build-essential automake pkg-config libevent-dev libncurses5-dev software-properties-common curl -y
 
-TMUX_VER=2.9a
+TMUX_VER=3.1b
 curl -L https://github.com/tmux/tmux/releases/download/$TMUX_VER/tmux-$TMUX_VER.tar.gz -o /tmp/tmux.tar.gz
 cd /tmp/
 tar zxvf tmux.tar.gz
