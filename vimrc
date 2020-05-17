@@ -16,7 +16,7 @@ endif
 
 
 if !has('nvim')
-  set mouse=a
+  "set mouse=a
   set ttymouse=xterm2
 endif
 set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
