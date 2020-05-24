@@ -5,7 +5,7 @@ if !filereadable(vim_plug_path)
   echo "Installing Vim-plug..."
   echo ""
   silent !mkdir -p ~/.vim/autoload
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://github.com/junegunn/vim-plug/raw/master/plug.vim
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://gitee.com/klesh/vim-plug/raw/master/plug.vim
   let vim_plug_just_installed = 1
 endif
 
@@ -16,7 +16,7 @@ endif
 
 
 if !has('nvim')
-  set mouse=a
+  "set mouse=a
   set ttymouse=xterm2
 endif
 set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
