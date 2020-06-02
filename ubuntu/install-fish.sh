@@ -1,3 +1,6 @@
+#!/bin/bash
+
+set -e
 sudo add-apt-repository ppa:fish-shell/release-3 -y
 sudo apt update
 sudo apt install fish -y
