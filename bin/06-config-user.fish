@@ -40,26 +40,31 @@ function link-dotfile
   run-cmd "ln -sf $DIR/$argv ~/.$argv"
 end
 
+set -l argv
+argparse 'c/cli-only' -- $argv
+
+
 link-dotfolder config
 link-dotfolder pip
 link-dotfile tmux.conf
 link-dotfile vimrc
-link-dotfile xinitrc
-link-dotfile Xresources
-link-dotfile Xmodmap
-
-
 # install tpm
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
-# set zathura as default pdf viewer
-xdg-mime default org.pwmt.zathura.desktop application/pdf
+if [ -n "$_flag_c" ]
+  link-dotfile xinitrc
+  link-dotfile Xresources
+  link-dotfile Xmodmap
+  # set zathura as default pdf viewer
+  xdg-mime default org.pwmt.zathura.desktop application/pdf
 
-# setup mpd
-mkdir -p ~/.mpd/playlists
-systemctl --user enable mpd
-systemctl --user start mpd
 
-# install ranger plugin
-yay -S ttf-nerd-fonts-symbols
-git clone https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons
+  # setup mpd
+  mkdir -p ~/.mpd/playlists
+  systemctl --user enable mpd
+  systemctl --user start mpd
+
+  # install ranger plugin
+  yay -S ttf-nerd-fonts-symbols
+  git clone https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons
+end
