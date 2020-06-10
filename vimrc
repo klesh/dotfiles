@@ -216,6 +216,7 @@ nnoremap <leader>gs :<C-u>:Gstatus<CR>
 nnoremap <leader>gc :<C-u>:Gcommit<CR>
 nnoremap <leader>gp :<C-u>:Gpush<CR>
 nnoremap <leader>gg :<C-u>:Gpull<CR>
+nnoremap <leader>gd :<C-u>:Gdiff<CR>
 autocmd FileType json nnoremap <leader>f %!json_pp<Cr>
 
 "nnoremap <leader>m :vertical resize +5<CR>
