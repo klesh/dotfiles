@@ -6,3 +6,6 @@ config/ranger/history
 config/ranger/tagged
 config/ranger/plugins
 config/Thunar/accels.scm
+config/nvim/autoload
+config/nvim/plugged
+config/nvim/.*

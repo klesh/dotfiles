@@ -1,0 +1,4 @@
+{
+    "npm.binPath": "yarn",
+    "python.linting.flake8Enabled": true
+}

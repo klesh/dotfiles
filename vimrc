@@ -50,11 +50,14 @@ Plug 'jiangmiao/auto-pairs'
 
 " ide like
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'mgedmin/coverage-highlight.vim'
-"Plug 'klesh/vim-fakeclip'
+Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-python', {'do': 'yarn install --frozen-lockfile'}
+Plug 'weirongxu/coc-explorer', {'do': 'yarn install --frozen-lockfile'}
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-fugitive'                                         " git 功能
-Plug 'scrooloose/nerdtree'
+"Plug 'scrooloose/nerdtree'
+"Plug 'mgedmin/coverage-highlight.vim'
+"Plug 'klesh/vim-fakeclip'
 
 " color themes
 Plug 'morhetz/gruvbox'
@@ -66,7 +69,7 @@ Plug 'lunaru/vim-less'
 Plug 'posva/vim-vue'
 Plug 'othree/html5.vim'
 Plug 'dag/vim-fish'
-Plug 'vim-python/python-syntax'
+"Plug 'vim-python/python-syntax'
 Plug 'plasticboy/vim-markdown'
 "Plug 'digitaltoad/vim-pug'
 
@@ -80,15 +83,21 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
+xmap <silent> <leader>fs <Plug>(coc-format-selected)
+nmap <silent> <leader>fs <Plug>(coc-format-selected)
+nmap <silent> <leader>fb <Plug>(coc-format)
+nmap <silent> <leader>rn <Plug>(coc-rename)
+nmap <silent> <leader>ne <Plug>(coc-diagnostic-next-error)
+nmap <silent> <leader>pe <Plug>(coc-diagnostic-prev-error)
+nmap <silent> <leader>fe :CocCommand explorer --toggle<CR>
+nmap <silent> <leader>if :CocInfo<CR>
+nmap <silent> <leader>cl :CocList<CR>
+nmap <silent> <leader>ol <Plug>(coc-openlink)
+
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
 
-" Remap for format selected region
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
 
 " Use K to show documentation in preview window
 function! s:show_documentation()
