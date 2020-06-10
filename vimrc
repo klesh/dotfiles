@@ -205,13 +205,17 @@ nnoremap <C-S-s> :<C-u>:w<CR>
 
 vnoremap <leader>p "_dP
 nnoremap <leader><Esc> :noh<return><esc>
-nnoremap <leader>n :NERDTreeToggle<CR>
-nnoremap <leader>g :Grepper -tool git<CR>
+nnoremap <leader>nt :NERDTreeToggle<CR>
+nnoremap <leader>fs :Grepper -tool git<CR>
 nnoremap <leader>o :only<CR>
 nnoremap <leader>q :<C-u>qall<CR>
 nnoremap <leader>e :<C-u>%s/\s\+$//g<CR>
 nnoremap <leader>s :<C-u>syntax sync fromstart<CR>
 nnoremap <leader>c :<C-u>:set cursorcolumn!<CR>
+nnoremap <leader>gs :<C-u>:Gstatus<CR>
+nnoremap <leader>gc :<C-u>:Gcommit<CR>
+nnoremap <leader>gp :<C-u>:Gpush<CR>
+nnoremap <leader>gg :<C-u>:Gpull<CR>
 autocmd FileType json nnoremap <leader>f %!json_pp<Cr>
 
 "nnoremap <leader>m :vertical resize +5<CR>
@@ -222,6 +226,26 @@ autocmd FileType json nnoremap <leader>f %!json_pp<Cr>
 "nnoremap <leader>[ :lprev<CR>
 "nnoremap <leader>] :lnext<CR>
 "vnoremap <silent> <leader>m c<c-r>=trim(@") . '=' . trim(system('math ' . shellescape(@")))<cr><esc>
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
+cnoremap <C-f> <Right>
+cnoremap <C-b> <Left>
+cnoremap <C-d> <Delete>
+cnoremap <C-n> <Down>
+cnoremap <C-p> <Up>
+
+inoremap <C-a> <Home>
+inoremap <C-e> <End>
+inoremap <C-f> <Right>
+inoremap <C-b> <Left>
+inoremap <C-d> <Delete>
+inoremap <C-n> <Down>
+inoremap <C-p> <Up>
+
+noremap <C-a> <Home>
+noremap <C-e> <End>
+noremap <C-f> <Right>
+noremap <C-b> <Left>
 
 " iterm2 插入模式时backspace不works
 set backspace=indent,eol,start
