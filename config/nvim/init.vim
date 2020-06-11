@@ -13,6 +13,7 @@ set nobackup
 set hlsearch
 set noswapfile
 set ignorecase
+set laststatus=2
 set fillchars=vert:\ ,fold:-
 filetype plugin indent on
 syntax on
@@ -40,6 +41,8 @@ noremap <C-b> <Left>
 vnoremap <leader>p "_dP
 nnoremap <leader>q :qall<CR>
 
+nnoremap <leader>1 :b1
+
 
 " trailing spaces
 highlight ExtraWhitespace ctermbg=red guibg=red
@@ -48,7 +51,11 @@ au Syntax * match ExtraWhitespace /\s\+$/
 nnoremap <leader>es :%s/\s\+$//g<CR>
 
 " auto install vim-plug
-let vim_plug_path = expand("~/.config/nvim/autoload/plug.vim")
+if has('nvim')
+    let vim_plug_path = expand("~/.config/nvim/autoload/plug.vim")
+else
+    let vim_plug_path = expand("~/.vim/autoload/plug.vim")
+endif
 let vim_plug_just_installed = 0
 if !filereadable(vim_plug_path)
     echo "Installing vim-plug..."

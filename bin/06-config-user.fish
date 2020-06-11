@@ -47,7 +47,11 @@ argparse 'c/cli-only' -- $argv
 link-dotfolder config
 link-dotfolder pip
 link-dotfile tmux.conf
-link-dotfile vimrc
+#link-dotfile vimrc
+rm -rf ~/.vimrc ~/.vim/coc-settings.json
+ln -s $DIR/config/nvim/init.vim ~/.vimrc
+mkdir -p ~/.vim
+ln -s $DIR/config/nvim/coc-settings.json ~/.vim/coc-settings.json
 # install tpm
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 

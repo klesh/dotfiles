@@ -5,7 +5,7 @@ set DIR (dirname (dirname (readlink -f (status --current-filename))))
 # cli basic tooling
 pacman -S \
   base-devel \
-  neovim \
+  vim neovim \
   tmux bc \
   unzip p7zip \
   openssh \
