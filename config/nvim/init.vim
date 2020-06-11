@@ -13,6 +13,7 @@ set nobackup
 set hlsearch
 set noswapfile
 set ignorecase
+set fillchars=vert:\ ,fold:-
 filetype plugin indent on
 syntax on
 cnoremap <C-a> <Home>
@@ -70,6 +71,7 @@ Plug 'tpope/vim-fugitive'                                         " git 功能
 Plug 'scrooloose/nerdcommenter'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
+Plug 'morhetz/gruvbox'
 call plug#end()
 
 
@@ -82,13 +84,14 @@ nmap <silent> gr <Plug>(coc-references)
 xmap <silent> <leader>fs <Plug>(coc-format-selected)
 nmap <silent> <leader>fs <Plug>(coc-format-selected)
 nmap <silent> <leader>fb <Plug>(coc-format)
-nmap <silent> <leader>sd :call CocAction('doHover')<CR>
 nmap <silent> <leader>rn <Plug>(coc-rename)
 nmap <silent> <leader>ne <Plug>(coc-diagnostic-next-error)
 nmap <silent> <leader>pe <Plug>(coc-diagnostic-prev-error)
 nmap <silent> <leader>fe :CocCommand explorer --toggle<CR>
 nmap <silent> <leader>if :CocInfo<CR>
 nmap <silent> <leader>cl :CocList<CR>
+nmap <silent> <leader>sd :call CocAction('doHover')<CR>
+nmap <silent> <leader>ss :call CocAction('showSignatureHelp')<CR>
 nmap <silent> <leader>ol <Plug>(coc-openlink)
 nnoremap <leader>sg :Grepper -tool git<CR>
 nnoremap <leader>sc :Grepper -tool grep<CR>
@@ -103,3 +106,9 @@ nnoremap <leader>gd :Gdiff<CR>
 
 " ==== ctrlp configuration ====
 let g:ctrlp_user_command = ['.git', 'git ls-files -co --exclude-standard']
+
+
+" ==== gruvbox configuration ====
+color gruvbox
+set background=dark
+highlight Normal ctermbg=None
