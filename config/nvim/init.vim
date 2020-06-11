@@ -60,7 +60,7 @@ endif
 call plug#begin()
 Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-surround'
-"Plug 'jiangmiao/auto-pairs'
+Plug 'jiangmiao/auto-pairs'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
 Plug 'iamcco/coc-vimlsp', {'do': 'yarn install --frozen-lockfile'}
