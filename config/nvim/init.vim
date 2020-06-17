@@ -15,8 +15,11 @@ set noswapfile
 set ignorecase
 set laststatus=2
 set fillchars=vert:\ ,fold:-
+set clipboard+=unnamedplus
 filetype plugin indent on
 syntax on
+au! BufWritePost $MYVIMRC source %
+
 cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 cnoremap <C-f> <Right>
@@ -98,7 +101,7 @@ nmap <silent> <leader>fe :CocCommand explorer --toggle<CR>
 nmap <silent> <leader>if :CocInfo<CR>
 nmap <silent> <leader>cl :CocList<CR>
 nmap <silent> <leader>sd :call CocAction('doHover')<CR>
-nmap <silent> <leader>ss :call CocAction('showSignatureHelp')<CR>
+nmap <silent> <leader>ss :syntax sync fromstart<CR>
 nmap <silent> <leader>ol <Plug>(coc-openlink)
 nnoremap <leader>sg :Grepper -tool git<CR>
 nnoremap <leader>sc :Grepper -tool grep<CR>

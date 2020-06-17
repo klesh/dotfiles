@@ -1,5 +1,6 @@
 {
     "npm.binPath": "yarn",
     "python.linting.flake8Enabled": true,
-    "explorer.icon.enableNerdfont": true
+    "explorer.icon.enableNerdfont": true,
+    "explorer.width": 30
 }
