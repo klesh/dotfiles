@@ -10,9 +10,15 @@ set autoindent
 set confirm
 set noundofile
 set nobackup
+set nowritebackup
 set hlsearch
 set noswapfile
 set ignorecase
+set smarttab
+set smartindent
+set cursorline
+set incsearch
+set signcolumn=yes
 set laststatus=2
 set fillchars=vert:\ ,fold:-
 set clipboard+=unnamedplus
