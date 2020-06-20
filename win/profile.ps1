@@ -1,4 +1,4 @@
-# adminstration powershell:
+﻿# adminstration powershell:
 # Set-ExecutionPolicy RemoteSigned
 # new-item -ItemType SymbolicLink -Target "D:\Nextcloud\klesh\config\win\profile.ps1" -Path $profile
 
