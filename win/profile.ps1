@@ -47,3 +47,17 @@ function vsbuild {
   Import-Module "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\Tools\Microsoft.VisualStudio.DevShell.dll"
   Enter-VsDevShell 56e7bf1c
 }
+
+function ssh-copy-id {
+  [Cmdletbinding()]
+  param (
+    [Parameter()]
+    [String]
+    $IdentityFile="~/.ssh/id_rsa.pub",
+    [Parameter(Mandatory=$true, Position=0)]
+    [String]
+    $UserHost
+  )
+
+  Get-Content $IdentityFile | ssh $UserHost "umask 077; test -d .ssh || mkdir .ssh ; cat >> .ssh/authorized_keys"
+}
