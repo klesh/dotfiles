@@ -50,7 +50,15 @@ noremap <C-b> <Left>
 vnoremap <leader>p "_dP
 nnoremap <leader>q :qall<CR>
 
-nnoremap <leader>1 :b1
+nnoremap <leader>1 :b1<CR>
+nnoremap <leader>2 :b2<CR>
+nnoremap <leader>3 :b3<CR>
+nnoremap <leader>4 :b4<CR>
+nnoremap <leader>5 :b5<CR>
+nnoremap <leader>w :w<CR>
+nnoremap <leader><Esc> :noh<return><esc>
+
+inoremap <C-w> <esc><C-w>
 
 
 " trailing spaces
