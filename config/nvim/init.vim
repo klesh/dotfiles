@@ -101,6 +101,7 @@ call plug#end()
 
 
 " ==== coc configuration ====
+let g:coc_disable_startup_warning = 1
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
