@@ -2,7 +2,7 @@
 
 set -e
 
-sudo apt install libevent-dev libncurses5-dev -y
+sudo apt install libevent-dev libncurses5-dev bison -y
 
 TMUX_VER=3.1b
 #curl -L https://github.com/tmux/tmux/releases/download/$TMUX_VER/tmux-$TMUX_VER.tar.gz -o /tmp/tmux.tar.gz

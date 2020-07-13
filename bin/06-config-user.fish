@@ -58,7 +58,7 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 if [ -n "$_flag_c" ]
   link-dotfile xinitrc
   link-dotfile Xresources
-  link-dotfile Xmodmap
+  #link-dotfile Xmodmap
   # set zathura as default pdf viewer
   xdg-mime default org.pwmt.zathura.desktop application/pdf
 

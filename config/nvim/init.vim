@@ -96,6 +96,7 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 Plug 'morhetz/gruvbox'
+Plug 'dag/vim-fish'
 call plug#end()
 
 
@@ -117,6 +118,7 @@ nmap <silent> <leader>cl :CocList<CR>
 nmap <silent> <leader>sd :call CocAction('doHover')<CR>
 nmap <silent> <leader>ss :syntax sync fromstart<CR>
 nmap <silent> <leader>ol <Plug>(coc-openlink)
+nmap <silent> <leader>ap :call AutoPairsToggle()<CR>
 nnoremap <leader>sg :Grepper -tool git<CR>
 nnoremap <leader>sc :Grepper -tool grep<CR>
 
@@ -127,6 +129,7 @@ nnoremap <leader>gc :Gcommit<CR>
 nnoremap <leader>gp :Gpush<CR>
 nnoremap <leader>gg :Gpull<CR>
 nnoremap <leader>gd :Gdiff<CR>
+nnoremap <leader>gb :Gblame<CR>
 
 " ==== ctrlp configuration ====
 let g:ctrlp_user_command = ['.git', 'git ls-files -co --exclude-standard']
