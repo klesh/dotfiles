@@ -10,6 +10,8 @@ echo '===================    Installing basic packages  ===================='
 $DIR/install-base.sh
 echo '===================    Installing fish shell      ===================='
 $DIR/install-fish.sh
+echo '===================    Installing nodejs          ===================='
+$DIR/install-nodejs.sh
 echo '===================    Installing vim             ===================='
 $DIR/install-vim.sh
 echo '===================    Installing tmux            ===================='
