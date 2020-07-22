@@ -1,5 +1,4 @@
-# execute this first
-Set-ExecutionPolicy RemoteSigned
+# execute this first: Set-ExecutionPolicy RemoteSigned
 
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     Start-Process PowerShell -Verb RunAs "-NoProfile -ExecutionPolicy Bypass -Command `"cd '$pwd'; & '$PSCommandPath';`"";
@@ -11,11 +10,9 @@ $dotfiles=(Get-Item $PSScriptRoot).Parent.FullName
 New-Item -ItemType SymbolicLink -Target $dotfiles\win\profile.ps1 -Path $profile -Force
 New-Item -ItemType SymbolicLink -Target $dotfiles\config\mpv\mpv.conf -Path $Env:APPDATA\mpv\mpv.conf -Force
 New-Item -ItemType SymbolicLink -Target $dotfiles\config\mpv\scripts -Path $Env:APPDATA\mpv\scripts -Force
-
-$sshconf="D:\Nextcloud\klesh\config\ssh\config"
-if (Test-Path $sshconf -PathType Leaf) {
-    New-Item -ItemType SymbolicLink -Target $sshconf -Path $home\.ssh\config -Force
-}
+Remove-Item -Force -Recurse $Env:APPDATA\pip
+New-Item -ItemType Directory -Path $Env:APPDATA\pip
+New-Item -ItemType SymbolicLink -Target $dotfiles\pip\pip.conf -Path $Env:APPDATA\pip\pip.ini -Force
 
 # fix Shift key toggling Cn/En fro MS wubi
 if (-not (Get-ScheduledTask -TaskName "Wubi No Shift")) {
