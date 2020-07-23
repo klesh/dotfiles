@@ -106,3 +106,17 @@ MoveCursorMon(toRight) {
 
 #u:: MoveCursorMon(False)
 #i:: MoveCursorMon(True)
+
+~#1 Up::
+~#2 Up::
+~#3 Up::
+~#4 Up::
+~#5 Up::
+~#6 Up::
+~#7 Up::
+~#8 Up::
+~#9 Up::
+  Sleep 0.5
+  WinGetPos, x, y, w, h, A
+  DllCall("SetCursorPos", "int", x + w / 2, "int", y + h / 2)
+  return
