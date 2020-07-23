@@ -39,13 +39,6 @@ Return
 #IfWinActive
 
 
-#f:: WinMaximize, A
-#+f:: WinRestore, A
-#+h:: #+Left
-#+l:: #+Right
-#,:: #Left
-#.:: #Right
-
 
 ; Capslock & h:: Send {Left}
 ; Capslock & j:: Send {Down}
@@ -72,15 +65,15 @@ Return
 ; Return
 ; Capslock::return
 
+MoveMouseAct(x, y) {
+  DllCall("SetCursorPos", "int", x, "int", y)
+  MouseGetPos, MouseX, MouseY, WinId
+  WinActivate, ahk_id %WinId%
+}
+
 MoveCursorMon(toRight) {
   CoordMode, Mouse, Screen ; mouse coordinates relative to the screen
   MouseGetPos, MouseX, MouseY
-  ; MsgBox % Format("x: {:d}, y: {:d}, wid: {:d}, sw: {:d}, sh: {:d}", MouseX, MouseY, WinId, A_ScreenWidth, A_ScreenHeight)
-  ; if (MouseX > A_ScreenWidth) {
-  ;   MouseMove, -A_ScreenWidth, 0, 0, R
-  ; } else {
-  ;   MouseMove, A_ScreenWidth, 0, 0, R
-  ; }
   SysGet, mc, MonitorCount
   mi := 0
   x := -10000
@@ -99,13 +92,40 @@ MoveCursorMon(toRight) {
       break
   }
   ; MouseMove, x, y
-  DllCall("SetCursorPos", "int", x, "int", y)
-  MouseGetPos, MouseX, MouseY, WinId
-  WinActivate, ahk_id %WinId%
+  MoveMouseAct(x, y)
 }
 
+MoveCursorWin(toRight) {
+  CoordMode, Mouse, Screen ; mouse coordinates relative to the screen
+  MouseGetPos, MouseX, MouseY
+  ; find current monitor
+  SysGet, mc, MonitorCount
+  mi := 0
+  loop {
+    SysGet, mon, Monitor, %mi%
+    if (monLeft < MouseX and monRight > MouseX) {
+      x := monLeft + (monRight - monLeft) * (toRight ? 0.75 : 0.25)
+      y := monTop + monBottom / 2
+      DllCall("SetCursorPos", "int", x, "int", y)
+      MoveMouseAct(x, y)
+      break
+    }
+    if (++mi >= mc)
+      break
+  }
+}
+
+
+#f:: WinMaximize, A
+#+f:: WinRestore, A
+#,:: #Left
+#.:: #Right
+#+u:: #+Left
+#+i:: #+Right
 #u:: MoveCursorMon(False)
 #i:: MoveCursorMon(True)
+#k:: MoveCursorWin(False)
+#j:: MoveCursorWin(True)
 
 ~#1 Up::
 ~#2 Up::
