@@ -1,5 +1,6 @@
 ^Esc:: Send ^{``}
-*#q:: Send {LAlt down}{F4}{LAlt up}
+*#q:: !F4
+#Esc:: Reload
 
 
 ^BS::
@@ -10,9 +11,10 @@
 
 #=::SoundSet,+5
 #-::SoundSet,-5
+#BS::#l
 
 
-; Ctrl + Shift + v : paste as plain text
+; Ctrl + Alt + v : paste as plain text
 ^!v::
     Clip0 = %ClipBoardAll%
     ClipBoard = %ClipBoard% ; Convert to plain text
@@ -31,13 +33,6 @@ Return
     VarSetCapacity(Clip0, 0) ; Free memory
 Return
 
-
-#IfWinActive ahk_class ConsoleWindowClass
-  ^+v:: MouseClick, Right
-  ^+c:: MouseClick, Right
-#IfWinActive
-
-
 #IfWinActive ahk_class mintty
   ^+v::Send +{Ins}
   ^+c::Send ^{Ins}
@@ -46,31 +41,68 @@ Return
 
 #f:: WinMaximize, A
 #+f:: WinRestore, A
-#+l:: Send {LWinDown}{Right}{LWinUp}
-#+h:: Send {LWinDown}{Left}{LWinUp}
+#+h:: #+Left
+#+l:: #+Right
+#,:: #Left
+#.:: #Right
 
 
-Capslock & h:: Send {Left}
-Capslock & j:: Send {Down}
-Capslock & k:: Send {Up}
-Capslock & l:: Send {Right}
-Capslock & -:: Send {Volume_Down}
-Capslock & =:: Send {Volume_Up}
-Capslock & \:: Send {Media_Play_Pause}
-Capslock & y:: Send {Browser_Back}
-Capslock & u:: Send ^{PgUp}
-Capslock & i:: Send ^{PgDn}
-Capslock & o:: Send {Browser_Forward}
-Capslock & BackSpace:: Send {Del}
+; Capslock & h:: Send {Left}
+; Capslock & j:: Send {Down}
+; Capslock & k:: Send {Up}
+; Capslock & l:: Send {Right}
+; Capslock & -:: Send {Volume_Down}
+; Capslock & =:: Send {Volume_Up}
+; Capslock & \:: Send {Media_Play_Pause}
+; Capslock & y:: Send {Browser_Back}
+; Capslock & u:: Send ^{PgUp}
+; Capslock & i:: Send ^{PgDn}
+; Capslock & o:: Send {Browser_Forward}
+; Capslock & BackSpace:: Send {Del}
 
-Capslock & n:: Send {Home}
-Capslock & m:: Send {PgUp}
-Capslock & ,:: Send {PgDn}
-Capslock & .:: Send {End}
+; Capslock & n:: Send {Home}
+; Capslock & m:: Send {PgUp}
+; Capslock & ,:: Send {PgDn}
+; Capslock & .:: Send {End}
 
-Capslock & Space:: SetCapsLockState % !GetKeyState("CapsLock", "T") 
-+CapsLock::
-  Send {~}
-  SetCapsLockState % !GetKeyState("CapsLock", "T")
-Return
-Capslock::return
+; Capslock & Space:: SetCapsLockState % !GetKeyState("CapsLock", "T") 
+; +CapsLock::
+;   Send {~}
+;   SetCapsLockState % !GetKeyState("CapsLock", "T")
+; Return
+; Capslock::return
+
+MoveCursorMon(toRight) {
+  CoordMode, Mouse, Screen ; mouse coordinates relative to the screen
+  MouseGetPos, MouseX, MouseY
+  ; MsgBox % Format("x: {:d}, y: {:d}, wid: {:d}, sw: {:d}, sh: {:d}", MouseX, MouseY, WinId, A_ScreenWidth, A_ScreenHeight)
+  ; if (MouseX > A_ScreenWidth) {
+  ;   MouseMove, -A_ScreenWidth, 0, 0, R
+  ; } else {
+  ;   MouseMove, A_ScreenWidth, 0, 0, R
+  ; }
+  SysGet, mc, MonitorCount
+  mi := 0
+  x := -10000
+  if (toRight)
+    x:= 10000
+  y := MouseY
+  loop {
+    SysGet, mon, Monitor, %mi%
+    monX := Floor((monLeft + monRight) / 2)
+    monY := Floor((monTop + monBottom) / 2)
+    if (toRight and monLeft > MouseX and monX < x) Or (!toRight and monRight < MouseX and monX > x) {
+      x := monX
+      y := monY
+    }
+    if (++mi >= mc)
+      break
+  }
+  ; MouseMove, x, y
+  DllCall("SetCursorPos", "int", x, "int", y)
+  MouseGetPos, MouseX, MouseY, WinId
+  WinActivate, ahk_id %WinId%
+}
+
+#u:: MoveCursorMon(False)
+#i:: MoveCursorMon(True)
