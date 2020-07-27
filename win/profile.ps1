@@ -5,6 +5,15 @@
 
 Set-PSReadLineOption -EditMode Emacs
 $Env:Path += ";$PSScriptRoot\bin"
+Set-Alias -Name k kubectl
+
+function kcc { k config get-contexts $args }
+function kcu { k config use-context $args}
+function kgd { k get deployment $args}
+function ked { k edit deployment $args}
+function kgp { k k get pod -o 'custom-columns=NAME:.metadata.name,IMG:.spec.containers[*].image,STATUS:.status.phase' $args}
+function kl { k logs -f --all-containers $args}
+
 
 function dp {
   [CmdletBinding()]
