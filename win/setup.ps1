@@ -21,3 +21,6 @@ if (-not (Get-ScheduledTask -TaskName "Wubi No Shift")) {
   $wubiTrigger = New-ScheduledTaskTrigger -AtLogOn
   Register-ScheduledTask -Action $wubiAction -Trigger $wubiTrigger -TaskName "Wubi No Shift" -Description "Disable Shift key toggling CN/EN" -RunLevel Highest
 }
+
+Install-Module posh-git
+Install-Module oh-my-posh
