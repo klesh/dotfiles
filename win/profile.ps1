@@ -6,6 +6,7 @@
 Set-PSReadLineOption -EditMode Emacs
 $Env:Path += ";$PSScriptRoot\bin"
 Set-Alias -Name k kubectl
+Set-Prompt
 
 function kcc { k config get-contexts $args }
 function kcu { k config use-context $args}
@@ -68,5 +69,5 @@ function ssh-copy-id {
     $UserHost
   )
 
-  Get-Content $IdentityFile | ssh $UserHost "umask 077; test -d .ssh || mkdir .ssh ; cat >> .ssh/authorized_keys"
+  Get-Content $IdentityFile | ssh $UserHost "umask 077; mkdir -p .ssh ; cat >> .ssh/authorized_keys"
 }
