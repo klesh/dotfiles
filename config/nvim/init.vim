@@ -69,7 +69,11 @@ nnoremap <leader>es :%s/\s\+$//g<CR>
 
 " auto install vim-plug
 if has('nvim')
-    let vim_plug_path = expand("~/.config/nvim/autoload/plug.vim")
+    if has('win32')
+        let vim_plug_path = $LOCALAPPDATA . "/nvim/autoload/plug.vim"
+    else
+        let vim_plug_path = expand("~/.config/nvim/autoload/plug.vim")
+    endif
 else
     let vim_plug_path = expand("~/.vim/autoload/plug.vim")
 endif

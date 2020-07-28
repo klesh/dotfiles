@@ -10,6 +10,7 @@ $dotfiles=(Get-Item $PSScriptRoot).Parent.FullName
 New-Item -ItemType SymbolicLink -Target $dotfiles\win\profile.ps1 -Path $profile -Force
 New-Item -ItemType SymbolicLink -Target $dotfiles\config\mpv\mpv.conf -Path $Env:APPDATA\mpv\mpv.conf -Force
 New-Item -ItemType SymbolicLink -Target $dotfiles\config\mpv\scripts -Path $Env:APPDATA\mpv\scripts -Force
+New-Item -ItemType SymbolicLink -Target $dotfiles\config\nvim -Path $Env:LOCALAPPDATA\nvim -Force
 Remove-Item -Force -Recurse $Env:APPDATA\pip
 New-Item -ItemType Directory -Path $Env:APPDATA\pip
 New-Item -ItemType SymbolicLink -Target $dotfiles\pip\pip.conf -Path $Env:APPDATA\pip\pip.ini -Force
