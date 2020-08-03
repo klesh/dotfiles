@@ -20,7 +20,11 @@ end
 function delete_file()
    mp.commandv('playlist-next', 'force')
    local path = get_path_info()
-   os.remove(path)
+   if package.config:sub(1,1) == '\\' then
+      utils.subprocess({ args={'cmd', '/c', 'del', path}, cancellable=false})
+   else
+      os.remove(path)
+   end
 end
 
 function move_file(folder)
@@ -30,7 +34,11 @@ function move_file(folder)
       local dest_dir = utils.join_path(work_dir, folder)
       local dest_path = utils.join_path(dest_dir, name)
       os.execute('mkdir "' .. dest_dir .. '"')
-      os.rename(path, dest_path)
+      if package.config:sub(1,1) == '\\' then
+         utils.subprocess({ args={'cmd', '/c', 'move', path, dest_path}, cancellable=false})
+      else
+         os.rename(path, dest_path)
+      end
    end
 end
 
