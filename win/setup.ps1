@@ -25,3 +25,7 @@ if (-not (Get-ScheduledTask -TaskName "Wubi No Shift")) {
 
 Install-Module posh-git
 Install-Module oh-my-posh
+
+# replace notepad with nvim-qt
+reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /v "Debugger" /t REG_SZ /d "${dotfiles}\win\npd.vbs" /f
+
