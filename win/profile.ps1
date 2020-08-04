@@ -5,6 +5,8 @@
 
 Set-PSReadLineOption -EditMode Emacs
 $Env:Path += ";$PSScriptRoot\bin"
+$Env:KUBE_EDITOR = 'nvim'
+$Env:EDITOR = 'nvim'
 Set-Alias -Name k kubectl
 $isPs7 = $host.Version.Major -ge 7
 if ( $isPs7 ) {
