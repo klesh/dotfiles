@@ -5,8 +5,13 @@
 
 Set-PSReadLineOption -EditMode Emacs
 $Env:Path += ";$PSScriptRoot\bin"
+$Env:KUBE_EDITOR = 'nvim'
+$Env:EDITOR = 'nvim'
 Set-Alias -Name k kubectl
-Set-Prompt
+$isPs7 = $host.Version.Major -ge 7
+if ( $isPs7 ) {
+    Set-Prompt
+}
 
 function kcc { k config get-contexts $args }
 function kcu { k config use-context $args}
