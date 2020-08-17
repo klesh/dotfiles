@@ -23,9 +23,9 @@ trusted-host = pypi.doubanio.com
 EOF
 
 # docker accelerator
-if [ -d /etc/docker ]; then$
-  dj='{}'$
-  [ -f /etc/docker/daemon.json ] && dj=$(cat /etc/docker/daemon.json)$
-  echo $dj | jq '. + {"registry-mirrors": ["https://izuhlbap.mirror.aliyuncs.com"]}' > /etc/docker/daemon.json$
-  systemctl restart docker$
-fi$
+if [ -d /etc/docker ]; then
+  dj='{}'
+  [ -f /etc/docker/daemon.json ] && dj=$(cat /etc/docker/daemon.json)
+  echo $dj | jq '. + {"registry-mirrors": ["https://izuhlbap.mirror.aliyuncs.com"]}' > /etc/docker/daemon.json
+  systemctl restart docker
+fi
