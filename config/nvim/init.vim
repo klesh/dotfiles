@@ -90,10 +90,10 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-surround'
 Plug 'jiangmiao/auto-pairs'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
-Plug 'iamcco/coc-vimlsp', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-python', {'do': 'yarn install --frozen-lockfile'}
-Plug 'weirongxu/coc-explorer', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-json', {'do': 'yarnpkg install --frozen-lockfile'}
+Plug 'iamcco/coc-vimlsp', {'do': 'yarnpkg install --frozen-lockfile'}
+Plug 'neoclide/coc-python', {'do': 'yarnpkg install --frozen-lockfile'}
+Plug 'weirongxu/coc-explorer', {'do': 'yarnpkg install --frozen-lockfile'}
 Plug 'liuchengxu/eleline.vim'
 Plug 'tpope/vim-fugitive'                                         " git 功能
 Plug 'scrooloose/nerdcommenter'
