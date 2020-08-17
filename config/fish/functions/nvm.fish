@@ -1,4 +1,4 @@
-set -g nvm_version 1.0.1
+set -g nvm_version 1.0.2
 
 function nvm -a cmd -d "Node.js version manager"
     set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
@@ -186,7 +186,7 @@ function _nvm_use
         set -l name "node-v$ver-$os-$arch"
         set -l url $nvm_mirror/v$ver/$name
 
-        echo "fetching $url.tar.gz" >&2
+        echo "fetching $url" >&2
         command mkdir -p $target/$name
 
         if not command curl -L --fail --progress-bar $url.tar.gz | command tar -xzf- -C $target/$name
