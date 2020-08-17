@@ -17,8 +17,9 @@ function kcc { k config get-contexts $args }
 function kcu { k config use-context $args}
 function kgd { k get deployment $args}
 function ked { k edit deployment $args}
-function kgp { k k get pod -o 'custom-columns=NAME:.metadata.name,IMG:.spec.containers[*].image,STATUS:.status.phase' $args}
+function kgp { k get pod -o 'custom-columns=NAME:.metadata.name,IMG:.spec.containers[*].image,STATUS:.status.phase' $args}
 function kl { k logs -f --all-containers $args}
+function issh { ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null" $args }
 
 
 function dp {
