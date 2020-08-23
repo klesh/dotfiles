@@ -46,6 +46,6 @@ end
 mp.add_key_binding("alt+d", "delete_file", delete_file)
 mp.add_key_binding("alt+a", "move_a", move_file('a'))
 mp.add_key_binding("alt+b", "move_b", move_file('b'))
-mp.add_key_binding("alt+w", "move_c", move_file('c'))
+mp.add_key_binding("alt+c", "move_c", move_file('c'))
 mp.add_key_binding("alt+s", "move_s", move_file('s'))
 mp.add_key_binding("alt+w", "move_w", move_file('w'))
