@@ -11,4 +11,7 @@ yarnpkg config set chromedriver_cdnurl https://npm.taobao.org/mirrors/chromedriv
 yarnpkg config set operadriver_cdnurl https://npm.taobao.org/mirrors/operadriver --global  && \
 yarnpkg config set phantomjs_cdnurl https://npm.taobao.org/mirrors/phantomjs --global  && \
 yarnpkg config set selenium_cdnurl https://npm.taobao.org/mirrors/selenium --global  && \
+yarnpkg config set sqlite3_binary_host_mirror "https://foxgis.oss-cn-shanghai.aliyuncs.com/" --global  && \
+yarnpkg config set profiler_binary_host_mirror "https://npm.taobao.org/mirrors/node-inspector/" --global  && \
+yarnpkg config set chromedriver_cdnurl "https://cdn.npm.taobao.org/dist/chromedriver" --global  && \
 yarnpkg config set node_inspector_cdnurl https://npm.taobao.org/mirrors/node-inspector --global
