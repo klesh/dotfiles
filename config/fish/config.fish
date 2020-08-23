@@ -115,6 +115,8 @@ alias kgd="k get deployment"
 alias ked="k edit deployment"
 alias kgp="k get pod -o 'custom-columns=NAME:.metadata.name,IMG:.spec.containers[*].image,STATUS:.status.phase'"
 alias kl="k logs -f --all-containers"
+alias issh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
+alias iscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
 
 
 source-file-if-exists ~/.profile.fish
