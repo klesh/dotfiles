@@ -20,6 +20,7 @@ function ked { k edit deployment $args}
 function kgp { k get pod -o 'custom-columns=NAME:.metadata.name,IMG:.spec.containers[*].image,STATUS:.status.phase' $args}
 function kl { k logs -f --all-containers $args}
 function issh { ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null" $args }
+function rf { ri -Recurse -Force $args }
 
 
 function dp {
