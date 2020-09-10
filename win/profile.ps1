@@ -4,6 +4,8 @@
 
 
 Set-PSReadLineOption -EditMode Emacs
+Set-PSReadLineOption -PredictionSource History
+
 $Env:Path += ";$PSScriptRoot\bin"
 $Env:KUBE_EDITOR = 'nvim'
 $Env:EDITOR = 'nvim'
