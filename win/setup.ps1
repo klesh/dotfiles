@@ -16,15 +16,16 @@ New-Item -ItemType Directory -Path $Env:APPDATA\pip
 New-Item -ItemType SymbolicLink -Target $dotfiles\pip\pip.conf -Path $Env:APPDATA\pip\pip.ini -Force
 
 # fix Shift key toggling Cn/En fro MS wubi
-if (-not (Get-ScheduledTask -TaskName "Wubi No Shift")) {
-  $wubiAction = New-ScheduledTaskAction -Execute 'Powershell.exe' `
-    -Argument "-NoProfile -WindowStyle Hidden -File $PSScriptRoot\wubi-no-shift.ps1"
-  $wubiTrigger = New-ScheduledTaskTrigger -AtLogOn
-  Register-ScheduledTask -Action $wubiAction -Trigger $wubiTrigger -TaskName "Wubi No Shift" -Description "Disable Shift key toggling CN/EN" -RunLevel Highest
-}
+#if (-not (Get-ScheduledTask -TaskName "Wubi No Shift")) {
+  #$wubiAction = New-ScheduledTaskAction -Execute 'Powershell.exe' `
+    #-Argument "-NoProfile -WindowStyle Hidden -File $PSScriptRoot\wubi-no-shift.ps1"
+  #$wubiTrigger = New-ScheduledTaskTrigger -AtLogOn
+  #Register-ScheduledTask -Action $wubiAction -Trigger $wubiTrigger -TaskName "Wubi No Shift" -Description "Disable Shift key toggling CN/EN" -RunLevel Highest
+#}
 
-Install-Module posh-git
-Install-Module oh-my-posh
+Install-Module -Name PowerShellGet -Force -AllowPrerelease
+Install-Module -Name posh-git
+Install-Module -Name oh-my-posh
 
 # replace notepad with nvim-qt
 reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /v "Debugger" /t REG_SZ /d "${dotfiles}\win\npd.vbs" /f
