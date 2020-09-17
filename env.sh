@@ -26,8 +26,8 @@ in-china () {
     return 0
 }
 
-ln-dir () {
-    [ "$#" -ne 2 ] && echo "ln-dir <dir> <symlink>"
+lnsf () {
+    [ "$#" -ne 2 ] && echo "lnsf <src> <symlink>"
     [ ! -L "$2" ] && rm -rf $2
     SYM_DIR=$(dirname $2)
     [ -n "$SYM_DIR" ] && mkdir -p $SYM_DIR

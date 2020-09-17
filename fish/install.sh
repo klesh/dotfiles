@@ -23,4 +23,4 @@ if [ "$DEFAULT_SHELL" != "$FISH_SHELL" ]; then
 fi
 
 # symlink config
-ln-dir $DIR/config ~/.config/fish
+lnsf $DIR/config ~/.config/fish
