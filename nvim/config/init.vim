@@ -89,11 +89,12 @@ call plug#begin()
 Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-surround'
 Plug 'jiangmiao/auto-pairs'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'neoclide/coc-json', {'do': 'yarnpkg install --frozen-lockfile'}
-Plug 'iamcco/coc-vimlsp', {'do': 'yarnpkg install --frozen-lockfile'}
-Plug 'neoclide/coc-python', {'do': 'yarnpkg install --frozen-lockfile'}
-Plug 'weirongxu/coc-explorer', {'do': 'yarnpkg install --frozen-lockfile'}
+Plug 'preservim/nerdtree'
+"Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"Plug 'neoclide/coc-json', {'do': 'yarnpkg install --frozen-lockfile'}
+"Plug 'iamcco/coc-vimlsp', {'do': 'yarnpkg install --frozen-lockfile'}
+"Plug 'neoclide/coc-python', {'do': 'yarnpkg install --frozen-lockfile'}
+"Plug 'weirongxu/coc-explorer', {'do': 'yarnpkg install --frozen-lockfile'}
 Plug 'liuchengxu/eleline.vim'
 Plug 'tpope/vim-fugitive'                                         " git 功能
 Plug 'scrooloose/nerdcommenter'
@@ -105,27 +106,34 @@ call plug#end()
 
 
 " ==== coc configuration ====
-let g:coc_disable_startup_warning = 1
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+"let g:coc_disable_startup_warning = 1
+"nmap <silent> gd <Plug>(coc-definition)
+"nmap <silent> gy <Plug>(coc-type-definition)
+"nmap <silent> gi <Plug>(coc-implementation)
+"nmap <silent> gr <Plug>(coc-references)
 
-xmap <silent> <leader>fs <Plug>(coc-format-selected)
-nmap <silent> <leader>fs <Plug>(coc-format-selected)
-nmap <silent> <leader>fb <Plug>(coc-format)
-nmap <silent> <leader>rn <Plug>(coc-rename)
-nmap <silent> <leader>ne <Plug>(coc-diagnostic-next-error)
-nmap <silent> <leader>pe <Plug>(coc-diagnostic-prev-error)
-nmap <silent> <leader>fe :CocCommand explorer --toggle<CR>
-nmap <silent> <leader>if :CocInfo<CR>
-nmap <silent> <leader>cl :CocList<CR>
-nmap <silent> <leader>sd :call CocAction('doHover')<CR>
-nmap <silent> <leader>ss :syntax sync fromstart<CR>
-nmap <silent> <leader>ol <Plug>(coc-openlink)
+"xmap <silent> <leader>fs <Plug>(coc-format-selected)
+"nmap <silent> <leader>fs <Plug>(coc-format-selected)
+"nmap <silent> <leader>fb <Plug>(coc-format)
+"nmap <silent> <leader>rn <Plug>(coc-rename)
+"nmap <silent> <leader>ne <Plug>(coc-diagnostic-next-error)
+"nmap <silent> <leader>pe <Plug>(coc-diagnostic-prev-error)
+"nmap <silent> <leader>fe :CocCommand explorer --toggle<CR>
+"nmap <silent> <leader>if :CocInfo<CR>
+"nmap <silent> <leader>cl :CocList<CR>
+"nmap <silent> <leader>sd :call CocAction('doHover')<CR>
+"nmap <silent> <leader>ss :syntax sync fromstart<CR>
+"nmap <silent> <leader>ol <Plug>(coc-openlink)
+
+
+" ==== grepper configuration ====
 nmap <silent> <leader>ap :call AutoPairsToggle()<CR>
 nnoremap <leader>sg :Grepper -tool git<CR>
 nnoremap <leader>sc :Grepper -tool grep<CR>
+
+
+" ==== NERDTree configuration ====
+nnoremap <leader>fe :NERDTreeToggle<CR>
 
 
 " ==== fugitive configuration ====

@@ -1,37 +1,52 @@
 #!/bin/bash
 
-set -e
+DIR=$(readlink -f $(dirname $0))
+. $DIR/../env.sh
+
+$ROOT/fonts/install.sh
 
 # install dependencies
-sudo apt install \
-    build-essential \
-    xorg \
-    libx11-dev \
-    libxft-dev \
-    libxinerama-dev \
-    libxrandr-dev \
-    arandr \
-    autorandr \
-    libxrandr-dev \
-    ibus ibus-table ibus-table-wubi \
-    gnome-keyring \
-    trayer
+case "$PM" in
+    apt)
+        sudo apt install \
+            build-essential \
+            unzip \
+            xorg \
+            libx11-dev \
+            libxft-dev \
+            libxinerama-dev \
+            libxrandr-dev \
+            arandr \
+            autorandr \
+            libxrandr-dev \
+            ibus ibus-table ibus-table-wubi \
+            gnome-keyring \
+            trayer
+        sudo apt remove gdm3
+        ;;
+    pacman)
+        echo TO DO
+        exit -1
+        ;;
+esac
+
+
 
 
 # clone / compile utilities and dwm itself
 
 mkdir -p ~/Projects/suckless
 
-git clone https://gitee.com/klesh/st.git ~/Projects/suckless/st
+[! -d ~/Projects/suckless/st] && git clone https://gitee.com/klesh/st.git ~/Projects/suckless/st
 cd ~/Projects/suckless/st && sudo rm -f config.h && sudo make clean install
 
-git clone https://gitee.com/klesh/dmenu.git ~/Projects/suckless/dmenu
+[! -d ~/Projects/suckless/dmenu] &&git clone https://gitee.com/klesh/dmenu.git ~/Projects/suckless/dmenu
 cd ~/Projects/suckless/dmenu && sudo rm -f config.h && sudo make clean install
 
-git clone https://gitee.com/klesh/slock.git ~/Projects/suckless/slock
+[! -d ~/Projects/suckless/slock] &&git clone https://gitee.com/klesh/slock.git ~/Projects/suckless/slock
 cd ~/Projects/suckless/slock && sudo rm -f config.h && sudo make clean install
 
-git clone https://gitee.com/klesh/dwm.git ~/Projects/suckless/dwm
+[! -d ~/Projects/suckless/dwm] &&git clone https://gitee.com/klesh/dwm.git ~/Projects/suckless/dwm
 cd ~/Projects/suckless/dwm && sudo rm -f config.h && sudo make clean install
 
 # config xinit to start for dwm
