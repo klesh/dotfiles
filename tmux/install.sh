@@ -8,7 +8,7 @@ TMUX_VER=3.1b
 # install ranger
 case "$PM" in
     apt)
-        sudo apt install libevent-dev libncurses5-dev bison autoconf -y
+        sudo apt install libevent-dev libncurses5-dev bison autoconf bc -y
         TMUX_SRC_URL=https://github.com/tmux/tmux/releases/download/$TMUX_VER/tmux-$TMUX_VER.tar.gz
         if in-china; then
             TMUX_SRC_URL=https://gitee.com/klesh/tmux/repository/archive/$TMUX_VER?format=tar.gz
@@ -25,7 +25,7 @@ case "$PM" in
         rm -rf /tmp/tmux*
         ;;
     pacman)
-        sudo pacman -S tmux
+        sudo pacman -S tmux bc
         ;;
 esac
 

@@ -3,6 +3,8 @@
 set -e
 ROOT=$(readlink -f $(dirname "${BASH_SOURCE[0]}"))
 PM=n/a
+DEFAULT_SHELL=$(getent passwd $USER | cut -d: -f7)
+FISH=$(which fish)
 
 if which pacman > /dev/null; then
     PM=pacman
@@ -33,3 +35,34 @@ lnsf () {
     [ -n "$SYM_DIR" ] && mkdir -p $SYM_DIR
     ln -sf $1 $2
 }
+
+fish-is-default-shell () {
+    [ "$DEFAULT_SHELL" = "$FISH" ]
+}
+
+has-bluetooth () {
+    dmesg | grep -i blue
+}
+
+
+# install basic common utilities
+case "$PM" in
+    apt)
+        sudo apt install \
+            build-essential \
+            unzip p7zip \
+            openssh-server openssh-client \
+            exfat-utils \
+            axel \
+            man sudo
+        ;;
+    pacman)
+        sudo pacman -S \
+            base-devel \
+            unzip p7zip \
+            openssh \
+            exfat-utils \
+            axel \
+            man sudo
+        ;;
+esac

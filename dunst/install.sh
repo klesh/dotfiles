@@ -9,15 +9,12 @@ DIR=$(readlink -f $(dirname $0))
 # install nvim
 case "$PM" in
     apt)
-        sudo add-apt-repository ppa:neovim-ppa/stable -y
-        sudo apt update
-        sudo apt install -y neovim
+        sudo apt install -y dunst
         ;;
     pacman)
-        sudo pacman -S neovim
+        sudo pacman -S dunst
         ;;
 esac
 
 # symlink configuration
-lnsf $DIR/config ~/.config/nvim
-lnsf $DIR/config/init.vim ~/.vimrc
+lnsf $DIR/config ~/.config/dunst

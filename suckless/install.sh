@@ -3,38 +3,38 @@
 DIR=$(readlink -f $(dirname $0))
 . $DIR/../env.sh
 
-$ROOT/fonts/install.sh
+$ROOT/fish/install.sh
+$ROOT/gui/install.sh
+$ROOT/picom/install.sh
+$ROOT/dunst/install.sh
 
 # install dependencies
 case "$PM" in
     apt)
         sudo apt install \
-            build-essential \
-            unzip \
-            xorg \
-            libx11-dev \
-            libxft-dev \
-            libxinerama-dev \
-            libxrandr-dev \
-            arandr \
-            autorandr \
-            libxrandr-dev \
+            xorg libx11-dev libxft-dev libxinerama-dev \
+            libxrandr-dev arandr autorandr \
             ibus ibus-table ibus-table-wubi \
             gnome-keyring \
+            xss-lock \
+            nitrogen \
             trayer
         sudo apt remove gdm3
         ;;
     pacman)
-        echo TO DO
-        exit -1
+        sudo pacman -S \
+            xorg-server xorg-xinit xorg-xrandr xorg-xev xorg-xprop \
+            alsa-firmware alsa-utils alsa-plugins pulseaudio-alsa pulseaudio pavucontrol  \
+            arandr autorandr \
+            ibus ibus-table ibus-table-chinese \
+            gnome-keyring \
+            xss-lock \
+            nitrogen \
+            trayer
         ;;
 esac
 
-
-
-
 # clone / compile utilities and dwm itself
-
 mkdir -p ~/Projects/suckless
 
 [! -d ~/Projects/suckless/st] && git clone https://gitee.com/klesh/st.git ~/Projects/suckless/st
@@ -50,7 +50,6 @@ cd ~/Projects/suckless/slock && sudo rm -f config.h && sudo make clean install
 cd ~/Projects/suckless/dwm && sudo rm -f config.h && sudo make clean install
 
 # config xinit to start for dwm
-
 cat <<EOT > ~/.xinitrc
 export QT_QPA_PLATFORMTHEME="qt5ct"
 export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
@@ -81,3 +80,7 @@ while :; do
 	ssh-agent dwm 2>/tmp/dwm.log || break
 done
 EOT
+
+
+# config dwm
+lnsf $DIR/config ~/.config/dwm

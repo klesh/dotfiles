@@ -7,10 +7,10 @@ DIR=$(readlink -f $(dirname $0))
 case "$PM" in
     apt)
         ! which pip3 && $ROOT/python/install.sh
-        sudo pip3 install ranger-fm
+        sudo pip3 install ranger-fm ueberzug
         ;;
     pacman)
-        sudo pacman -S ranger
+        sudo pacman -S ranger ueberzug
         ;;
 esac
 

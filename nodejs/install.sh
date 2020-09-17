@@ -14,6 +14,13 @@ case "$PM" in
         ;;
 esac
 
+# install nvm
+if fish-is-default-shell; then
+    fish -c "fisher add jorgebucaran/nvm.fish"
+else
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+fi
+
 
 # config mirrors for CHINA
 if in-china; then
