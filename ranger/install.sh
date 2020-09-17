@@ -13,3 +13,5 @@ case "$PM" in
         sudo pacman -S ranger
         ;;
 esac
+
+lnsf $DIR/config ~/.config/ranger
