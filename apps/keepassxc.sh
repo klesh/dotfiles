@@ -12,7 +12,7 @@ case "$PM" in
         sudo apt install -y keepassxc
         ;;
     pacman)
-        sudo pacman -S keepassxc
+        sudo pacman -S --needed keepassxc
         ;;
 esac
 

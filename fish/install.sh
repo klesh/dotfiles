@@ -14,7 +14,7 @@ case "$PM" in
         ;;
     pacman)
         ! which pip && $ROOT/python/install.sh
-        sudo pacman -S fish xdotool
+        sudo pacman -S --needed --needed fish xdotool
         ;;
 esac
 
@@ -29,3 +29,6 @@ fi
 lnsf $DIR/config/config.fish ~/.config/fish/config.fish
 lnsf $DIR/config/functions/fish_prompt.fish ~/.config/fish/functions/fish_prompt.fish
 lnsf $DIR/config/functions/fish_right_prompt.fish ~/.config/fish/functions/fish_right_prompt.fish
+lnsf $DIR/config/functions/fisher.fish ~/.config/fish/functions/fisher.fish
+
+source ~/.config/fish/config.fish

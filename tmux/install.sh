@@ -25,7 +25,7 @@ case "$PM" in
         rm -rf /tmp/tmux*
         ;;
     pacman)
-        sudo pacman -S tmux bc
+        sudo pacman -S --needed tmux bc
         ;;
 esac
 

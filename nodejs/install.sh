@@ -10,7 +10,7 @@ case "$PM" in
         sudo apt install -y nodejs yarnpkg
         ;;
     pacman)
-        sudo pacman -S nodejs yarn
+        sudo pacman -S --needed nodejs yarn
         ;;
 esac
 

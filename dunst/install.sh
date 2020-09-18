@@ -9,7 +9,7 @@ case "$PM" in
         sudo apt install -y dunst
         ;;
     pacman)
-        sudo pacman -S dunst
+        sudo pacman -S --needed dunst
         ;;
 esac
 

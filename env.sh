@@ -32,7 +32,10 @@ lnsf () {
     [ "$#" -ne 2 ] && echo "lnsf <src> <symlink>"
     [ ! -L "$2" ] && rm -rf $2
     SYM_DIR=$(dirname $2)
-    [ -n "$SYM_DIR" ] && mkdir -p $SYM_DIR
+    if [ -n "$SYM_DIR" ]; then
+        [ ! -d "$SYM_DIR" ] && rm -rf "$SYM_DIR"
+        mkdir -p "$SYM_DIR"
+    fi
     ln -sf $1 $2
 }
 
@@ -57,7 +60,7 @@ case "$PM" in
             man sudo
         ;;
     pacman)
-        sudo pacman -S \
+        sudo pacman -S --needed --needed \
             base-devel \
             unzip p7zip \
             openssh \
