@@ -41,7 +41,7 @@ fish-is-default-shell () {
 }
 
 has-bluetooth () {
-    dmesg | grep -i blue
+    dmesg | grep -i bluetooth
 }
 
 

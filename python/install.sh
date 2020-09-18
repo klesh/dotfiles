@@ -3,6 +3,15 @@
 DIR=$(readlink -f $(dirname $0))
 . $DIR/../env.sh
 
+# config pip mirror for CHINA
+if in-china; then
+    lnsf $DIR/pip.conf ~/.pip/pip.conf
+    if sudo [ ! -f /root/.pip/pip.conf ]; then
+        sudo mkdir -p /root/.pip
+        sudo cp $DIR/pip.conf /root/.pip/pip.conf
+    fi
+fi
+
 # install python3
 case "$PM" in
     apt)
@@ -16,11 +25,6 @@ case "$PM" in
 esac
 
 # enable auto_activation plugin for virtualfish
-fish-is-default-shell && fish -c "vf addplugins auto_activation"
+fish-is-default-shell && fish -c "yes | vf install && vf addplugins auto_activation"
 
 
-# config pip mirror for CHINA
-if in-china; then
-    mkdir -p ~/.pip
-    ln -sf $DIR/pip.conf ~/.pip/pip.conf
-fi

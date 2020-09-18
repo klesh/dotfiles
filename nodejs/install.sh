@@ -7,7 +7,7 @@ DIR=$(readlink -f $(dirname $0))
 # install nodejs and yarn
 case "$PM" in
     apt)
-        sudo apt install nodejs yarnpkg
+        sudo apt install -y nodejs yarnpkg
         ;;
     pacman)
         sudo pacman -S nodejs yarn

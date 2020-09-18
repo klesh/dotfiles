@@ -3,9 +3,6 @@
 DIR=$(readlink -f $(dirname $0))
 . $DIR/../env.sh
 
-# check dependencies
-! which yarnpkg && $ROOT/nodejs/install.sh
-
 # install nvim
 case "$PM" in
     apt)

@@ -3,7 +3,7 @@
 DIR=$(readlink -f $(dirname $0))
 . $DIR/../env.sh
 
-read -l -P 'Please enter autologin username (empty to skip): ' username
+read -p 'Please enter autologin username (empty to skip): ' username
 if [  -z "$username" ]; then
     echo skip autologin setup
 else

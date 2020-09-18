@@ -3,7 +3,7 @@
 DIR=$(readlink -f $(dirname $0))
 . $DIR/../env.sh
 
-$PICOM_VER=v8.1
+PICOM_VER=v8.1
 
 
 # install ranger
@@ -11,9 +11,9 @@ case "$PM" in
     apt)
         # install build tools
         ! which pip3 && $ROOT/python/install.sh
-        sudo pip install ninja-build meson
+        sudo pip3 install meson
         # install dependencies
-        sudo apt install libxext-dev libxcb1-dev libxcb-damage0-dev libxcb-xfixes0-dev libxcb-shape0-dev libxcb-render-util0-dev libxcb-render0-dev libxcb-randr0-dev libxcb-composite0-dev libxcb-image0-dev libxcb-present-dev libxcb-xinerama0-dev libxcb-glx0-dev libpixman-1-dev libdbus-1-dev libconfig-dev libgl1-mesa-dev  libpcre2-dev  libevdev-dev uthash-dev libev-dev libx11-xcb-dev
+        sudo apt install -y ninja-build libxext-dev libxcb1-dev libxcb-damage0-dev libxcb-xfixes0-dev libxcb-shape0-dev libxcb-render-util0-dev libxcb-render0-dev libxcb-randr0-dev libxcb-composite0-dev libxcb-image0-dev libxcb-present-dev libxcb-xinerama0-dev libxcb-glx0-dev libpixman-1-dev libdbus-1-dev libconfig-dev libgl1-mesa-dev  libpcre3-dev  libevdev-dev uthash-dev libev-dev libx11-xcb-dev
         # download picom source
         [ ! -f /tmp/picom.tar.gz ] && \
             curl -L https://github.com/yshui/picom/archive/v8.1.tar.gz --output /tmp/picom.tar.gz
@@ -21,9 +21,10 @@ case "$PM" in
         mkdir -p /tmp/picom
         tar zxvf /tmp/picom.tar.gz --strip 1 -C /tmp/picom
         pushd /tmp/picom
-        git submodule update --init --recursive
+        #git submodule update --init --recursive
         meson --buildtype=release . build
-        ninja -C build install
+        sudo ninja -C build install
+        popd
         ;;
     pacman)
         sudo pacman -S picom

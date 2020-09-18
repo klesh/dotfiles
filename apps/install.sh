@@ -11,7 +11,6 @@ case "$PM" in
             chromium-browser \
             zathura zathura-pdf-poppler sxiv \
             flameshot \
-            keepassxc \
             libreoffice \
             gimp
         ;;
@@ -20,7 +19,6 @@ case "$PM" in
             chromium \
             zathura zathura-pdf-mupdf sxiv\
             flameshot \
-            keepassxc \
             libreoffice-fresh \
             gimp
         ;;

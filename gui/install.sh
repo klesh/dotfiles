@@ -12,6 +12,7 @@ case "$PM" in
             fonts-droid-fallback \
             fonts-cascadia-code \
             ttf-dejavu \
+            fonts-urw-base35 \
             gucharmap
         # network manager
         sudo apt install \
@@ -20,8 +21,8 @@ case "$PM" in
         if has-bluetooth; then
             sudo apt install \
                 bluez bluez-tools blueman pulseaudio-module-bluetooth
-            systemctl enable bluetooth
-            systemctl start bluetooth
+            sudo systemctl enable bluetooth
+            sudo systemctl start bluetooth
         fi
         ;;
     pacman)
@@ -47,8 +48,8 @@ case "$PM" in
         if has-bluetooth; then
             sudo pacman -S \
                 bluez bluez-utils blueman pulseaudio-bluetooth xorg-xbacklight
-            systemctl enable bluetooth
-            systemctl start bluetooth
+            sudo systemctl enable bluetooth
+            sudo systemctl start bluetooth
         fi
         ;;
 esac

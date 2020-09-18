@@ -14,3 +14,7 @@ case "$PM" in
             lxappearance arc-gtk-theme arc-icon-theme qt5ct qt5-styleplugins
         ;;
 esac
+
+# configuration
+lnsf $DIR/config/gtk-3.0/settings.ini ~/.config/gtk-3.0/settings.ini
+lnsf $DIR/config/qt5ct/qt5ct.conf ~/.config/qt5ct/qt5ct.conf
