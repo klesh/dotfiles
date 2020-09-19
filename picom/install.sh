@@ -21,13 +21,13 @@ case "$PM" in
 esac
 
 # build and install picom-next
-curl -sLo https://github.com/yshui/picom/archive/next.zip /tmp/picom-next.zip
+curl 'https://github.com/yshui/picom/archive/next.zip' -sLo /tmp/picom-next.zip
 unzip /tmp/picom-next.zip -d /tmp
 pushd /tmp/picom-next
 meson --buildtype=release . build
 sudo ninja -C build install
 popd
-rm -rf /tmp/picom*
+sudo rm -rf /tmp/picom*
 
 # configuration
 lnsf $DIR/config ~/.config/picom

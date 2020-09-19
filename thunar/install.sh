@@ -6,7 +6,7 @@ DIR=$(readlink -f $(dirname $0))
 # install ranger
 case "$PM" in
     apt)
-        sudo apt install \
+        sudo apt install -y \
             thunar gvfs-bin gvfs-backends thunar-archive-plugin file-roller tumbler
         ;;
     pacman)
