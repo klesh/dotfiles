@@ -103,6 +103,7 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 Plug 'morhetz/gruvbox'
 Plug 'dag/vim-fish'
+Plug 'Vimjas/vim-python-pep8-indent'
 call plug#end()
 
 
@@ -126,9 +127,12 @@ call plug#end()
 "nmap <silent> <leader>ss :syntax sync fromstart<CR>
 "nmap <silent> <leader>ol <Plug>(coc-openlink)
 
+" ==== auto-pairs configuration ====
+nmap <silent> <leader>ap :call AutoPairsToggle()<CR>
+let g:AutoPairsShortcutToggle = ''
+
 
 " ==== grepper configuration ====
-nmap <silent> <leader>ap :call AutoPairsToggle()<CR>
 nnoremap <leader>sg :Grepper -tool git<CR>
 nnoremap <leader>sc :Grepper -tool grep<CR>
 

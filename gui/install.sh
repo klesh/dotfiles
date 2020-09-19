@@ -8,11 +8,10 @@ case "$PM" in
     apt)
         # fonts
         sudo apt install \
-            fonts-wqy-microhei \
-            fonts-droid-fallback \
             fonts-cascadia-code \
             ttf-dejavu \
             fonts-urw-base35 \
+            fonts-noto-cjk \
             gucharmap
         # network manager
         sudo apt install \
@@ -29,11 +28,10 @@ case "$PM" in
         # fonts
         sudo pacman -S --needed \
             terminus-font \
-            ttf-droid \
             freetype2 \
             ttf-cascadia-code \
             ttf-dejavu \
-            wqy-microhei-lite \
+            noto-fonts-cjk \
             gucharmap
         # clipboard
         sudo pacman -S --needed \
