@@ -20,14 +20,23 @@ case "$PM" in
         ;;
 esac
 
-# build and install picom-next
-curl 'https://github.com/yshui/picom/archive/next.zip' -sLo /tmp/picom-next.zip
-unzip /tmp/picom-next.zip -d /tmp
-pushd /tmp/picom-next
-meson --buildtype=release . build
-sudo ninja -C build install
-popd
-sudo rm -rf /tmp/picom*
+# build and install picom
+VERSION=next
+VERSION_PATH=$XDG_CONFIG_HOME/picom/version
+if [ "$VERSION" = "next" ] || ! eqv "$VERSION_PATH" "$VERSION"; then
+    echo Downloading picom $VERSION
+    rm -rf /tmp/picom.zip
+    curl "https://github.com/yshui/picom/archive/$VERSION.zip" -Lo /tmp/picom-$VERSION.zip
+    unzip /tmp/picom-$VERSION.zip -d /tmp
+    pushd /tmp/picom-$VERSION
+    meson --buildtype=release . build
+    sudo ninja -C build install
+    popd
+    echo "$VERSION" > "$VERSION_PATH"
+    sudo rm -rf /tmp/picom-$VERSION*
+fi
 
 # configuration
-lnsf $DIR/config ~/.config/picom
+lnsf $DIR/config/launch.sh $XDG_CONFIG_HOME/picom/launch.sh
+lnsf $DIR/config/toggle.sh $XDG_CONFIG_HOME/picom/toggle.sh
+lnsf $DIR/config/picom.conf $XDG_CONFIG_HOME/picom/picom.conf

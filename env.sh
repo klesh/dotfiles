@@ -5,6 +5,7 @@ ROOT=$(readlink -f $(dirname "${BASH_SOURCE[0]}"))
 PM=n/a
 DEFAULT_SHELL=$(getent passwd $USER | cut -d: -f7)
 FISH=$(which fish)
+XDG_CONFIG_HOME=${XDG_CONFIG_HOME-"$HOME/.config"}
 
 if which pacman > /dev/null; then
     PM=pacman
@@ -29,14 +30,17 @@ in-china () {
 }
 
 lnsf () {
-    [ "$#" -ne 2 ] && echo "lnsf <src> <symlink>"
-    [ ! -L "$2" ] && rm -rf $2
-    SYM_DIR=$(dirname $2)
-    if [ -n "$SYM_DIR" ]; then
-        [ ! -d "$SYM_DIR" ] && rm -rf "$SYM_DIR"
-        mkdir -p "$SYM_DIR"
+    [ "$#" -ne 2 ] && echo "lnsf <target> <symlink>" && return -1
+    local TARGET=$(readlink -f $1)
+    local SYMLNK=$2
+    [ -z "$TARGET" ] && echo "$1 not exists" && return -1
+    local SYMDIR=$(dirname $SYMLNK)
+    if [ -n "$SYMDIR" ] && [ -L $SYMDIR ]; then
+        rm -rf $SYMDIR
+        mkdir -p $SYMDIR
     fi
-    ln -sf $1 $2
+    [ ! -L $SYMLNK ] && rm -rf $SYMLNK
+    ln -sf $TARGET $SYMLNK
 }
 
 fish-is-default-shell () {
@@ -45,6 +49,14 @@ fish-is-default-shell () {
 
 has-bluetooth () {
     dmesg | grep -i bluetooth
+}
+
+eqv () {
+    local VERSION_PATH=$1
+    local VERSION=$2
+    [ ! -f $VERSION_PATH ] && return -1
+    local VERSION2=$(cat "$VERSION_PATH")
+    [ "$VERSION" = "$VERSION2" ]
 }
 
 
@@ -69,3 +81,4 @@ case "$PM" in
             man sudo
         ;;
 esac
+

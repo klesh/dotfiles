@@ -32,7 +32,7 @@ case "$PM" in
             gnome-keyring \
             xss-lock \
             nitrogen \
-            lm-sensors \
+            i2c-tools \
             trayer
         ;;
 esac
@@ -80,10 +80,12 @@ export SSH_AUTH_SOCK
 
 autorandr --change --force
 while :; do
-	ssh-agent dwm 2>/tmp/dwm.log || break
+    ssh-agent dwm 2>/tmp/dwm.log || break
 done
 EOT
 
 
 # config dwm
-lnsf $DIR/config ~/.config/dwm
+lnsf $DIR/config/dwm/autostart $XDG_CONFIG_HOME/dwm/autostart
+lnsf $DIR/config/dwm/dwmbar $XDG_CONFIG_HOME/dwm/dwmbar
+lnsf $DIR/config/autorandr/postswitch $XDG_CONFIG_HOME/autorandr/postswitch

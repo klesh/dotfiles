@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# set system dpi to the minimal dpi among all connected monitors
+
+MIN_DPI=99999999
+
+# loop through all connected monitors line by line
+while IFS= read -r LINE; do
+    WIDTH_PX=$(echo $LINE | grep -oP '\d+(?=x\d+)')
+    [ -z "$WIDTH_PX" ] && continue
+    WIDTH_MM=$(echo $LINE | grep -oP '\d+(?=mm x)')
+    # calculate dpi of the monitor
+    DPI=$(bc <<< "$WIDTH_PX*25.4/$WIDTH_MM")
+    # update min dpi
+    if [ "$DPI" -lt "$MIN_DPI" ]; then
+        MIN_DPI=$DPI
+    fi
+done <<< "$(xrandr | grep ' connected')"
+
+# update dpi
+echo setting dpi to $MIN_DPI
+echo Xft.dpi: $MIN_DPI | xrdb -merge
+
+nitrogen --restore

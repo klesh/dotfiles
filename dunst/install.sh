@@ -14,4 +14,5 @@ case "$PM" in
 esac
 
 # symlink configuration
-lnsf $DIR/config ~/.config/dunst
+lnsf $DIR/config/dunstrc $XDG_CONFIG_HOME/dunst/dunstrc
+lnsf $DIR/config/launch.sh $XDG_CONFIG_HOME/dunst/launch.sh

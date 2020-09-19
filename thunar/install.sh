@@ -16,4 +16,4 @@ case "$PM" in
 esac
 
 # symlink configuration
-lnsf $DIR/Thunar/uca.xml ~/.config/Thunar/uca.xml
+lnsf $DIR/Thunar/uca.xml $XDG_CONFIG_HOME/Thunar/uca.xml

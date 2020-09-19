@@ -10,8 +10,8 @@ case "$PM" in
         sudo pip3 install ranger-fm ueberzug
         ;;
     pacman)
-        sudo pacman -S --needed ranger ueberzug
+        sudo pip install ranger-fm ueberzug
         ;;
 esac
 
-lnsf $DIR/config ~/.config/ranger
+lnsf $DIR/config $XDG_CONFIG_HOME/ranger

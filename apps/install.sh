@@ -25,4 +25,4 @@ case "$PM" in
 esac
 
 # symlink configuration
-lnsf $DIR/config/zathura ~/.config/zathura
+lnsf $DIR/config/zathura $XDG_CONFIG_HOME/zathura

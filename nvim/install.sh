@@ -19,5 +19,5 @@ case "$PM" in
 esac
 
 # symlink configuration
-lnsf $DIR/config/init.vim ~/.config/nvim/init.vim
+lnsf $DIR/config/init.vim $XDG_CONFIG_HOME/nvim/init.vim
 lnsf $DIR/config/init.vim ~/.vimrc

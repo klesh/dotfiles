@@ -24,11 +24,10 @@ if ! fish-is-default-shell; then
 fi
 
 # symlink config
-[ -L ~/.config/fish ] && rm -rf ~/.config/fish
+[ -L $XDG_CONFIG_HOME/fish ] && rm -rf $XDG_CONFIG_HOME/fish
 
-lnsf $DIR/config/config.fish ~/.config/fish/config.fish
-lnsf $DIR/config/functions/fish_prompt.fish ~/.config/fish/functions/fish_prompt.fish
-lnsf $DIR/config/functions/fish_right_prompt.fish ~/.config/fish/functions/fish_right_prompt.fish
-lnsf $DIR/config/functions/fisher.fish ~/.config/fish/functions/fisher.fish
+lnsf $DIR/config/config.fish $XDG_CONFIG_HOME/fish/config.fish
+lnsf $DIR/config/functions/fish_prompt.fish $XDG_CONFIG_HOME/fish/functions/fish_prompt.fish
+lnsf $DIR/config/functions/fish_right_prompt.fish $XDG_CONFIG_HOME/fish/functions/fish_right_prompt.fish
+lnsf $DIR/config/functions/fisher.fish $XDG_CONFIG_HOME/fish/functions/fisher.fish
 
-source ~/.config/fish/config.fish

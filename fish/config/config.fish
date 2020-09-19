@@ -1,4 +1,6 @@
-set -gx EDITOR vim
+#!/usr/bin/env fish
+
+set -gx EDITOR nvim
 set -gx PGDATA /usr/local/var/postgres
 set -gx LESS "-SRXF"
 set -gx LS_COLORS 'ow=34;42;40'

@@ -11,7 +11,7 @@ case "$PM" in
             fonts-cascadia-code \
             ttf-dejavu \
             fonts-urw-base35 \
-            fonts-noto-cjk \
+            fonts-wqy-microhei \
             gucharmap
         # network manager
         sudo apt install \
@@ -31,7 +31,7 @@ case "$PM" in
             freetype2 \
             ttf-cascadia-code \
             ttf-dejavu \
-            noto-fonts-cjk \
+            wqy-microhei \
             gucharmap
         # clipboard
         sudo pacman -S --needed \

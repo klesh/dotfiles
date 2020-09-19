@@ -31,4 +31,4 @@ esac
 
 # symlink configuration
 lnsf $DIR/tmux.conf ~/.tmux.conf
-lnsf $DIR/config ~/.config/tmux
+lnsf $DIR/config $XDG_CONFIG_HOME/tmux

@@ -16,5 +16,5 @@ case "$PM" in
 esac
 
 # configuration
-lnsf $DIR/config/gtk-3.0/settings.ini ~/.config/gtk-3.0/settings.ini
-lnsf $DIR/config/qt5ct/qt5ct.conf ~/.config/qt5ct/qt5ct.conf
+lnsf $DIR/config/gtk-3.0/settings.ini $XDG_CONFIG_HOME/gtk-3.0/settings.ini
+lnsf $DIR/config/qt5ct/qt5ct.conf $XDG_CONFIG_HOME/qt5ct/qt5ct.conf

@@ -14,11 +14,11 @@ case "$PM" in
         ;;
 esac
 
+# symlink configuration
+lnsf $DIR/config/mpd $XDG_CONFIG_HOME/mpd
+lnsf $DIR/config/ncmpcpp $XDG_CONFIG_HOME/ncmpcpp
+lnsf $DIR/config/mpv $XDG_CONFIG_HOME/mpv
+
 # enable for current user
 systemctl --user enable mpd
 systemctl --user start mpd
-
-# symlink configuration
-lnsf $DIR/config/mpd ~/.config/mpd
-lnsf $DIR/config/ncmpcpp ~/.config/ncmpcpp
-lnsf $DIR/config/mpv ~/.config/mpv
