@@ -16,12 +16,6 @@ function source-file-if-exists
   end
 end
 
-if not functions -q fisher
-    set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
-    curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
-    fish -c fisher
-end
-
 source-file-if-exists /usr/share/autojump/autojump.fish
 source-file-if-exists /usr/local/share/autojump/autojump.fish
 append-path-if-exists ~/.local/bin

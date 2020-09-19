@@ -12,7 +12,7 @@ case "$PM" in
         sudo pip3 install docker-compose
         ;;
     pacman)
-        sudo pacman -S docker docker-compose
+        sudo pacman -S --needed docker docker-compose
         ;;
 esac
 

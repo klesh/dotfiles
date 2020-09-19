@@ -14,7 +14,7 @@ case "$PM" in
         sudo apt install -y neovim
         ;;
     pacman)
-        sudo pacman -S neovim
+        sudo pacman -S --needed neovim
         ;;
 esac
 

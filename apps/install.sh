@@ -15,7 +15,7 @@ case "$PM" in
             gimp
         ;;
     pacman)
-        sudo pacman -S \
+        sudo pacman -S --needed \
             chromium \
             zathura zathura-pdf-mupdf sxiv\
             flameshot \

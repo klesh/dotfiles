@@ -10,7 +10,7 @@ case "$PM" in
         sudo apt install -y mpd mpc ncmpcpp mpv
         ;;
     pacman)
-        sudo pacman -S mpd mpc ncmpcpp mpv
+        sudo pacman -S --needed mpd mpc ncmpcpp mpv
         ;;
 esac
 

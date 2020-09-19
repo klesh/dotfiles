@@ -24,7 +24,7 @@ case "$PM" in
         sudo apt remove gdm3
         ;;
     pacman)
-        sudo pacman -S \
+        sudo pacman -S --needed \
             xorg-server xorg-xinit xorg-xrandr xorg-xev xorg-xprop \
             alsa-firmware alsa-utils alsa-plugins pulseaudio-alsa pulseaudio pavucontrol  \
             arandr autorandr \

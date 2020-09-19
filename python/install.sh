@@ -19,7 +19,7 @@ case "$PM" in
         fish-is-default-shell && sudo pip3 install virtualfish
         ;;
     pacman)
-        sudo pacman -S python python-pip
+        sudo pacman -S --needed python python-pip
         fish-is-default-shell && sudo pip install virtualfish
         ;;
 esac

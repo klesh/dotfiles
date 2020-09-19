@@ -27,7 +27,7 @@ case "$PM" in
         ;;
     pacman)
         # fonts
-        sudo pacman -S \
+        sudo pacman -S --needed \
             terminus-font \
             ttf-droid \
             freetype2 \
@@ -36,17 +36,17 @@ case "$PM" in
             wqy-microhei-lite \
             gucharmap
         # clipboard
-        sudo pacman -S \
+        sudo pacman -S --needed \
             xclip xsel
         # keyring
-        sudo pacman -S \
+        sudo pacman -S --needed \
             gnome-keyring libsecret
         # network manager
-        sudo pacman -S \
+        sudo pacman -S --needed \
             networkmanager network-manager-applet
         # bluetooth
         if has-bluetooth; then
-            sudo pacman -S \
+            sudo pacman -S --needed \
                 bluez bluez-utils blueman pulseaudio-bluetooth xorg-xbacklight
             sudo systemctl enable bluetooth
             sudo systemctl start bluetooth

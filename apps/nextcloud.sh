@@ -12,6 +12,6 @@ case "$PM" in
         sudo apt install -y nextcloud-client
         ;;
     pacman)
-        sudo pacman -S nextcloud-client
+        sudo pacman -S --needed nextcloud-client
         ;;
 esac

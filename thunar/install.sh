@@ -10,7 +10,7 @@ case "$PM" in
             thunar gvfs-bin gvfs-backends thunar-archive-plugin file-roller tumbler
         ;;
     pacman)
-        sudo pacman -S \
+        sudo pacman -S --needed \
             thunar gvfs-smb gvfs-mtp thunar-archive-plugin file-roller tumbler
         ;;
 esac

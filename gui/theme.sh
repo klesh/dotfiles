@@ -10,7 +10,7 @@ case "$PM" in
             lxappearance arc-theme qt5ct qt5-style-plugins
         ;;
     pacman)
-        sudo pacman -S \
+        sudo pacman -S --needed \
             lxappearance arc-gtk-theme arc-icon-theme qt5ct qt5-styleplugins
         ;;
 esac
