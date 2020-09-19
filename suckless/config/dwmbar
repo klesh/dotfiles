@@ -4,9 +4,11 @@
 function update
   set -x text
   # mpd
-  set music (mpc)
-  if string match -r playing "$music[2]"
-    set text $text "喇 $music[1]"
+  if which mpc
+      set music (mpc)
+      if string match -r playing "$music[2]"
+        set text $text "喇 $music[1]"
+      end
   end
   # volume
   set vol (amixer get Master)
@@ -36,7 +38,7 @@ function update
     set text $text " $cpu"
   end
   # battery
-  set battery (cat /sys/class/power_supply/BAT0/capacity 2>/dev/null || -1)
+  set battery (cat /sys/class/power_supply/BAT0/capacity 2>/dev/null || echo "-1")
   if test "$battery" -gt -1
     set plugged (cat /sys/class/power_supply/AC/online)
     if test "$plugged" -eq 1

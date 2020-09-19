@@ -15,9 +15,11 @@ case "$PM" in
             xorg libx11-dev libxft-dev libxinerama-dev \
             libxrandr-dev arandr autorandr \
             ibus ibus-table ibus-table-wubi \
+            pavucontrol \
             gnome-keyring \
             xss-lock \
             nitrogen \
+            lm-sensors \
             trayer
         sudo apt remove gdm3
         ;;
@@ -30,6 +32,7 @@ case "$PM" in
             gnome-keyring \
             xss-lock \
             nitrogen \
+            lm-sensors \
             trayer
         ;;
 esac

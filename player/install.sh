@@ -14,6 +14,10 @@ case "$PM" in
         ;;
 esac
 
+# enable for current user
+systemctl --user enable mpd
+systemctl --user start mpd
+
 # symlink configuration
 lnsf $DIR/config/mpd ~/.config/mpd
 lnsf $DIR/config/ncmpcpp ~/.config/ncmpcpp
