@@ -35,10 +35,10 @@ lnsf () {
     local SYMLNK=$2
     [ -z "$TARGET" ] && echo "$1 not exists" && return -1
     local SYMDIR=$(dirname $SYMLNK)
-    if [ -n "$SYMDIR" ] && [ -L $SYMDIR ]; then
+    if [[ -n $SYMDIR && -L $SYMDIR ]]; then
         rm -rf $SYMDIR
-        mkdir -p $SYMDIR
     fi
+    mkdir -p $SYMDIR
     [ ! -L $SYMLNK ] && rm -rf $SYMLNK
     ln -sf $TARGET $SYMLNK
 }

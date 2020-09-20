@@ -15,9 +15,11 @@ case "$PM" in
 esac
 
 # symlink configuration
-lnsf $DIR/config/mpd $XDG_CONFIG_HOME/mpd
-lnsf $DIR/config/ncmpcpp $XDG_CONFIG_HOME/ncmpcpp
-lnsf $DIR/config/mpv $XDG_CONFIG_HOME/mpv
+lnsf $DIR/config/mpd/mpd.conf $XDG_CONFIG_HOME/mpd/mpd.conf
+lnsf $DIR/config/mpv/mpv.conf $XDG_CONFIG_HOME/mpv/mpv.conf
+lnsf $DIR/config/mpv/scripts/organize.lua $XDG_CONFIG_HOME/mpv/scripts/organize.lua
+lnsf $DIR/config/ncmpcpp/bindings $XDG_CONFIG_HOME/ncmpcpp/bindings
+lnsf $DIR/config/ncmpcpp/config $XDG_CONFIG_HOME/ncmpcpp/config
 
 # enable for current user
 systemctl --user enable mpd
