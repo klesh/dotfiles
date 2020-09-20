@@ -53,6 +53,7 @@ cd ~/Projects/suckless/slock && sudo rm -f config.h && sudo make clean install
 cd ~/Projects/suckless/dwm && sudo rm -f config.h && sudo make clean install
 
 # config xinit to start for dwm
+rm ~/.xinitrc
 cat <<EOT > ~/.xinitrc
 export QT_QPA_PLATFORMTHEME="qt5ct"
 export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
