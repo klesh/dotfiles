@@ -14,4 +14,10 @@ case "$PM" in
         ;;
 esac
 
-lnsf $DIR/config $XDG_CONFIG_HOME/ranger
+# linking configuration files
+lnsf $DIR/config/commands.py $XDG_CONFIG_HOME/ranger/commands.py
+lnsf $DIR/config/rc.conf $XDG_CONFIG_HOME/ranger/rc.conf
+lnsf $DIR/config/scope.sh $XDG_CONFIG_HOME/ranger/scope.sh
+
+# install devicons
+git clone --depth 1 https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons
