@@ -104,6 +104,7 @@ Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 Plug 'morhetz/gruvbox'
 Plug 'dag/vim-fish'
 Plug 'Vimjas/vim-python-pep8-indent'
+Plug 'chrisbra/Colorizer'
 call plug#end()
 
 
