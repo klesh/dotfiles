@@ -1,3 +1,5 @@
+set -g __fish_git_prompt_show_informative_status 1
+
 # Defined in /tmp/fish.hyt5lE/fish_prompt.fish @ line 2
 function fish_prompt --description 'Write out the prompt'
 	set -l color_cwd
@@ -19,5 +21,6 @@ function fish_prompt --description 'Write out the prompt'
     if set -q VIRTUAL_ENV
         echo -n -s (set_color -b blue white) "(" (basename "$VIRTUAL_ENV") ")" (set_color normal)
     end
+    echo -n -s (fish_git_prompt)
     echo -n -s "$suffix "
 end
