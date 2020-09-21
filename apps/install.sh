@@ -8,7 +8,7 @@ DIR=$(readlink -f $(dirname $0))
 case "$PM" in
     apt)
         sudo apt install -y \
-            chromium-browser \
+            google-chrome-stable \
             zathura zathura-pdf-poppler sxiv \
             flameshot \
             libreoffice \
@@ -18,11 +18,11 @@ case "$PM" in
         sudo pacman -S --needed \
             chromium \
             zathura zathura-pdf-mupdf sxiv\
-            flameshot \
+            flameshot 
             libreoffice-fresh \
             gimp
         ;;
 esac
 
 # symlink configuration
-lnsf $DIR/config/zathura $XDG_CONFIG_HOME/zathura
+lnsf $DIR/config/zathura/zathurarc $XDG_CONFIG_HOME/zathura/zathurarc
