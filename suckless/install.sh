@@ -87,6 +87,8 @@ EOT
 
 
 # config dwm
-lnsf $DIR/config/dwm/autostart $XDG_CONFIG_HOME/dwm/autostart
+[[ -L $XDG_CONFIG_HOME/dwm/autostart ]] && rm $XDG_CONFIG_HOME/dwm/autostart
+mkdir -p $DIR/config/dwm
+cp $DIR/config/dwm/autostart $XDG_CONFIG_HOME/dwm/autostart
 lnsf $DIR/config/dwm/dwmbar $XDG_CONFIG_HOME/dwm/dwmbar
 lnsf $DIR/config/autorandr/postswitch $XDG_CONFIG_HOME/autorandr/postswitch
