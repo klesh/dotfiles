@@ -79,6 +79,13 @@ case "$PM" in
             exfat-utils \
             axel \
             man sudo
+        # install yay
+        if ! which yay; then
+            git clone --depth 1 https://aur.archlinux.org/yay.git /tmp/yay
+            cd /tmp/yay
+            makepkg -si
+            cd -
+        fi
         ;;
 esac
 

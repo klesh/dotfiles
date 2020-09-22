@@ -11,6 +11,7 @@ case "$PM" in
             fonts-cascadia-code \
             fonts-urw-base35 \
             fonts-droid-fallback \
+            fonts-symbola \
             gucharmap
         # network manager
         sudo apt install \
@@ -32,6 +33,8 @@ case "$PM" in
             ttf-droid \
             wqy-microhei \
             gucharmap
+        # install symbola for plain emojis(no-color) for st
+        yay -S ttf-symbola-free
         # clipboard
         sudo pacman -S --needed \
             xclip xsel
