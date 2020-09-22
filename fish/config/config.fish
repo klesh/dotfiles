@@ -25,6 +25,7 @@ append-path-if-exists ~/.yarn/bin
 source-file-if-exists ~/.cargo/env
 append-path-if-exists ~/Programs/bin
 append-path-if-exists /usr/local/bin
+append-path-if-exists /snap/bin
 #/usr/bin/xmodmap /home/klesh/.Xmodmap
 
 if which pip 1>/dev/null 2>/dev/null; and pip show virtualfish > /dev/null 2>/dev/null
