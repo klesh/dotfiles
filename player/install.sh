@@ -21,6 +21,11 @@ lnsf $DIR/config/mpv/scripts/organize.lua $XDG_CONFIG_HOME/mpv/scripts/organize.
 lnsf $DIR/config/ncmpcpp/bindings $XDG_CONFIG_HOME/ncmpcpp/bindings
 lnsf $DIR/config/ncmpcpp/config $XDG_CONFIG_HOME/ncmpcpp/config
 
+# prevent system-wide mpd
+sudo systemctl disable mpd
+sudo systemctl stop mpd
+mkdir -p $HOME/.mpd/playlists
+
 # enable for current user
 systemctl --user enable mpd
 systemctl --user start mpd
