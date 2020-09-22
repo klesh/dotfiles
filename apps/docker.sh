@@ -10,6 +10,7 @@ case "$PM" in
         sudo apt install -y docker.io docker-compose
         ! which pip3 && $ROOT/python/install.sh
         sudo pip3 install docker-compose
+        sudo snap install kubectl --classic
         ;;
     pacman)
         sudo pacman -S --needed docker docker-compose
@@ -24,8 +25,8 @@ sudo systemctl start docker
 # configuration
 sudo usermod -aG docker $USER
 
-if [ -d /etc/docker ]; then
-    dj='{}'
+# set mirror
+if in-china && [[ -d /etc/docker ]]; then
     if [ -f /etc/docker/daemon.json ]; then
         # backup
         [ ! -f /etc/docker/daemon.bak.json ] && \
@@ -33,6 +34,8 @@ if [ -d /etc/docker ]; then
         # read
         dj=$(cat /etc/docker/daemon.json)
     fi
-    echo $dj | jq '. + {"registry-mirrors": ["https://izuhlbap.mirror.aliyuncs.com"]}' | sudo tee /etc/docker/daemon.json
+    [[ -z $dj ]] && dj='{}'
+    echo $dj | jq '. + {"registry-mirrors": ["https://izuhlbap.mirror.aliyuncs.com"]}' | \
+        sudo tee /etc/docker/daemon.json
     sudo systemctl restart docker
 fi
