@@ -8,6 +8,12 @@ case "$PM" in
     apt)
         sudo apt install -y \
             lxappearance arc-theme qt5ct qt5-style-plugins
+        # install arc-icon-theme
+        git clone https://github.com/horst3180/arc-icon-theme --depth 1  /tmp/arc-icon-theme && cd /tmp/arc-icon-theme
+        ./autogen.sh --prefix=/usr
+        sudo make install
+        rm -rf /tmp/arc-icon-theme
+        cd -
         ;;
     pacman)
         sudo pacman -S --needed \
@@ -15,6 +21,3 @@ case "$PM" in
         ;;
 esac
 
-# configuration
-lnsf $DIR/config/gtk-3.0/settings.ini $XDG_CONFIG_HOME/gtk-3.0/settings.ini
-lnsf $DIR/config/qt5ct/qt5ct.conf $XDG_CONFIG_HOME/qt5ct/qt5ct.conf
