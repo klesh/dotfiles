@@ -6,11 +6,13 @@ DIR=$(readlink -f $(dirname $0))
 # install ranger
 case "$PM" in
     apt)
+        # atool/p7zip-full for archive previewing/extracting etc
+        sudo apt install -y atool p7zip-full
         ! which pip3 && $ROOT/python/install.sh
         sudo pip3 install ranger-fm ueberzug
         ;;
     pacman)
-        sudo pip install ranger-fm ueberzug
+        sudo pip install ranger-fm ueberzug atool p7zip
         ;;
 esac
 
