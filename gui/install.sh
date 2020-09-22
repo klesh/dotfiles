@@ -47,6 +47,8 @@ case "$PM" in
             sudo systemctl enable bluetooth
             sudo systemctl start bluetooth
         fi
+        # for setting up default programs: exo-preferred-applications
+        sudo pacman -S --needed exo
         ;;
 esac
 
