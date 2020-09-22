@@ -24,12 +24,13 @@ case "$PM" in
         fi
         ;;
     pacman)
-        # fonts
+        # fonts, wqy-microhei is required for qt5.15 to display CJK character
         sudo pacman -S --needed \
             freetype2 \
             terminus-font \
             ttf-cascadia-code \
             ttf-droid \
+            wqy-microhei \
             gucharmap
         # clipboard
         sudo pacman -S --needed \
