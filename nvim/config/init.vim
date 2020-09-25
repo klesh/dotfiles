@@ -21,7 +21,7 @@ set incsearch
 set signcolumn=yes
 set laststatus=2
 set fillchars=vert:\ ,fold:-
-set clipboard+=unnamedplus
+set clipboard=unnamedplus
 filetype plugin indent on
 syntax on
 au! BufWritePost $MYVIMRC source %
@@ -105,8 +105,12 @@ Plug 'morhetz/gruvbox'
 Plug 'dag/vim-fish'
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'chrisbra/Colorizer'
+Plug 'alvan/vim-closetag'
 call plug#end()
 
+
+" ==== vim-closetag configuration ====
+let g:closetag_filetypes = 'html,xhtml,phtml,vue'
 
 " ==== coc configuration ====
 "let g:coc_disable_startup_warning = 1
