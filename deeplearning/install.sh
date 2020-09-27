@@ -9,11 +9,10 @@ $ROOT/python/install.sh
 # install deep learning tools
 case "$PM" in
     apt)
-        # cuda dependencies
-        sudo apt install linux-headers-$(uname -r)
-
+        # cuda
         source /etc/lsb-release
         if [ "$DISTRIB_RELEASE" = "18.04" ] && [ "$(uname -m)" = 'x86_64' ]; then
+            sudo apt install linux-headers-$(uname -r)
             wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-ubuntu1804.pin
             sudo mv cuda-ubuntu1804.pin /etc/apt/preferences.d/cuda-repository-pin-600
             sudo apt-key adv --fetch-keys \
@@ -27,6 +26,8 @@ case "$PM" in
             echo 'Unsupported release'
             exit -1
         fi
+
+        # nvidia docker
         distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
         curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
         curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | \
