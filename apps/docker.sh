@@ -25,6 +25,14 @@ sudo systemctl start docker
 # configuration
 sudo usermod -aG docker $USER
 
+# completion
+case "$DEFAULT_SHELL" in
+    fish)
+        curl -sLo $HOME/.config/fish/completions/docker.fish --create-dirs \
+            'https://github.com/docker/cli/raw/master/contrib/completion/fish/docker.fish'
+        ;;
+esac
+
 # set mirror
 if in-china && [[ -d /etc/docker ]]; then
     if [ -f /etc/docker/daemon.json ]; then
