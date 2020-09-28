@@ -7,6 +7,8 @@ DIR=$(readlink -f $(dirname $0))
 # install docker
 case "$PM" in
     apt)
+        # snap docker will intefere native docker.io, must be dealt with
+        sudo snap remove --purge docker
         sudo apt install -y docker.io docker-compose
         ! which pip3 && $ROOT/python/install.sh
         sudo pip3 install docker-compose
