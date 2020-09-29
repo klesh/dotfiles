@@ -8,9 +8,9 @@ case "$PM" in
     apt)
         # fonts
         sudo apt install \
-            fonts-cascadia-code \
-            fonts-droid-fallback \
             fonts-urw-base35 \
+            fonts-cascadia-code \
+            fonts-wqy-microhei \
             fonts-symbola \
             gucharmap
         # network manager
@@ -28,9 +28,8 @@ case "$PM" in
         # fonts
         sudo pacman -S --needed \
             freetype2 \
-            ttf-cascadia-code \
             gsfonts \
-            ttf-droid \
+            ttf-cascadia-code \
             wqy-microhei \
             gucharmap
         # install symbola for plain emojis(no-color) for st
