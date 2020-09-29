@@ -4,13 +4,13 @@
 function update
   set -x text
   if test -f /tmp/recording.pid
-    set text $text "壘"
+    set text $text "🎥"
   end
   # mpd
   if which mpc
       set music (mpc)
       if string match -r playing "$music[2]"
-        set text $text "🎥 $music[1]"
+        set text $text "♬ $music[1]"
       end
   end
   # volume
