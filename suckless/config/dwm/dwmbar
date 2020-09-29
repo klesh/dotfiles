@@ -7,63 +7,64 @@ function update
     set text $text "🎥"
   end
   # mpd
-  if which mpc
+  if which mpc 1>/dev/null 2>&1
       set music (mpc)
-      if string match -r playing "$music[2]"
+      if string match -r playing "$music[2]" 1>/dev/null 2>&1
         set text $text "♬ $music[1]"
       end
   end
   # volume
   set vol (amixer get Master)
   if string match -r '\[off\]' "$vol"
-    set text $text "ﱝ 0"
+    set text $text "🔉 0"
   else
     set v (string match -r '\[(\d+)%\]' $vol | tail -n 1)
-    set text $text " $v"
+    set text $text "🔊 $v"
   end
   # network
   for nic in (ls -d /sys/class/net/e*)
     if grep up $nic/operstate > /dev/null
       set speed (cat $nic/speed)M
-      set text $text " $speed"
+      set text $text "🖧 $speed"
     end
   end
   set wifi (grep "^\s*w" /proc/net/wireless | awk '{ print int($3 * 100 / 70) "%" }')
   if test -n "$wifi"
-    set text $text " $wifi"
+    set text $text "📡 $wifi"
   end
   # memory
   set memory (free | awk '/^Mem:/ {print $3 "/" $2 "*" 100}' | math -s0)
-  set text $text " $memory%"
+  set text $text "📈 $memory%"
   # cpu
   set cpu (sensors | awk '/Core /{print $3}' | sort -r | head -n 1)
   if test -n "$cpu"
-    set text $text " $cpu"
+    set text $text "🌡 $cpu"
   end
   # battery
   set battery (cat /sys/class/power_supply/BAT0/capacity 2>/dev/null || echo "-1")
   if test "$battery" -gt -1
     set plugged (cat /sys/class/power_supply/AC/online)
     if test "$plugged" -eq 1
-      set battery " $battery%"
+      set battery "🔌 $battery%"
     else
-      if test $battery -gt 90
-        set battery " $battery%"
-      else if test $battery -gt 75
-        set battery " $battery%"
-      else if test $battery -gt 50
-        set battery " $battery%"
-      else if test $battery -gt 25
-        set battery " $battery%"
-      else
-        set battery " $battery%"
-      end
+      set battery "🔋 $battery%"
+      #if test $battery -gt 90
+        #set battery " $battery%"
+      #else if test $battery -gt 75
+        #set battery " $battery%"
+      #else if test $battery -gt 50
+        #set battery " $battery%"
+      #else if test $battery -gt 25
+        #set battery " $battery%"
+      #else
+        #set battery " $battery%"
+      #end
     end
     set text $text "$battery"
   end
   # | sed 's/Mon/一/; s/Tue/二/; s/Wed/三/; s/Thu/四/; s/Fri/五/; s/Sat/六/; s/Sun/日/;'
   set dt (date +"%m-%d %H:%M %a")
-  set text $text " $dt"
+  set text $text "⏲ $dt"
   set text (string join '  ' $text)
   xsetroot -name " $text "
 
