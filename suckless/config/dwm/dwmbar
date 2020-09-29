@@ -7,7 +7,7 @@ function update
   if which mpc
       set music (mpc)
       if string match -r playing "$music[2]"
-        set text $text "喇 $music[1]"
+        set text $text "🎥 $music[1]"
       end
   end
   # volume
