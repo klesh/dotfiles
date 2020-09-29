@@ -7,6 +7,8 @@ DIR=$(readlink -f $(dirname $0))
 # install docker
 case "$PM" in
     apt)
+        # snap docker will intefere native docker.io, must be dealt with
+        sudo snap remove --purge docker
         sudo apt install -y docker.io docker-compose
         ! which pip3 && $ROOT/python/install.sh
         sudo pip3 install docker-compose
@@ -24,6 +26,14 @@ sudo systemctl start docker
 
 # configuration
 sudo usermod -aG docker $USER
+
+# completion
+case "$DEFAULT_SHELL" in
+    fish)
+        curl -sLo $HOME/.config/fish/completions/docker.fish --create-dirs \
+            'https://github.com/docker/cli/raw/master/contrib/completion/fish/docker.fish'
+        ;;
+esac
 
 # set mirror
 if in-china && [[ -d /etc/docker ]]; then

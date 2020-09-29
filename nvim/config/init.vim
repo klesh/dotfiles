@@ -153,6 +153,10 @@ nnoremap <leader>gp :Gpush<CR>
 nnoremap <leader>gg :Gpull<CR>
 nnoremap <leader>gd :Gdiff<CR>
 nnoremap <leader>gb :Gblame<CR>
+nnoremap <leader>gl :Glog<CR>
+nnoremap <leader>gms :Gvdiffsplit!<CR>
+nnoremap <leader>gmh :diffget //2<CR>
+nnoremap <leader>gml :diffget //3<CR>
 
 " ==== ctrlp configuration ====
 let g:ctrlp_user_command = ['.git', 'git ls-files -co --exclude-standard']

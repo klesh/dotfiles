@@ -9,8 +9,7 @@ case "$PM" in
         # fonts
         sudo apt install \
             fonts-cascadia-code \
-            fonts-urw-base35 \
-            fonts-droid-fallback \
+            fonts-noto-cjk \
             fonts-symbola \
             gucharmap
         # network manager
@@ -25,13 +24,11 @@ case "$PM" in
         fi
         ;;
     pacman)
-        # fonts, wqy-microhei is required for qt5.15 to display CJK character
+        # fonts
         sudo pacman -S --needed \
             freetype2 \
-            terminus-font \
             ttf-cascadia-code \
-            ttf-droid \
-            wqy-microhei \
+            noto-fonts-cjk \
             gucharmap
         # install symbola for plain emojis(no-color) for st
         yay -S ttf-symbola-free
