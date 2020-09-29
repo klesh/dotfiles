@@ -20,11 +20,11 @@ end
 
 source-file-if-exists /usr/share/autojump/autojump.fish
 source-file-if-exists /usr/local/share/autojump/autojump.fish
+source-file-if-exists ~/.cargo/env
+
+append-path-if-exists /usr/local/bin
 append-path-if-exists ~/.local/bin
 append-path-if-exists ~/.yarn/bin
-source-file-if-exists ~/.cargo/env
-append-path-if-exists ~/Programs/bin
-append-path-if-exists /usr/local/bin
 append-path-if-exists /snap/bin
 #/usr/bin/xmodmap /home/klesh/.Xmodmap
 
