@@ -47,7 +47,7 @@ noremap <C-e> <End>
 noremap <C-f> <Right>
 noremap <C-b> <Left>
 
-vnoremap <leader>p "_dP
+vnoremap <leader>p pgvy
 nnoremap <leader>q :qall<CR>
 
 nnoremap <leader>1 :b1<CR>
