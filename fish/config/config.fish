@@ -5,6 +5,7 @@ set -gx PGDATA /usr/local/var/postgres
 set -gx LESS "-SRXF"
 set -gx LS_COLORS 'ow=34;42;40'
 set -gx nvm_mirror http://npm.taobao.org/mirrors/node
+set -gx HIGHLIGHT_OPTIONS --style=solarized-dark
 
 function append-path-if-exists
   if test -e $argv
