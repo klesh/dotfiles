@@ -57,23 +57,27 @@ esac
 
 
 # install hermit nerd font
-if ! ls /usr/share/fonts | grep -i hurmit > /dev/null; then
-    if [ ! -f /tmp/hermit.zip ]; then
-        if in-china; then
-            git clone https://gitee.com/klesh/nerd-fonts.git /tmp/nerd-fonts
-            mv /tmp/nerd-fonts/Hermit-v2.1.0.zip /tmp/hermit.zip
-            rm -rf /tmp/nerd-fonts
-        else
-            echo 'for rest of the world'
-            HNF_PATH=$(curl -L https://github.com/ryanoasis/nerd-fonts/releases/latest | grep -i hermit | sed -n 's/.*href="\([^"]*\).*/\1/p')
-            HNF_URL="https://github.com$HNF_PATH"
-            curl -L $HNF_URL --output /tmp/hermit.zip || rm -rf /tmp/hermit.zip && false
-        fi
-    fi
-    unzip /tmp/hermit.zip -d /tmp/hermit
-    rm /tmp/hermit/*Windows*
-    sudo cp /tmp/hermit/* /usr/share/fonts
-fi
+install-nerdfont () {
+    ORIGIN_NAME=$1
+    PATCHED_PAT=$2
+    VERSION=$3
+    NAME=$ORIGIN_NAME-$VERSION.zip
+    LOCAL_REPO_PATH=/tmp/nerd-font/$ORIGIN_NAME
+    # shortcircuit if font already in system
+    fc-list | grep -F $0 | grep -i nerd && return
+    # clone single branch from gitee
+    git clone --single-branch --branch $ORIGIN_NAME --depth 1 \
+        https://gitee.com/klesh/nerd-fonts.git \
+        $LOCAL_REPO_PATH
+    sudo 7z x -x!'*Windows*' -aoa $LOCAL_REPO_PATH/$NAME -o/usr/local/share/fonts
+    echo $LOCAL_REPO_PATH
+    rm -rf $LOCAL_REPO_PATH
+}
+
+#install-nerdfont Hermit Hurmit v2.1.0
+install-nerdfont Agave agave v2.1.0
+#install-nerdfont CascadiaCode Caskaydia v2.1.0
+#install-nerdfont DaddyTimeMono DaddyTimeMono v2.1.0
 
 # start network
 sudo systemctl enable NetworkManager
