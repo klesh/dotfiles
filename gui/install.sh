@@ -12,6 +12,7 @@ case "$PM" in
             fonts-cascadia-code \
             fonts-wqy-microhei \
             fonts-symbola \
+            fonts-dejavu-core \
             gucharmap
         # network manager
         sudo apt install \
@@ -31,9 +32,10 @@ case "$PM" in
             gsfonts \
             ttf-cascadia-code \
             wqy-microhei \
+            ttf-dejavu \
             gucharmap
         # install symbola for plain emojis(no-color) for st
-        yay -S ttf-symbola-free
+        yay -S --needed ttf-symbola-free
         # clipboard
         sudo pacman -S --needed \
             xclip xsel
