@@ -10,6 +10,7 @@ $HOME/.config/dunst/launch.sh
 $HOME/.config/dwm/dwmbar
 
 # setup screen locker
+xset s 300
 killall xss-lock
 xss-lock --ignore-sleep (which slock) &
 

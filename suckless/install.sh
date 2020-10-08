@@ -64,14 +64,9 @@ export XMODIFIERS="@im=ibus"
 export QT_IM_MODULE=ibus
 export GTK_IM_MODULE=xim
 
-# auto lock after 300 seconds
-xset s 300
-systemd-lock-handler /usr/local/bin/slock
-
 # setup gnome keyring
 dbus-update-activation-environment --systemd DISPLAY
-eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
-export SSH_AUTH_SOCK
+export SSH_AUTH_SOCK=$(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
 
 # load monitors profile
 autorandr --change --force
