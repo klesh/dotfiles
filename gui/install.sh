@@ -12,6 +12,7 @@ case "$PM" in
             fonts-cascadia-code \
             fonts-wqy-microhei \
             fonts-symbola \
+            fonts-dejavu-core \
             gucharmap
         # network manager
         sudo apt install \
@@ -31,9 +32,10 @@ case "$PM" in
             gsfonts \
             ttf-cascadia-code \
             wqy-microhei \
+            ttf-dejavu \
             gucharmap
         # install symbola for plain emojis(no-color) for st
-        yay -S ttf-symbola-free
+        yay -S --needed ttf-symbola-free
         # clipboard
         sudo pacman -S --needed \
             xclip xsel
@@ -70,6 +72,7 @@ install-nerdfont () {
         https://gitee.com/klesh/nerd-fonts.git \
         $LOCAL_REPO_PATH
     sudo 7z x -x!'*Windows*' -aoa $LOCAL_REPO_PATH/$NAME -o/usr/local/share/fonts
+    sudo chmod +x /usr/local/share/fonts
     echo $LOCAL_REPO_PATH
     rm -rf $LOCAL_REPO_PATH
 }

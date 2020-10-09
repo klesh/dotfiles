@@ -166,3 +166,25 @@ let g:ctrlp_user_command = ['.git', 'git ls-files -co --exclude-standard']
 color gruvbox
 set background=dark
 highlight Normal ctermbg=None
+
+" ==== NERDCommenter for vue ====
+let g:ft = ''
+fu! NERDCommenter_before()
+  if &ft == 'vue'
+    let g:ft = 'vue'
+    let stack = synstack(line('.'), col('.'))
+    if len(stack) > 0
+      let syn = synIDattr((stack)[0], 'name')
+      if len(syn) > 0
+        let syn = tolower(syn)
+        exe 'setf '.syn
+      endif
+    endif
+  endif
+endfu
+fu! NERDCommenter_after()
+  if g:ft == 'vue'
+    setf vue
+    g:ft
+  endif
+endfu
