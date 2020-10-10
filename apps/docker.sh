@@ -12,7 +12,6 @@ case "$PM" in
         sudo apt install -y docker.io docker-compose
         ! which pip3 && $ROOT/python/install.sh
         sudo pip3 install docker-compose
-        sudo snap install kubectl --classic
         ;;
     pacman)
         sudo pacman -S --needed docker docker-compose
