@@ -10,6 +10,7 @@ case "$PM" in
         sudo apt install \
             fonts-urw-base35 \
             fonts-cascadia-code \
+            fonts-droid-fallback \
             fonts-wqy-microhei \
             fonts-symbola \
             fonts-dejavu-core \
@@ -31,6 +32,7 @@ case "$PM" in
             freetype2 \
             gsfonts \
             ttf-cascadia-code \
+            ttf-droid \
             wqy-microhei \
             ttf-dejavu \
             gucharmap
