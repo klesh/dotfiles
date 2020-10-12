@@ -10,7 +10,6 @@ case "$PM" in
         sudo apt install \
             fonts-urw-base35 \
             fonts-cascadia-code \
-            fonts-droid-fallback \
             fonts-wqy-microhei \
             fonts-symbola \
             fonts-dejavu-core \
@@ -32,10 +31,16 @@ case "$PM" in
             freetype2 \
             gsfonts \
             ttf-cascadia-code \
-            ttf-droid \
-            wqy-microhei \
             ttf-dejavu \
             gucharmap
+        # official wqy-microhei package doesn't fix the Korean Glyphs stacking bug
+        # https://code.google.com/p/chromium/issues/detail?id=233851
+        # use debian package instead
+        DEB_PKG_NAME=fonts-wqy-microhei_0.2.0-beta-3_all.deb
+        PAC_PKG_NAME=fonts-wqy-microhei_0.2.0-beta-3_all.pkg
+        [[ ! -f /tmp/$DEB_PKG_NAME ]] && \
+            wget http://mirrors.163.com/debian/pool/main/f/fonts-wqy-microhei/$DEB_PKG_NAME -O /tmp/$DEB_PKG_NAME
+        ar p /tmp/$DEB_PKG_NAME data.tar.xz | sudo tar Jxv -C /
         # install symbola for plain emojis(no-color) for st
         yay -S --needed ttf-symbola-free
         # clipboard
