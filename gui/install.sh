@@ -79,7 +79,7 @@ install-nerdfont () {
         https://gitee.com/klesh/nerd-fonts.git \
         $LOCAL_REPO_PATH
     sudo 7z x -x!'*Windows*' -aoa $LOCAL_REPO_PATH/$NAME -o/usr/local/share/fonts
-    sudo chmod +x /usr/local/share/fonts
+    sudo chmod +rx /usr/local/share/fonts
     echo $LOCAL_REPO_PATH
     rm -rf $LOCAL_REPO_PATH
 }
