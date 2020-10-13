@@ -40,7 +40,7 @@ case "$PM" in
         PAC_PKG_NAME=fonts-wqy-microhei_0.2.0-beta-3_all.pkg
         [[ ! -f /tmp/$DEB_PKG_NAME ]] && \
             wget http://mirrors.163.com/debian/pool/main/f/fonts-wqy-microhei/$DEB_PKG_NAME -O /tmp/$DEB_PKG_NAME
-        ar p /tmp/$DEB_PKG_NAME.data.tar.xz | sudo.tar.-Jxv -C /
+        ar p /tmp/$DEB_PKG_NAME data.tar.xz | sudo tar Jxv -C /
         # install symbola for plain emojis(no-color) for st
         yay -S --needed ttf-symbola-free
         # clipboard
@@ -79,7 +79,7 @@ install-nerdfont () {
         https://gitee.com/klesh/nerd-fonts.git \
         $LOCAL_REPO_PATH
     sudo 7z x -x!'*Windows*' -aoa $LOCAL_REPO_PATH/$NAME -o/usr/local/share/fonts
-    sudo chmod +x /usr/local/share/fonts
+    sudo chmod +rx /usr/local/share/fonts
     echo $LOCAL_REPO_PATH
     rm -rf $LOCAL_REPO_PATH
 }
