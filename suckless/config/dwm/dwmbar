@@ -20,8 +20,8 @@ set ICON_MUTED          
 set ICON_VOLUME         
 set ICON_NIC            
 set ICON_WIFI           
-set ICON_MEMORY         
-set ICON_TEMPERATURE    
+set ICON_MEMORY         
+set ICON_TEMPERATURE    
 set ICON_PLUGGED        
 set ICON_BATTERY_0      
 set ICON_BATTERY_1      
