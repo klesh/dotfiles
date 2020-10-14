@@ -14,21 +14,21 @@ set ICON_BATTERY        🔋
 set ICON_DATETIME       ⏲
 
 # nerdfont
-set ICON_RECORDING      
-set ICON_MUSIC          
-set ICON_MUTED          
-set ICON_VOLUME         
-set ICON_NIC            
-set ICON_WIFI           
-set ICON_MEMORY         
+set ICON_RECORDING      辶
+set ICON_MUSIC          
+set ICON_MUTED          'ﱝ '
+set ICON_VOLUME         ' '
+set ICON_NIC            ' '
+set ICON_WIFI           ' '
+set ICON_MEMORY         ' '
 set ICON_TEMPERATURE    
-set ICON_PLUGGED        
-set ICON_BATTERY_0      
-set ICON_BATTERY_1      
-set ICON_BATTERY_2      
-set ICON_BATTERY_3      
-set ICON_BATTERY_4      
-set ICON_DATETIME       
+set ICON_PLUGGED        ' '
+set ICON_BATTERY_0      '  '
+set ICON_BATTERY_1      '  '
+set ICON_BATTERY_2      '  '
+set ICON_BATTERY_3      '  '
+set ICON_BATTERY_4      '  '
+set ICON_DATETIME       ' '
 
 
 function update
@@ -79,10 +79,10 @@ function update
         set plugged (cat /sys/class/power_supply/AC/online)
         if test $plugged -eq 1
             set battery "$ICON_PLUGGED $battery%"
-        elif test -n "$ICON_BATTERY"
+        else if test -n "$ICON_BATTERY"
             set battery "$ICON_BATTERY $battery%"
-        elif test -n "$ICON_BATTERY_0"
-            if test $battery -gt 90
+        else if test -n "$ICON_BATTERY_0"
+            if test ""$battery -gt 90
                 set battery "$ICON_BATTERY_4 $battery%"
             else if test $battery -gt 75
                 set battery "$ICON_BATTERY_3 $battery%"
