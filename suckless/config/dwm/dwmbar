@@ -1,106 +1,137 @@
 #!/usr/bin/env fish
 
+# symbola
+set ICON_RECORDING      🎥
+set ICON_MUSIC          ♬
+set ICON_MUTED          🔉
+set ICON_VOLUME         🔊
+set ICON_NIC            🖧
+set ICON_WIFI           📡
+set ICON_MEMORY         📈
+set ICON_TEMPERATURE    🌡
+set ICON_PLUGGED        🔌
+set ICON_BATTERY        🔋
+set ICON_DATETIME       ⏲
+
+# nerdfont
+set ICON_RECORDING      
+set ICON_MUSIC          
+set ICON_MUTED          
+set ICON_VOLUME         
+set ICON_NIC            
+set ICON_WIFI           
+set ICON_MEMORY         
+set ICON_TEMPERATURE    
+set ICON_PLUGGED        
+set ICON_BATTERY_0      
+set ICON_BATTERY_1      
+set ICON_BATTERY_2      
+set ICON_BATTERY_3      
+set ICON_BATTERY_4      
+set ICON_DATETIME       
+
 
 function update
-  if pgrep slock
-    return
-  end
-  set -x text
-  if test -f /tmp/recording.pid
-    set text $text "🎥"
-  end
-  # mpd
-  if which mpc 1>/dev/null 2>&1
-      set music (mpc)
-      if string match -r playing "$music[2]" 1>/dev/null 2>&1
-        set text $text "♬ $music[1]"
-      end
-  end
-  # volume
-  set vol (amixer get Master)
-  if string match -r '\[off\]' "$vol"
-    set text $text "🔉 0"
-  else
-    set v (string match -r '\[(\d+)%\]' $vol | tail -n 1)
-    set text $text "🔊 $v"
-  end
-  # network
-  for nic in (ls -d /sys/class/net/e*)
-    if grep up $nic/operstate > /dev/null
-      set speed (cat $nic/speed)M
-      set text $text "🖧 $speed"
+    if pgrep slock
+        return
     end
-  end
-  set wifi (grep "^\s*w" /proc/net/wireless | awk '{ print int($3 * 100 / 70) "%" }')
-  if test -n "$wifi"
-    set text $text "📡 $wifi"
-  end
-  # memory
-  set memory (free | awk '/^Mem:/ {print $3 "/" $2 "*" 100}' | math -s0)
-  set text $text "📈 $memory%"
-  # cpu
-  set cpu (sensors | awk '/Core /{print $3}' | sort -r | head -n 1)
-  if test -n "$cpu"
-    set text $text "🌡 $cpu"
-  end
-  # battery
-  set battery (cat /sys/class/power_supply/BAT0/capacity 2>/dev/null || echo "-1")
-  if test "$battery" -gt -1
-    set plugged (cat /sys/class/power_supply/AC/online)
-    if test "$plugged" -eq 1
-      set battery "🔌 $battery%"
+    set -x text
+    if test -f /tmp/recording.pid
+        set text $text $ICON_RECORDING
+    end
+    # mpd
+    if which mpc 1>/dev/null 2>&1
+        set music (mpc)
+        if string match -r playing "$music[2]" 1>/dev/null 2>&1
+            set text $text "$ICON_MUSIC $music[1]"
+        end
+    end
+    # volume
+    set vol (amixer get Master)
+    if string match -r '\[off\]' "$vol"
+        set text $text "$ICON_MUTED 0"
     else
-      set battery "🔋 $battery%"
-      #if test $battery -gt 90
-        #set battery " $battery%"
-      #else if test $battery -gt 75
-        #set battery " $battery%"
-      #else if test $battery -gt 50
-        #set battery " $battery%"
-      #else if test $battery -gt 25
-        #set battery " $battery%"
-      #else
-        #set battery " $battery%"
-      #end
+        set v (string match -r '\[(\d+)%\]' $vol | tail -n 1)
+        set text $text "$ICON_VOLUME $v"
     end
-    set text $text "$battery"
-  end
-  # | sed 's/Mon/一/; s/Tue/二/; s/Wed/三/; s/Thu/四/; s/Fri/五/; s/Sat/六/; s/Sun/日/;'
-  set dt (date +"%m-%d %H:%M %a")
-  set text $text "⏲ $dt"
-  set text (string join '  ' $text)
-  xsetroot -name " $text "
+    # network
+    for nic in (ls -d /sys/class/net/e*)
+        if grep up $nic/operstate >/dev/null
+            set speed (cat $nic/speed)M
+            set text $text "$ICON_NIC $speed"
+        end
+    end
+    set wifi (grep "^\s*w" /proc/net/wireless | awk '{ print int($3 * 100 / 70) "%" }')
+    if test -n "$wifi"
+        set text $text "$ICON_WIFI $wifi"
+    end
+    # memory
+    set memory (free | awk '/^Mem:/ {print $3 "/" $2 "*" 100}' | math -s0)
+    set text $text "$ICON_MEMORY $memory%"
+    # cpu
+    set cpu (sensors | awk '/Core /{print $3}' | sort -r | head -n 1)
+    if test -n "$cpu"
+        set text $text "$ICON_TEMPERATURE $cpu"
+    end
+    # battery
+    set battery (cat /sys/class/power_supply/BAT0/capacity 2>/dev/null || echo "-1")
+    if test $battery -gt -1
+        set plugged (cat /sys/class/power_supply/AC/online)
+        if test $plugged -eq 1
+            set battery "$ICON_PLUGGED $battery%"
+        elif test -n "$ICON_BATTERY"
+            set battery "$ICON_BATTERY $battery%"
+        elif test -n "$ICON_BATTERY_0"
+            if test $battery -gt 90
+                set battery "$ICON_BATTERY_4 $battery%"
+            else if test $battery -gt 75
+                set battery "$ICON_BATTERY_3 $battery%"
+            else if test $battery -gt 50
+                set battery "$ICON_BATTERY_2 $battery%"
+            else if test $battery -gt 25
+                set battery "$ICON_BATTERY_1 $battery%"
+            else
+                set battery "$ICON_BATTERY_0 $battery%"
+            end
+        end
+        set text $text "$battery"
+    end
+    # | sed 's/Mon/一/; s/Tue/二/; s/Wed/三/; s/Thu/四/; s/Fri/五/; s/Sat/六/; s/Sun/日/;'
+    set dt (date +"%m-%d %H:%M %a")
+    set text $text "$ICON_DATETIME $dt"
+    set text (string join '  ' $text)
+    xsetroot -name " $text "
 
-  # prevent screen-saver when there is ongoing zoom metting
-  if xdotool search --name '^Zoom Meeting ID:'
-      xset s reset
-  end
+    # prevent screen-saver when there is ongoing zoom metting
+    if xdotool search --name '^Zoom Meeting ID:'
+        xset s reset
+    end
 end
 
 function loop
-  while true
-    update
-    sleep 1
-  end
+    while true
+        update
+        sleep 1
+    end
 end
 
 function start
-  set script (status -f)
-  $script loop &
+    set script (status -f)
+    $script loop &
 end
 
 function restart
-  pkill -f 'dwmbar loop'
-  start
+    pkill -f 'dwmbar loop'
+    start
 end
 
 switch "$argv[1]"
-  case "update"
-    update
-  case "loop"
-    loop
-  case "start"
-    start
-  case "*"
-    restart
+    case "update"
+        update
+    case "loop"
+        loop
+    case "start"
+        start
+    case "*"
+        restart
 end
