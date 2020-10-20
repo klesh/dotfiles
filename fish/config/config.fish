@@ -7,6 +7,17 @@ set -gx LS_COLORS 'ow=34;42;40'
 set -gx nvm_mirror http://npm.taobao.org/mirrors/node
 set -gx HIGHLIGHT_OPTIONS --style=solarized-dark
 
+# tune git icon for nerdfont
+set -g __fish_git_prompt_char_upstream_ahead ">"
+set -g __fish_git_prompt_char_upstream_behind "<"
+set -g __fish_git_prompt_char_upstream_prefix ""
+
+set -g __fish_git_prompt_char_stagedstate "●"
+set -g __fish_git_prompt_char_dirtystate "*"
+set -g __fish_git_prompt_char_untrackedfiles "+"
+set -g __fish_git_prompt_char_conflictedstate "x"
+set -g __fish_git_prompt_char_cleanstate "✔ "
+
 function append-path-if-exists
   if test -e $argv
     set -gx PATH $argv $PATH
