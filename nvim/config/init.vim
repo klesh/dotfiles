@@ -91,6 +91,7 @@ Plug 'tpope/vim-surround'
 Plug 'jiangmiao/auto-pairs'
 Plug 'preservim/nerdtree'
 Plug 'posva/vim-vue'
+Plug 'tpope/vim-repeat'
 "Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "Plug 'neoclide/coc-json', {'do': 'yarnpkg install --frozen-lockfile'}
 "Plug 'iamcco/coc-vimlsp', {'do': 'yarnpkg install --frozen-lockfile'}
@@ -106,6 +107,7 @@ Plug 'dag/vim-fish'
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'chrisbra/Colorizer'
 Plug 'alvan/vim-closetag'
+Plug 'airblade/vim-gitgutter'
 call plug#end()
 
 
