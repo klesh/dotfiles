@@ -2,6 +2,8 @@ import os
 from ranger.core.loader import CommandLoader
 from ranger.api.commands import Command
 from ranger.gui.widgets import Widget
+from ranger.gui.widgets.browsercolumn import BrowserColumn
+
 
 Widget.vcsstatus_symb = {
     'conflict': (
@@ -24,6 +26,7 @@ Widget.vcsstatus_symb = {
         '! ', ['vcsunknown']),
 }
 
+
 Widget.vcsremotestatus_symb = {
     'diverged': (
         ' Y', ['vcsdiverged']),
@@ -38,6 +41,19 @@ Widget.vcsremotestatus_symb = {
     'unknown': (
         ' !', ['vcsunknown']),
 }
+
+
+def wrap_draw_vcsstring_display(origin):
+    def _draw_vcsstring_display(*args, **kwargs):
+        vcsstring = origin(*args, **kwargs)
+        if vcsstring and vcsstring[0] and vcsstring[0][0] == '  ':
+            vcsstring[0][0] = '    '
+        return vcsstring
+    return _draw_vcsstring_display
+
+
+BrowserColumn._draw_vcsstring_display = wrap_draw_vcsstring_display(BrowserColumn._draw_vcsstring_display)
+
 
 class extracthere(Command):
     def execute(self):
