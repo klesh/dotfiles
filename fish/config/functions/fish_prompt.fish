@@ -2,7 +2,8 @@ set -g __fish_git_prompt_show_informative_status 1
 
 # Defined in /tmp/fish.hyt5lE/fish_prompt.fish @ line 2
 function fish_prompt --description 'Write out the prompt'
-	set -l color_cwd
+    set -U last_pwd $PWD
+    set -l color_cwd
     set -l suffix
     switch "$USER"
         case root toor

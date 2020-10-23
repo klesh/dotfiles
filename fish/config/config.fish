@@ -130,3 +130,5 @@ alias iscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
 
 
 source-file-if-exists ~/.profile.fish
+
+status is-interactive && cd $last_pwd
