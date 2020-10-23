@@ -28,7 +28,7 @@ sudo usermod -aG docker $USER
 
 # completion
 case "$DEFAULT_SHELL" in
-    fish)
+    $FISH)
         curl -sLo $HOME/.config/fish/completions/docker.fish --create-dirs \
             'https://github.com/docker/cli/raw/master/contrib/completion/fish/docker.fish'
         ;;
