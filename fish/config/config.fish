@@ -1,5 +1,6 @@
 #!/usr/bin/env fish
 
+set -U FZF_COMPLETE 0
 set -gx EDITOR nvim
 set -gx PGDATA /usr/local/var/postgres
 set -gx LESS "-SRXF"
