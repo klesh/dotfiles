@@ -89,8 +89,8 @@ call plug#begin()
 Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-surround'
 Plug 'jiangmiao/auto-pairs'
-Plug 'preservim/nerdtree'
-Plug 'posva/vim-vue'
+Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'posva/vim-vue', { 'for': 'vue' }
 Plug 'tpope/vim-repeat'
 "Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "Plug 'neoclide/coc-json', {'do': 'yarnpkg install --frozen-lockfile'}
@@ -100,19 +100,25 @@ Plug 'tpope/vim-repeat'
 Plug 'liuchengxu/eleline.vim'
 Plug 'tpope/vim-fugitive'                                         " git 功能
 Plug 'scrooloose/nerdcommenter'
-Plug 'ctrlpvim/ctrlp.vim'
+"Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 Plug 'morhetz/gruvbox'
-Plug 'dag/vim-fish'
-Plug 'Vimjas/vim-python-pep8-indent'
+Plug 'dag/vim-fish', { 'for': 'fish' }
+Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
 Plug 'chrisbra/Colorizer'
-Plug 'alvan/vim-closetag'
+Plug 'alvan/vim-closetag', { 'for': ['vue', 'html', 'xml'] }
 Plug 'airblade/vim-gitgutter'
+Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
+Plug 'junegunn/fzf'
 call plug#end()
+
+" ==== vim-markdown configuration ====
+let g:vim_markdown_folding_disabled = 1
 
 
 " ==== vim-closetag configuration ====
 let g:closetag_filetypes = 'html,xhtml,phtml,vue'
+
 
 " ==== coc configuration ====
 "let g:coc_disable_startup_warning = 1
@@ -161,7 +167,10 @@ nnoremap <leader>gmh :diffget //2<CR>
 nnoremap <leader>gml :diffget //3<CR>
 
 " ==== ctrlp configuration ====
-let g:ctrlp_user_command = ['.git', 'git ls-files -co --exclude-standard']
+"let g:ctrlp_user_command = ['.git', 'git ls-files -co --exclude-standard']
+
+" ==== fzf configuration ====
+nnoremap <C-p> :FZF<CR>
 
 
 " ==== gruvbox configuration ====
