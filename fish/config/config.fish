@@ -5,7 +5,7 @@ set -gx EDITOR nvim
 # enable fzf completion hotkey
 set -U FZF_COMPLETE 0
 # no line-wrapping, good for `docker ps`
-set -gx LESS "-SXF"
+set -gx LESS "-SRXF"
 # nvm plugin
 set -gx nvm_mirror http://npm.taobao.org/mirrors/node
 # change OTHER-WRITABLE color for `ls` command
@@ -14,15 +14,15 @@ set -gx LS_COLORS 'ow=34;42;40'
 set -gx HIGHLIGHT_OPTIONS --style=solarized-dark
 
 # tune git icon for nerdfont
-set -g __fish_git_prompt_char_upstream_ahead ">"
-set -g __fish_git_prompt_char_upstream_behind "<"
-set -g __fish_git_prompt_char_upstream_prefix ""
+set -g __fish_git_prompt_char_upstream_ahead '>'
+set -g __fish_git_prompt_char_upstream_behind '<'
+set -g __fish_git_prompt_char_upstream_prefix ''
 
-set -g __fish_git_prompt_char_stagedstate "●"
-set -g __fish_git_prompt_char_dirtystate "*"
-set -g __fish_git_prompt_char_untrackedfiles "+"
-set -g __fish_git_prompt_char_conflictedstate "x"
-set -g __fish_git_prompt_char_cleanstate "✔ "
+set -g __fish_git_prompt_char_stagedstate '●'
+set -g __fish_git_prompt_char_dirtystate '*'
+set -g __fish_git_prompt_char_untrackedfiles '+'
+set -g __fish_git_prompt_char_conflictedstate 'x'
+set -g __fish_git_prompt_char_cleanstate '✔ '
 
 function append-path-if-exists
     if test -e $argv
