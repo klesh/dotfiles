@@ -1,5 +1,5 @@
 #!/usr/bin/env fish
-#
+
 set -gx EDITOR nvim
 
 # enable fzf completion hotkey
@@ -45,10 +45,6 @@ append-path-if-exists ~/.local/bin
 append-path-if-exists ~/.yarn/bin
 append-path-if-exists /snap/bin
 
-# source virtualfish if available
-if which pip &>/dev/null && pip show virtualfish &>/dev/null
-    eval (python -m virtualfish auto_activation)
-end
 
 # datetime in filename format
 function dt
@@ -113,16 +109,22 @@ if test -z "$STARTED" -a -z "$DISPLAY" -a -n "$XDG_VTNR" -a "$XDG_VTNR" -eq "1"
     startx
 end
 
-alias k="kubectl"
-alias kcc="k config get-contexts"
-alias kcu="k config use-context"
-alias kgd="k get deployment"
-alias ked="k edit deployment"
-alias kgp="k get pod -o 'custom-columns=NAME:.metadata.name,IMG:.spec.containers[*].image,STATUS:.status.phase'"
-alias kl="k logs -f --all-containers"
-alias issh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
-alias iscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
+if status is-interactive
+    alias k="kubectl"
+    alias kcc="k config get-contexts"
+    alias kcu="k config use-context"
+    alias kgd="k get deployment"
+    alias ked="k edit deployment"
+    alias kgp="k get pod -o 'custom-columns=NAME:.metadata.name,IMG:.spec.containers[*].image,STATUS:.status.phase'"
+    alias kl="k logs -f --all-containers"
+    alias issh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
+    alias iscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
+    set -q virtualfish || set -U virtualfish (
+        which pip &>/dev/null && pip show virtualfish &>/dev/null && \
+        python -m virtualfish auto_activation
+    )
+    test -n $virtualfish && eval $virtualfish
+    cd $last_pwd
+    source-file-if-exists ~/.profile.fish
+end
 
-status is-interactive && cd $last_pwd
-
-source-file-if-exists ~/.profile.fish
