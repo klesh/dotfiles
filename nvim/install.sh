@@ -20,4 +20,5 @@ esac
 
 # symlink configuration
 lnsf $DIR/config/init.vim $XDG_CONFIG_HOME/nvim/init.vim
+lnsf $DIR/config/coc-settings.json $XDG_CONFIG_HOME/nvim/coc-settings.json
 lnsf $DIR/config/init.vim ~/.vimrc

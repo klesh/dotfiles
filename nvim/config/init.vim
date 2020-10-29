@@ -59,6 +59,7 @@ nnoremap <leader>w :w<CR>
 nnoremap <leader><Esc> :noh<return><esc>
 
 inoremap <C-w> <esc><C-w>
+nmap <silent> <leader>ss :syntax sync fromstart<CR>
 
 
 " trailing spaces
@@ -92,11 +93,12 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'posva/vim-vue', { 'for': 'vue' }
 Plug 'tpope/vim-repeat'
-"Plug 'neoclide/coc.nvim', {'branch': 'release'}
-"Plug 'neoclide/coc-json', {'do': 'yarnpkg install --frozen-lockfile'}
-"Plug 'iamcco/coc-vimlsp', {'do': 'yarnpkg install --frozen-lockfile'}
-"Plug 'neoclide/coc-python', {'do': 'yarnpkg install --frozen-lockfile'}
-"Plug 'weirongxu/coc-explorer', {'do': 'yarnpkg install --frozen-lockfile'}
+if $COC_ENABLED == 'yes'
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    Plug 'neoclide/coc-python', {'do': 'yarnpkg install --frozen-lockfile'}
+else
+    Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
+endif
 Plug 'liuchengxu/eleline.vim'
 Plug 'tpope/vim-fugitive'                                         " git 功能
 Plug 'scrooloose/nerdcommenter'
@@ -104,7 +106,6 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 Plug 'morhetz/gruvbox'
 Plug 'dag/vim-fish', { 'for': 'fish' }
-Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
 Plug 'chrisbra/Colorizer'
 Plug 'alvan/vim-closetag', { 'for': ['vue', 'html', 'xml'] }
 Plug 'airblade/vim-gitgutter'
@@ -121,24 +122,25 @@ let g:closetag_filetypes = 'html,xhtml,phtml,vue'
 
 
 " ==== coc configuration ====
-"let g:coc_disable_startup_warning = 1
-"nmap <silent> gd <Plug>(coc-definition)
-"nmap <silent> gy <Plug>(coc-type-definition)
-"nmap <silent> gi <Plug>(coc-implementation)
-"nmap <silent> gr <Plug>(coc-references)
+if $COC_ENABLED == 'yes'
+    let g:coc_disable_startup_warning = 1
+    set statusline^=%{coc#status()}
+    nmap <silent> gd <Plug>(coc-definition)
+    nmap <silent> gy <Plug>(coc-type-definition)
+    nmap <silent> gi <Plug>(coc-implementation)
+    nmap <silent> gr <Plug>(coc-references)
 
-"xmap <silent> <leader>fs <Plug>(coc-format-selected)
-"nmap <silent> <leader>fs <Plug>(coc-format-selected)
-"nmap <silent> <leader>fb <Plug>(coc-format)
-"nmap <silent> <leader>rn <Plug>(coc-rename)
-"nmap <silent> <leader>ne <Plug>(coc-diagnostic-next-error)
-"nmap <silent> <leader>pe <Plug>(coc-diagnostic-prev-error)
-"nmap <silent> <leader>fe :CocCommand explorer --toggle<CR>
-"nmap <silent> <leader>if :CocInfo<CR>
-"nmap <silent> <leader>cl :CocList<CR>
-"nmap <silent> <leader>sd :call CocAction('doHover')<CR>
-"nmap <silent> <leader>ss :syntax sync fromstart<CR>
-"nmap <silent> <leader>ol <Plug>(coc-openlink)
+    xmap <silent> <leader>fs <Plug>(coc-format-selected)
+    nmap <silent> <leader>fs <Plug>(coc-format-selected)
+    nmap <silent> <leader>fb <Plug>(coc-format)
+    nmap <silent> <leader>rn <Plug>(coc-rename)
+    nmap <silent> <leader>ne <Plug>(coc-diagnostic-next-error)
+    nmap <silent> <leader>pe <Plug>(coc-diagnostic-prev-error)
+    nmap <silent> <leader>if :CocInfo<CR>
+    nmap <silent> <leader>cl :CocList<CR>
+    nmap <silent> <leader>sd :call CocAction('doHover')<CR>
+    nmap <silent> <leader>ol <Plug>(coc-openlink)
+endif
 
 " ==== auto-pairs configuration ====
 nmap <silent> <leader>ap :call AutoPairsToggle()<CR>
