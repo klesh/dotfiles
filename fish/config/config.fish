@@ -36,8 +36,6 @@ function source-file-if-exists
   end
 end
 
-source-file-if-exists /usr/share/autojump/autojump.fish
-source-file-if-exists /usr/local/share/autojump/autojump.fish
 source-file-if-exists ~/.cargo/env
 
 append-path-if-exists /usr/local/bin
@@ -119,12 +117,11 @@ if status is-interactive
     alias kl="k logs -f --all-containers"
     alias issh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
     alias iscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
-    set -q virtualfish || set -U virtualfish (
-        which pip &>/dev/null && pip show virtualfish &>/dev/null && \
-        python -m virtualfish auto_activation
-    )
-    test -n $virtualfish && eval $virtualfish
     cd $last_pwd
+    source-file-if-exists /usr/share/autojump/autojump.fish
+    source-file-if-exists /usr/local/share/autojump/autojump.fish
+    source-file-if-exists ~/.config/fish/virtualfish
+    source-file-if-exists ~/.profile.fish
     source-file-if-exists ~/.profile.fish
 end
 

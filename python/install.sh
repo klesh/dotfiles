@@ -15,7 +15,7 @@ fi
 # install python3
 case "$PM" in
     apt)
-        sudo apt install python3 python3-pip
+        sudo apt install python3 python3-pip python-is-python3
         fish-is-default-shell && sudo pip3 install virtualfish
         ;;
     pacman)
@@ -23,6 +23,8 @@ case "$PM" in
         fish-is-default-shell && sudo pip install virtualfish
         ;;
 esac
+
+python -m virtualfish auto_activation > ~/.config/fish/virtualfish
 
 # enable auto_activation plugin for virtualfish
 fish-is-default-shell && fish -c "yes | vf install && vf addplugins auto_activation"
