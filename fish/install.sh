@@ -10,7 +10,13 @@ case "$PM" in
         ! which pip3 && $ROOT/python/install.sh
         sudo add-apt-repository ppa:fish-shell/release-3 -y
         sudo apt update
-        sudo apt install fish libnotify-bin xdotool fzf -y
+        sudo apt install fish libnotify-bin xdotool -y
+        if apt show fzf &>/dev/null; then
+            sudo apt install fzf
+        else
+            git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+            ~/.fzf/install
+        fi
         ;;
     pacman)
         ! which pip && $ROOT/python/install.sh

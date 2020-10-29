@@ -3,16 +3,33 @@
 DIR=$(readlink -f $(dirname $0))
 . $DIR/../env.sh
 
+# install specific version
+if [[ -n $1 ]]; then
+    if which node &>/dev/null && [[ "$1" != "$(node -v)" ]]; then
+        NODE_URL=https://nodejs.org/dist
+        in-china && NODE_URL=https://npm.taobao.org/mirrors/node
+        if [[ $1 == 'ls' ]]; then
+            curl -s $NODE_URL/index.json |  jq '.[] | "\(.version) \(if .lts then "(lts)" else "" end)"' -r | less
+            exit
+        else
+            FN=node-$1-linux-x64.tar.gz
+            wget -O /tmp/$FN $NODE_URL/$1/$FN
+            sudo tar zxvf /tmp/$FN --strip 1 -C /usr/local/
+            rm /tmp/$FN
+        fi
+    fi
+else
+# install from distribution repo
+    case "$PM" in
+        apt)
+            sudo apt install -y nodejs npm yarnpkg
+            ;;
+        pacman)
+            sudo pacman -S --needed nodejs npm yarn
+            ;;
+    esac
+fi
 
-# install nodejs and yarn
-case "$PM" in
-    apt)
-        sudo apt install -y nodejs npm yarnpkg
-        ;;
-    pacman)
-        sudo pacman -S --needed nodejs npm yarn
-        ;;
-esac
 
 # install nvm
 if fish-is-default-shell; then
