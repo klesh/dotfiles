@@ -95,7 +95,6 @@ Plug 'posva/vim-vue', { 'for': 'vue' }
 Plug 'tpope/vim-repeat'
 if $COC_ENABLED == 'yes'
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
-    Plug 'neoclide/coc-python', {'do': 'yarnpkg install --frozen-lockfile'}
 else
     Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
 endif
