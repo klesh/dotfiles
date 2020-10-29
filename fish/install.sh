@@ -13,7 +13,7 @@ case "$PM" in
         sudo apt install fish libnotify-bin xdotool -y
         if apt show fzf &>/dev/null; then
             sudo apt install fzf
-        else
+        elif ! which fzf &>/dev/null; then
             git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
             ~/.fzf/install
         fi
