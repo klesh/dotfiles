@@ -10,7 +10,7 @@ case "$PM" in
         ! which pip3 && $ROOT/python/install.sh
         sudo add-apt-repository ppa:fish-shell/release-3 -y
         sudo apt update
-        sudo apt install fish libnotify-bin xdotool -y
+        sudo apt install fish libnotify-bin xdotool silversearcher-ag -y
         if apt show fzf &>/dev/null; then
             sudo apt install fzf
         elif ! which fzf &>/dev/null; then
@@ -20,7 +20,7 @@ case "$PM" in
         ;;
     pacman)
         ! which pip && $ROOT/python/install.sh
-        sudo pacman -S --needed --needed fish xdotool fzf
+        sudo pacman -S --needed --needed fish xdotool fzf the_silver_searcher
         ;;
 esac
 

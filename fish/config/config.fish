@@ -3,6 +3,7 @@
 set -gx EDITOR nvim
 
 # enable fzf completion hotkey
+#set -gx FZF_DEFAULT_COMMAND 'ag -g ""'
 set -U FZF_COMPLETE 0
 # no line-wrapping, good for `docker ps`
 set -gx LESS "-SRXF"
