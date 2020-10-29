@@ -121,7 +121,7 @@ if status is-interactive
     cd $last_pwd
     source-file-if-exists /usr/share/autojump/autojump.fish
     source-file-if-exists /usr/local/share/autojump/autojump.fish
-    source-file-if-exists ~/.config/fish/virtualfish
+    #source-file-if-exists ~/.config/fish/virtualfish
     source-file-if-exists ~/.profile.fish
     source-file-if-exists ~/.profile.fish
 end

@@ -24,8 +24,6 @@ case "$PM" in
         ;;
 esac
 
-python -m virtualfish auto_activation > ~/.config/fish/virtualfish
-
 # enable auto_activation plugin for virtualfish
 fish-is-default-shell && fish -c "yes | vf install && vf addplugins auto_activation"
 
