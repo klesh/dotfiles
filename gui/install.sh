@@ -23,6 +23,10 @@ case "$PM" in
                 bluez bluez-tools blueman pulseaudio-module-bluetooth
             sudo systemctl enable bluetooth
             sudo systemctl start bluetooth
+        # system utils
+        sudo apt install \
+            exfat-utils \
+            axel
         fi
         ;;
     pacman)
@@ -60,7 +64,10 @@ case "$PM" in
             sudo systemctl start bluetooth
         fi
         # for setting up default programs: exo-preferred-applications
-        sudo pacman -S --needed exo
+        sudo pacman -S --needed
+            exfat-utils \
+            axel \
+            exo
         ;;
 esac
 

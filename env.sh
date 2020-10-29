@@ -66,9 +66,7 @@ case "$PM" in
         sudo apt install \
             build-essential \
             unzip p7zip \
-            openssh-server openssh-client \
-            exfat-utils \
-            axel \
+            openssh-client \
             man sudo
         ;;
     pacman)
@@ -76,8 +74,6 @@ case "$PM" in
             base-devel \
             unzip p7zip \
             openssh \
-            exfat-utils \
-            axel \
             man sudo
         # install yay
         if ! which yay; then
