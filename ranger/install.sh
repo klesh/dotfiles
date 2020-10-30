@@ -12,7 +12,8 @@ case "$PM" in
         sudo pip3 install ranger-fm ueberzug
         ;;
     pacman)
-        sudo pip install ranger-fm ueberzug atool p7zip unrar highlight
+	sudo pacman -S --needed atool
+        sudo pip install ranger-fm ueberzug p7zip unrar highlight
         ;;
 esac
 
