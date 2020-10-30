@@ -1,4 +1,4 @@
-#!/usr/bin/env fish
+#!/bin/sh
 
 # start compositor daemon
 $HOME/.config/picom/launch.sh
@@ -7,7 +7,7 @@ $HOME/.config/picom/launch.sh
 $HOME/.config/dunst/launch.sh
 
 # start dwmbar daemon
-$HOME/.config/dwm/dwmbar
+$HOME/.config/dwm/statusbar
 
 # disable screen saver / turn off monitor if inactived for 300 secs
 xset s off

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 DIR=$(readlink -f $(dirname $0))
 
