@@ -46,7 +46,7 @@ case "$PM" in
             wget http://mirrors.163.com/debian/pool/main/f/fonts-wqy-microhei/$DEB_PKG_NAME -O /tmp/$DEB_PKG_NAME
         ar p /tmp/$DEB_PKG_NAME data.tar.xz | sudo tar Jxv -C /
         # install symbola for plain emojis(no-color) for st
-        yay -S --needed ttf-symbola-free
+        ! fc-list | grep -qi symbola && yay -S --needed ttf-symbola-free
         # clipboard
         sudo pacman -S --needed \
             xclip xsel
@@ -64,7 +64,7 @@ case "$PM" in
             sudo systemctl start bluetooth
         fi
         # for setting up default programs: exo-preferred-applications
-        sudo pacman -S --needed
+        sudo pacman -S --needed \
             exfat-utils \
             axel \
             exo
@@ -74,6 +74,7 @@ esac
 
 # install hermit nerd font
 install-nerdfont () {
+    grep -F "$*" /usr/local/share/fonts/nerdfont && return
     ORIGIN_NAME=$1
     PATCHED_PAT=$2
     VERSION=$3
@@ -87,6 +88,7 @@ install-nerdfont () {
         $LOCAL_REPO_PATH
     sudo 7z x -x!'*Windows*' -aoa $LOCAL_REPO_PATH/$NAME -o/usr/local/share/fonts
     sudo chmod +rx /usr/local/share/fonts
+    echo "$*" | sudo tee -a /usr/local/share/fonts/nerdfont
     echo $LOCAL_REPO_PATH
     rm -rf $LOCAL_REPO_PATH
 }

@@ -67,6 +67,7 @@ case "$PM" in
             build-essential \
             unzip p7zip \
             openssh-client \
+            curl wget \
             man sudo
         ;;
     pacman)
@@ -74,6 +75,7 @@ case "$PM" in
             base-devel \
             unzip p7zip \
             openssh \
+            curl wget \
             man sudo
         # install yay
         if ! which yay; then

@@ -40,16 +40,16 @@ esac
 # clone / compile utilities and dwm itself
 mkdir -p ~/Projects/suckless
 
-[! -d ~/Projects/suckless/st] && git clone https://gitee.com/klesh/st.git ~/Projects/suckless/st
+[ ! -d ~/Projects/suckless/st ] && git clone https://gitee.com/klesh/st.git ~/Projects/suckless/st
 cd ~/Projects/suckless/st && sudo rm -f config.h && sudo make clean install
 
-[! -d ~/Projects/suckless/dmenu] &&git clone https://gitee.com/klesh/dmenu.git ~/Projects/suckless/dmenu
+[ ! -d ~/Projects/suckless/dmenu ] &&git clone https://gitee.com/klesh/dmenu.git ~/Projects/suckless/dmenu
 cd ~/Projects/suckless/dmenu && sudo rm -f config.h && sudo make clean install
 
-[! -d ~/Projects/suckless/slock] &&git clone https://gitee.com/klesh/slock.git ~/Projects/suckless/slock
+[ ! -d ~/Projects/suckless/slock ] &&git clone https://gitee.com/klesh/slock.git ~/Projects/suckless/slock
 cd ~/Projects/suckless/slock && sudo rm -f config.h && sudo make clean install
 
-[! -d ~/Projects/suckless/dwm] &&git clone https://gitee.com/klesh/dwm.git ~/Projects/suckless/dwm
+[ ! -d ~/Projects/suckless/dwm ] &&git clone https://gitee.com/klesh/dwm.git ~/Projects/suckless/dwm
 cd ~/Projects/suckless/dwm && sudo rm -f config.h && sudo make clean install
 
 # config xinit to start for dwm
@@ -80,7 +80,7 @@ EOT
 
 # config dwm
 [[ -L $XDG_CONFIG_HOME/dwm/autostart ]] && rm $XDG_CONFIG_HOME/dwm/autostart
-mkdir -p $DIR/config/dwm
+mkdir -p $XDG_CONFIG_HOME/dwm
 cp $DIR/config/dwm/autostart $XDG_CONFIG_HOME/dwm/autostart
 lnsf $DIR/config/dwm/dwmbar $XDG_CONFIG_HOME/dwm/dwmbar
 lnsf $DIR/config/autorandr/postswitch $XDG_CONFIG_HOME/autorandr/postswitch

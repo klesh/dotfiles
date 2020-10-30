@@ -21,17 +21,19 @@ case "$PM" in
 esac
 
 # build and install picom
-VERSION=next
+VERSION=v8.2
 VERSION_PATH=$XDG_CONFIG_HOME/picom/version
 if [ "$VERSION" = "next" ] || ! eqv "$VERSION_PATH" "$VERSION"; then
     echo Downloading picom $VERSION
-    rm -rf /tmp/picom.zip
-    curl "https://github.com/yshui/picom/archive/$VERSION.zip" -Lo /tmp/picom-$VERSION.zip
+    [ ! -f /tmp/picom-$VERSION.zip ] && \
+        curl "https://github.com/yshui/picom/archive/$VERSION.zip" -Lo /tmp/picom-$VERSION.zip
     unzip /tmp/picom-$VERSION.zip -d /tmp
-    pushd /tmp/picom-$VERSION
+    FD=$(unzip -l /tmp/picom-$VERSION.zip | awk 'NR==5{print $4}')
+    pushd /tmp/$FD
     meson --buildtype=release . build
     sudo ninja -C build install
     popd
+    mkdir -p $(dirname $VERSION_PATH)
     echo "$VERSION" > "$VERSION_PATH"
     sudo rm -rf /tmp/picom-$VERSION*
 fi
