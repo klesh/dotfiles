@@ -82,5 +82,5 @@ EOT
 [[ -L $XDG_CONFIG_HOME/dwm/autostart ]] && rm $XDG_CONFIG_HOME/dwm/autostart
 mkdir -p $XDG_CONFIG_HOME/dwm
 cp $DIR/config/dwm/autostart $XDG_CONFIG_HOME/dwm/autostart
-lnsf $DIR/config/dwm/dwmbar $XDG_CONFIG_HOME/dwm/dwmbar
+lnsf $DIR/config/dwm/statusbar $XDG_CONFIG_HOME/dwm/statusbar
 lnsf $DIR/config/autorandr/postswitch $XDG_CONFIG_HOME/autorandr/postswitch

@@ -115,8 +115,9 @@ start() {
 }
 
 restart() {
-    pkill -f 'dwmbar loop'
-    $0 loop &
+    FP=$(readlink -f $0)
+    pkill -f "$FP loop"
+    $FP loop &
 }
 
 if [ "$1" = "loop" ]; then
