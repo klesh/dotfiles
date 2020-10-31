@@ -75,6 +75,13 @@ while :; do
 done
 EOT
 
+cat <<'EOT' > ~/.profile
+#!/bin/sh
+
+# auto startx
+[ -z "$DISPLAY" -a -n "$XDG_VTNR" -a "$XDG_VTNR" -eq "1" ] && exec startx
+EOT
+
 
 # config dwm
 [[ -L $XDG_CONFIG_HOME/dwm/autostart ]] && rm $XDG_CONFIG_HOME/dwm/autostart
