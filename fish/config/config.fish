@@ -1,50 +1,5 @@
 #!/usr/bin/env fish
 
-set -gx EDITOR nvim
-
-# enable fzf completion hotkey
-set -gx FZF_DEFAULT_COMMAND 'ag -g ""'
-set -U FZF_COMPLETE 0
-set -U FZF_FIND_FILE_COMMAND 'ag -g ""'
-set -U FZF_OPEN_COMMAND 'ag -g ""'
-# no line-wrapping, good for `docker ps`
-set -gx LESS "-SRXF"
-# nvm plugin
-set -gx nvm_mirror http://npm.taobao.org/mirrors/node
-# change OTHER-WRITABLE color for `ls` command
-set -gx LS_COLORS 'ow=34;42;40'
-# ranger highlighting color theme
-set -gx HIGHLIGHT_OPTIONS --style=solarized-dark
-
-# tune git icon for nerdfont
-set -g __fish_git_prompt_char_upstream_ahead '>'
-set -g __fish_git_prompt_char_upstream_behind '<'
-set -g __fish_git_prompt_char_upstream_prefix ''
-
-set -g __fish_git_prompt_char_stagedstate '●'
-set -g __fish_git_prompt_char_dirtystate '*'
-set -g __fish_git_prompt_char_untrackedfiles '+'
-set -g __fish_git_prompt_char_conflictedstate 'x'
-set -g __fish_git_prompt_char_cleanstate '✔ '
-
-function append-path-if-exists
-    if test -e $argv
-        set -gx PATH $argv $PATH
-  end
-end
-
-function source-file-if-exists
-    if test -e $argv
-        source $argv
-  end
-end
-
-source-file-if-exists ~/.cargo/env
-
-append-path-if-exists /usr/local/bin
-append-path-if-exists ~/.local/bin
-append-path-if-exists ~/.yarn/bin
-append-path-if-exists /snap/bin
 
 
 # datetime in filename format
@@ -104,13 +59,52 @@ function show-colors
     bash -c '(x=`tput op` y=`printf %76s`;for i in {0..256};do o=00$i;echo -e ${o:${#o}-3:3} `tput setaf $i;tput setab $i`${y// /=}$x;done)'
 end
 
-# auto startx
-if test -z "$STARTED" -a -z "$DISPLAY" -a -n "$XDG_VTNR" -a "$XDG_VTNR" -eq "1"
-    set -gx STARTED true
-    exec startx
-end
-
 if status is-interactive
+    set -gx EDITOR nvim
+
+    # enable fzf completion hotkey
+    set -gx FZF_DEFAULT_COMMAND 'ag -g ""'
+    set -U FZF_COMPLETE 0
+    set -U FZF_FIND_FILE_COMMAND 'ag -g ""'
+    set -U FZF_OPEN_COMMAND 'ag -g ""'
+    # no line-wrapping, good for `docker ps`
+    set -gx LESS "-SRXF"
+    # nvm plugin
+    set -gx nvm_mirror http://npm.taobao.org/mirrors/node
+    # change OTHER-WRITABLE color for `ls` command
+    set -gx LS_COLORS 'ow=34;42;40'
+    # ranger highlighting color theme
+    set -gx HIGHLIGHT_OPTIONS --style=solarized-dark
+
+    # tune git icon for nerdfont
+    set -g __fish_git_prompt_char_upstream_ahead '>'
+    set -g __fish_git_prompt_char_upstream_behind '<'
+    set -g __fish_git_prompt_char_upstream_prefix ''
+
+    set -g __fish_git_prompt_char_stagedstate '●'
+    set -g __fish_git_prompt_char_dirtystate '*'
+    set -g __fish_git_prompt_char_untrackedfiles '+'
+    set -g __fish_git_prompt_char_conflictedstate 'x'
+    set -g __fish_git_prompt_char_cleanstate '✔ '
+
+    function append-path-if-exists
+        if test -e $argv
+            set -gx PATH $argv $PATH
+      end
+    end
+
+    function source-file-if-exists
+        if test -e $argv
+            source $argv
+      end
+    end
+
+    source-file-if-exists ~/.cargo/env
+
+    append-path-if-exists /usr/local/bin
+    append-path-if-exists ~/.local/bin
+    append-path-if-exists ~/.yarn/bin
+    append-path-if-exists /snap/bin
     alias k="kubectl"
     alias kcc="k config get-contexts"
     alias kcu="k config use-context"
