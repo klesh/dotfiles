@@ -3,8 +3,10 @@
 set -gx EDITOR nvim
 
 # enable fzf completion hotkey
-set -gx FZF_DEFAULT_COMMAND 'ag -g "" --ignore "node_modules/"'
+set -gx FZF_DEFAULT_COMMAND 'ag -g ""'
 set -U FZF_COMPLETE 0
+set -U FZF_FIND_FILE_COMMAND 'ag -g ""'
+set -U FZF_OPEN_COMMAND 'ag -g ""'
 # no line-wrapping, good for `docker ps`
 set -gx LESS "-SRXF"
 # nvm plugin
