@@ -19,7 +19,6 @@ case "$PM" in
             gnome-keyring \
             xss-lock \
             nitrogen \
-            lm-sensors \
             trayer
         sudo apt remove gdm3
         ;;
@@ -32,7 +31,6 @@ case "$PM" in
             gnome-keyring \
             xss-lock \
             nitrogen \
-            i2c-tools \
             trayer
         ;;
 esac
