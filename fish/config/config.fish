@@ -107,7 +107,7 @@ end
 # auto startx
 if test -z "$STARTED" -a -z "$DISPLAY" -a -n "$XDG_VTNR" -a "$XDG_VTNR" -eq "1"
     set -gx STARTED true
-    startx
+    exec startx
 end
 
 if status is-interactive
