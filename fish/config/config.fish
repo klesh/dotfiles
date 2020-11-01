@@ -1,7 +1,5 @@
 #!/usr/bin/env fish
 
-
-
 # datetime in filename format
 function dt
     date "+%Y%m%d-%H%M%S"
@@ -94,17 +92,12 @@ if status is-interactive
     end
 
     function source-file-if-exists
-        if test -e $argv
-            source $argv
-      end
+        for f in $argv
+            test -e $f && source $f && return
+        end
     end
 
-    source-file-if-exists ~/.cargo/env
-
-    append-path-if-exists /usr/local/bin
-    append-path-if-exists ~/.local/bin
     append-path-if-exists ~/.yarn/bin
-    append-path-if-exists /snap/bin
     alias k="kubectl"
     alias kcc="k config get-contexts"
     alias kcu="k config use-context"
@@ -115,10 +108,7 @@ if status is-interactive
     alias issh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
     alias iscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
     cd $last_pwd
-    source-file-if-exists /usr/share/autojump/autojump.fish
-    source-file-if-exists /usr/local/share/autojump/autojump.fish
-    #source-file-if-exists ~/.config/fish/virtualfish
-    source-file-if-exists ~/.profile.fish
+    source-file-if-exists /usr/share/autojump/autojump.fish /usr/local/share/autojump/autojump.fish
     source-file-if-exists ~/.profile.fish
 end
 
