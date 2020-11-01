@@ -23,7 +23,7 @@ case "$PM" in
         sudo pacman -S --needed --needed fish xdotool fzf the_silver_searcher dash
         # prevent bash upgradation relink /bin/sh
         sudo mkdir -p /etc/pacman.d/hooks
-        cat <<-EOT | sed 's/^ *//' | sudo tee /etc/pacman.d/sh-is-dash.hook
+        cat <<'        EOT' | sed 's/^ *//' | sudo tee /etc/pacman.d/sh-is-dash.hook
         [Trigger]
         Type = Package
         Operation = Install
