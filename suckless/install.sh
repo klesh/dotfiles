@@ -78,6 +78,8 @@ EOT
 cat <<'EOT' > ~/.profile
 #!/bin/sh
 
+export PATH=$HOME/.local/bin
+
 # auto startx
 [ -z "$DISPLAY" -a -n "$XDG_VTNR" -a "$XDG_VTNR" -eq "1" ] && exec startx
 EOT
