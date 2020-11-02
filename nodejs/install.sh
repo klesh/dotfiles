@@ -1,21 +1,21 @@
-#!/bin/bash
+#!/bin/sh
 
-DIR=$(readlink -f $(dirname $0))
-. $DIR/../env.sh
+DIR=$(readlink -f "$(dirname "$0")")
+. "$DIR/../env.sh"
 
 # install specific version
-if [[ -n $1 ]]; then
-    if which node &>/dev/null && [[ "$1" != "$(node -v)" ]]; then
+if [ -n "$1" ]; then
+    if command -v node 1>/dev/null 2>&1 && [ "$1" != "$(node -v)" ]; then
         NODE_URL=https://nodejs.org/dist
-        in-china && NODE_URL=https://npm.taobao.org/mirrors/node
-        if [[ $1 == 'ls' ]]; then
+        in_china && NODE_URL=https://npm.taobao.org/mirrors/node
+        if [ "$1" = 'ls' ]; then
             curl -s $NODE_URL/index.json |  jq '.[] | "\(.version) \(if .lts then "(lts)" else "" end)"' -r | less
             exit
         else
             FN=node-$1-linux-x64.tar.gz
-            wget -O /tmp/$FN $NODE_URL/$1/$FN
-            sudo tar zxvf /tmp/$FN --strip 1 -C /usr/local/
-            rm /tmp/$FN
+            wget -O "/tmp/$FN" "$NODE_URL/$1/$FN"
+            sudo tar zxvf "/tmp/$FN" --strip 1 -C /usr/local/
+            rm "/tmp/$FN"
         fi
     fi
 else
@@ -32,7 +32,7 @@ fi
 
 
 # install nvm
-if which fish 2>/dev/null; then
+if command -v fish 2>/dev/null; then
     fish -c "fisher add jorgebucaran/nvm.fish"
 else
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
@@ -40,7 +40,7 @@ fi
 
 
 # config mirrors for CHINA
-if in-china; then
+if in_china; then
     sudo npm install cnpm -g --registry=https://r.npm.taobao.org
     yarnpkg config set registry https://registry.npm.taobao.org --global  && \
     yarnpkg config set disturl https://npm.taobao.org/dist --global && \

@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 
-DIR=$(readlink -f $(dirname $0))
-. $DIR/../env.sh
+DIR=$(readlink -f "$(dirname "$0")")
+. "$DIR/../env.sh"
 
 # tips
 # 1. to relocate default pool
@@ -26,4 +26,4 @@ case "$PM" in
 esac
 
 # configuration
-sudo usermod -aG libvirt $USER
+sudo usermod -aG libvirt "$USER"

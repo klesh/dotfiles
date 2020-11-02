@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 
 sudo systemctl disable systemd-networkd-wait-online

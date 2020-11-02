@@ -21,7 +21,7 @@ set incsearch
 set signcolumn=yes
 set laststatus=2
 set fillchars=vert:\ ,fold:-
-set clipboard=unnamedplus
+set clipboard=unnamed,unnamedplus
 filetype plugin indent on
 syntax on
 au! BufWritePost $MYVIMRC source %
@@ -86,22 +86,22 @@ if !filereadable(vim_plug_path)
     echo "vim-plug installed"
 endif
 
-call plug#begin()
+call plug#begin('~/.vim/plugged')
 Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-surround'
 Plug 'jiangmiao/auto-pairs'
 Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'posva/vim-vue', { 'for': 'vue' }
 Plug 'tpope/vim-repeat'
-if $COC_ENABLED == 'yes'
+if $VIM_MODE == 'enhanced'
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    Plug 'puremourning/vimspector'
 else
     Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
 endif
 Plug 'liuchengxu/eleline.vim'
 Plug 'tpope/vim-fugitive'                                         " git 功能
 Plug 'scrooloose/nerdcommenter'
-"Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 Plug 'morhetz/gruvbox'
 Plug 'dag/vim-fish', { 'for': 'fish' }
@@ -120,8 +120,8 @@ let g:vim_markdown_folding_disabled = 1
 let g:closetag_filetypes = 'html,xhtml,phtml,vue'
 
 
-" ==== coc configuration ====
-if $COC_ENABLED == 'yes'
+if $VIM_MODE == 'enhanced'
+    " ==== coc configuration ====
     let g:coc_disable_startup_warning = 1
     set statusline^=%{coc#status()}
     nmap <silent> gd <Plug>(coc-definition)
@@ -139,6 +139,10 @@ if $COC_ENABLED == 'yes'
     nmap <silent> <leader>cl :CocList<CR>
     nmap <silent> <leader>sd :call CocAction('doHover')<CR>
     nmap <silent> <leader>ol <Plug>(coc-openlink)
+
+    " ==== vimspector configuration ====
+    let g:vimspector_enable_mappings = 'HUMAN'
+    let g:vimspector_install_gadgets = [ 'debugpy' ]
 endif
 
 " ==== auto-pairs configuration ====

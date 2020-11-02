@@ -1,7 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 
-DIR=$(readlink -f $(dirname $0))
-. $DIR/../env.sh
+set -e
+DIR=$(readlink -f "$(dirname "$0")")
+. "$DIR/../env.sh"
 
 # for better looking
 case "$PM" in

@@ -2,5 +2,8 @@
     "npm.binPath": "yarnpkg",
     "python.linting.enable": true,
     "python.linting.flake8Enabled": true,
-    "python.linting.pylintEnabled": false
+    "python.linting.pylintEnabled": false,
+    "diagnostic-languageserver.filetypes": {
+        "sh": ["shellcheck", "-e", "SC1090"]
+    }
 }

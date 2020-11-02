@@ -56,8 +56,9 @@ statusbar() {
     # volume
     amixer get Master | awk 'END {
         ICO = $NF == "[off]" ? ENVIRON["ICON_MTD"] : ENVIRON["ICON_VOL"]
-        VOL = $(NF-1)
-        printf "%s %s  ", ICO,substr(VOL, 2, length(VOL)-2)
+        match($0, / \[([0-9]+%)\] /, m)
+        VOL = m[1]
+        printf "%s %s  ", ICO, VOL
     }'
 
     # network
