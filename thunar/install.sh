@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 
-DIR=$(readlink -f $(dirname $0))
-. $DIR/../env.sh
+DIR=$(readlink -f "$(dirname "$0")")
+. "$DIR/../env.sh"
 
 # install ranger
 case "$PM" in
@@ -16,4 +16,4 @@ case "$PM" in
 esac
 
 # symlink configuration
-lnsf $DIR/Thunar/uca.xml $XDG_CONFIG_HOME/Thunar/uca.xml
+lnsf "$DIR/Thunar/uca.xml" "$XDG_CONFIG_HOME/Thunar/uca.xml"

@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 
-DIR=$(readlink -f $(dirname $0))
-. $DIR/../env.sh
+DIR=$(readlink -f "$(dirname "$0")")
+. "$DIR/../env.sh"
 
 # install sshd
 case "$PM" in

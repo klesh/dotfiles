@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 
-DIR=$(readlink -f $(dirname $0))
-. $DIR/../env.sh
+DIR=$(readlink -f "$(dirname "$0")")
+. "$DIR/../env.sh"
 
 
-! in-china && echo 'Skip mirrors configuration' && exit
+! in_china && echo 'Skip mirrors configuration' && exit
 
 # setup package mirror for CHINA
 case "$PM" in
@@ -18,7 +18,7 @@ case "$PM" in
         ;;
     pacman)
         echo TODO
-        exit -1
+        exit 1
         ;;
 esac
 

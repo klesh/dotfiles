@@ -1,61 +1,56 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
-ROOT=$(readlink -f $(dirname "${BASH_SOURCE[0]}"))
+ROOT=$(readlink -f "$(dirname "$0")")
 PM=n/a
-DEFAULT_SHELL=$(getent passwd $USER | cut -d: -f7)
-FISH=$(which fish)
 XDG_CONFIG_HOME=${XDG_CONFIG_HOME-"$HOME/.config"}
+echo "dotfiles path: $ROOT"
 
-if which pacman > /dev/null; then
+if command -v pacman > /dev/null; then
     PM=pacman
-elif which apt > /dev/null; then
+elif command -v apt > /dev/null; then
     PM=apt
 fi
 
 if [ "$PM" = "n/a" ]; then
     echo "Unsupported Package Manager"
-    exit -1
+    exit 1
 fi
 
-in-china () {
+in_china () {
     if [ -z "$IS_CHINA" ]; then
         IS_CHINA=no
         if curl -q myip.ipip.net | grep '中国' > /dev/null; then
             IS_CHINA=yes
         fi
     fi
-    [ "$IS_CHINA" = "no" ] && return -1
+    [ "$IS_CHINA" = "no" ] && return 1
     return 0
 }
 
 lnsf () {
-    [ "$#" -ne 2 ] && echo "lnsf <target> <symlink>" && return -1
-    local TARGET=$(readlink -f $1)
-    local SYMLNK=$2
-    [ -z "$TARGET" ] && echo "$1 not exists" && return -1
-    local SYMDIR=$(dirname $SYMLNK)
-    if [[ -n $SYMDIR && -L $SYMDIR ]]; then
-        rm -rf $SYMDIR
+    [ "$#" -ne 2 ] && echo "lnsf <target> <symlink>" && return 1
+    TARGET=$(readlink -f "$1")
+    SYMLNK=$2
+    [ -z "$TARGET" ] && echo "$1 not exists" && return 1
+    SYMDIR=$(dirname "$SYMLNK")
+    if [ -n "$SYMDIR" && -L "$SYMDIR" ]; then
+        rm -rf "$SYMDIR"
     fi
-    mkdir -p $SYMDIR
-    [ ! -L $SYMLNK ] && rm -rf $SYMLNK
-    ln -sf $TARGET $SYMLNK
+    mkdir -p "$SYMDIR"
+    [ ! -L "$SYMLNK" ] && rm -rf "$SYMLNK"
+    ln -sf "$TARGET" "$SYMLNK"
 }
 
-fish-is-default-shell () {
-    [ "$DEFAULT_SHELL" = "$FISH" ]
-}
-
-has-bluetooth () {
+has_bluetooth () {
     dmesg | grep -i bluetooth
 }
 
 eqv () {
-    local VERSION_PATH=$1
-    local VERSION=$2
-    [ ! -f $VERSION_PATH ] && return -1
-    local VERSION2=$(cat "$VERSION_PATH")
+    VERSION_PATH=$1
+    VERSION=$2
+    [ ! -f "$VERSION_PATH" ] && return 1
+    VERSION2="$(cat "$VERSION_PATH")"
     [ "$VERSION" = "$VERSION2" ]
 }
 
@@ -78,7 +73,7 @@ case "$PM" in
             curl wget \
             man sudo
         # install yay
-        if ! which yay; then
+        if ! command -v yay; then
             git clone --depth 1 https://aur.archlinux.org/yay.git /tmp/yay
             cd /tmp/yay
             makepkg -si

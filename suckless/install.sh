@@ -1,12 +1,12 @@
-#!/bin/bash
+#!/bin/sh
 
-DIR=$(readlink -f $(dirname $0))
-. $DIR/../env.sh
+DIR=$(readlink -f "$(dirname "$0")")
+. "$DIR/../env.sh"
 
-$ROOT/fish/install.sh
-$ROOT/gui/install.sh
-$ROOT/picom/install.sh
-$ROOT/dunst/install.sh
+"$ROOT/fish/install.sh"
+"$ROOT/gui/install.sh"
+"$ROOT/picom/install.sh"
+"$ROOT/dunst/install.sh"
 
 # install dependencies
 case "$PM" in
@@ -86,8 +86,8 @@ EOT
 
 
 # config dwm
-[[ -L $XDG_CONFIG_HOME/dwm/autostart ]] && rm $XDG_CONFIG_HOME/dwm/autostart
-mkdir -p $XDG_CONFIG_HOME/dwm
-cp $DIR/config/dwm/autostart $XDG_CONFIG_HOME/dwm/autostart
-lnsf $DIR/config/dwm/statusbar $XDG_CONFIG_HOME/dwm/statusbar
-lnsf $DIR/config/autorandr/postswitch $XDG_CONFIG_HOME/autorandr/postswitch
+[ -L "$XDG_CONFIG_HOME/dwm/autostart" ] && rm "$XDG_CONFIG_HOME/dwm/autostart"
+mkdir -p "$XDG_CONFIG_HOME/dwm"
+cp "$DIR/config/dwm/autostart" "$XDG_CONFIG_HOME/dwm/autostart"
+lnsf "$DIR/config/dwm/statusbar" "$XDG_CONFIG_HOME/dwm/statusbar"
+lnsf "$DIR/config/autorandr/postswitch" "$XDG_CONFIG_HOME/autorandr/postswitch"
