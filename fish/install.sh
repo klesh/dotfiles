@@ -11,11 +11,8 @@ case "$PM" in
         sudo add-apt-repository ppa:fish-shell/release-3 -y
         sudo apt update
         sudo apt install fish libnotify-bin xdotool silversearcher-ag dash -y
-        if apt show fzf 2>/dev/null; then
-            sudo apt install -y fzf
-            git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-            ~/.fzf/install
-        fi
+        git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+        ~/.fzf/install
         ;;
     pacman)
         sudo pacman -S --needed --needed fish xdotool fzf the_silver_searcher dash
@@ -52,5 +49,5 @@ lnsf "$DIR/config/functions/fish_right_prompt.fish" "$XDG_CONFIG_HOME/fish/funct
 lnsf "$DIR/config/functions/fisher.fish" "$XDG_CONFIG_HOME/fish/functions/fisher.fish"
 
 # install plugins
-fish -c "fisher add jethrokuan/fzf"
+#fish -c "fisher add jethrokuan/fzf"
 
