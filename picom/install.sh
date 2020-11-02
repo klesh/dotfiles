@@ -21,7 +21,7 @@ case "$PM" in
 esac
 
 # build and install picom
-VERSION=v8.2
+VERSION=next
 VERSION_PATH=$XDG_CONFIG_HOME/picom/version
 if [ "$VERSION" = "next" ] || ! eqv "$VERSION_PATH" "$VERSION"; then
     echo Downloading picom $VERSION
