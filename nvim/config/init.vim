@@ -107,7 +107,7 @@ Plug 'morhetz/gruvbox'
 Plug 'dag/vim-fish', { 'for': 'fish' }
 Plug 'chrisbra/Colorizer'
 Plug 'alvan/vim-closetag', { 'for': ['vue', 'html', 'xml'] }
-Plug 'airblade/vim-gitgutter'
+"Plug 'airblade/vim-gitgutter'
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'junegunn/fzf'
 call plug#end()
@@ -139,6 +139,7 @@ if $VIM_MODE == 'enhanced'
     nmap <silent> <leader>cl :CocList<CR>
     nmap <silent> <leader>sd :call CocAction('doHover')<CR>
     nmap <silent> <leader>ol <Plug>(coc-openlink)
+    nmap <silent> <leader>oc :CocCommand<CR>
 
     " ==== vimspector configuration ====
     let g:vimspector_enable_mappings = 'HUMAN'

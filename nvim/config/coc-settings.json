@@ -4,6 +4,6 @@
     "python.linting.flake8Enabled": true,
     "python.linting.pylintEnabled": false,
     "diagnostic-languageserver.filetypes": {
-        "sh": ["shellcheck", "-e", "SC1090"]
+        "sh": "shellcheck"
     }
 }

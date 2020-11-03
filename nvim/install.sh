@@ -5,6 +5,7 @@ DIR=$(readlink -f "$(dirname "$0")")
 
 # check dependencies
 ! command -v yarnpkg && "$ROOT/nodejs/install.sh"
+! command -v pip && "$ROOT/python/install.sh"
 
 # install nvim
 case "$PM" in
@@ -12,9 +13,11 @@ case "$PM" in
         sudo add-apt-repository ppa:neovim-ppa/stable -y
         sudo apt update
         sudo apt install -y neovim
+        sudo pip3 install pyvim neovim
         ;;
     pacman)
         sudo pacman -S --needed neovim
+        sudo pip install pyvim neovim
         ;;
 esac
 
