@@ -1,35 +1,30 @@
 #!/bin/sh
 
 # start compositor daemon
-$HOME/.config/picom/launch.sh
+"$HOME/.config/picom/launch.sh"
 
 # start desktop notification daemon
-$HOME/.config/dunst/launch.sh
+"$HOME/.config/dunst/launch.sh"
 
 # start dwmbar daemon
-$HOME/.config/dwm/statusbar
+"$HOME/.config/dwm/statusbar"
 
 # disable screen saver / turn off monitor if inactived for 300 secs
 xset s off
 xset dpms 300 300 300
 killall xss-lock
-xss-lock $(which slock) &
+xss-lock "$(command -v slock)" &
 
-# start network applet
-pgrep -x nm-applet || nm-applet &
+launchapp () {
+    ! command -v "$1" >/dev/null && return  # command doesn't exist
+    pgrep -u "$USER" -x "$1" && return      # if launched by current user
+    "$@" &
+}
 
-# start bluetooth applet
-which blueman-applet && ! pgrep -x blueman-applet || blueman-applet &
+launchapp nm-applet
+launchapp blueman-applet
+launchapp flameshot
+launchapp ibus-daemon -drx
+launchapp nextcloud --background
 
-# start screenshot tool
-which flameshot && ! pgrep -x flameshot && flameshot &
-
-# start input method
-pgrep -x ibus-daemon || ibus-daemon -drx &
-
-# restart wallpaper
 nitrogen --restore
-
-# start nextcloud
-pgrep -x nextcloud || nextcloud &
-
