@@ -121,9 +121,15 @@ restart() {
     $FP loop &
 }
 
-if [ "$1" = "loop" ]; then
-    start
-else
-    restart
-fi
+case "$1" in
+    loop)
+        start
+        ;;
+    dryrun)
+        statusbar
+        ;;
+    *)
+        restart
+        ;;
+esac
 

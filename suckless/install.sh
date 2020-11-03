@@ -81,7 +81,7 @@ cat <<'EOT' > ~/.profile
 export PATH=$HOME/.local/bin
 
 # auto startx
-[ -z "$DISPLAY" -a -n "$XDG_VTNR" -a "$XDG_VTNR" -eq "1" ] && exec startx
+[ -z "$DISPLAY" -a -n "$XDG_VTNR" ] && [ "$XDG_VTNR" -eq "1" ] && exec startx
 EOT
 
 
