@@ -5,26 +5,6 @@ function dt
     date "+%Y%m%d-%H%M%S"
 end
 
-# translation
-function d
-    set meta (
-        curl -SsLG "http://cn.bing.com/dict/search" --data-urlencode "q=$argv" | \
-        string match -r '<meta name="description" content="必应词典为您提供.+的释义，(.+?)" />'
-    )
-    set trans (string replace -ra '\W(?=(\w+\.|网络释义：))' \n $meta[2])
-    string join \n $trans
-end
-
-# pronounciation
-function dp
-    set play afplay
-    if not which $play 2>/dev/null
-        set play ffplay -nodisp -autoexit
-    end
-    wget -O /tmp/sound.mp3 "http://dict.youdao.com/dictvoice?audio=$argv[1]&type=1" &>/dev/null
-    and eval $play /tmp/sound.mp3 1>/dev/null 2>/dev/null
-end
-
 function clean-taobao-link
     echo "$argv" | sed 's/^\(.*\)?\(.*&\)\?\(id=[^&]\+\).*$/\1?\3/g' | xsel -sb
 end

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# shellcheck disable=2086
+
 set -e
 DIR="$(readlink -f "$(dirname "$0")")"
 DMENU_OPTS='-i -c -fn monospace:13 -nb #626262 -nf  #bbbbbb -sb  #5b97f7 -sf  #eeeeee -l 20'
@@ -34,7 +36,7 @@ display() {
                 fi
                 display
             elif echo "$INPUT" | grep -P '^ '; then
-                echo -n $INPUT | sed 's/^\s+//' |  xsel -b
+                printf "%s" "$INPUT" | sed 's/^\s+//' |  xsel -b
             else
                 SENTENCE="$INPUT"
                 request
@@ -44,7 +46,10 @@ display() {
 
 
 SENTENCE="$*"
-[ -z "$SENTENCE" ] && SENTENCE="$(xsel -o)"
-request
+if [ -n "$SENTENCE" ]; then
+    request
+else
+    display
+fi
 #pronounce "$@"
 
