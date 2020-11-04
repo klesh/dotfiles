@@ -1,0 +1,50 @@
+#!/bin/sh
+
+set -e
+DIR="$(readlink -f "$(dirname "$0")")"
+DMENU_OPTS='-i -c -fn monospace:13 -nb #626262 -nf  #bbbbbb -sb  #5b97f7 -sf  #eeeeee -l 20'
+
+
+request() {
+    RESULT="$(
+        curl -SsLG "http://dict.youdao.com/w/eng/$SENTENCE/" \
+            | awk -v PI=' ' -f "$DIR/dict.awk"
+    )"
+    display
+}
+
+pronounce() {
+    PLAY=afplay
+    ! command -v "$PLAY" 2>/dev/null && PLAY="ffplay -nodisp -autoexit"
+    FP="/tmp/dict/$*.mp3"
+    mkdir -p /tmp/dict
+    [ ! -f "$FP" ] && curl -o  "$FP" "http://dict.youdao.com/dictvoice?audio=$1&type=$2" 1>/dev/null 2>&1
+    $PLAY "$FP" 1>/dev/null 2>&1
+}
+
+display() {
+    echo "$RESULT" \
+        | dmenu $DMENU_OPTS \
+        | if IFS= read -r INPUT; then
+            if echo "$INPUT" | grep -qP ' '; then
+                if echo "$INPUT" | grep -q '美'; then
+                    pronounce "$SENTENCE" 2 &
+                else
+                    pronounce "$SENTENCE" 1 &
+                fi
+                display
+            elif echo "$INPUT" | grep -P '^ '; then
+                echo -n $INPUT | sed 's/^\s+//' |  xsel -b
+            else
+                SENTENCE="$INPUT"
+                request
+            fi
+          fi
+}
+
+
+SENTENCE="$*"
+[ -z "$SENTENCE" ] && SENTENCE="$(xsel -o)"
+request
+#pronounce "$@"
+
