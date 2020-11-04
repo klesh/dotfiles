@@ -34,7 +34,7 @@ lnsf () {
     SYMLNK=$2
     [ -z "$TARGET" ] && echo "$1 not exists" && return 1
     SYMDIR=$(dirname "$SYMLNK")
-    if [ -n "$SYMDIR" && -L "$SYMDIR" ]; then
+    if [ -n "$SYMDIR" ] && [ -L "$SYMDIR" ]; then
         rm -rf "$SYMDIR"
     fi
     mkdir -p "$SYMDIR"
