@@ -1,26 +1,29 @@
+ bulkrename
  google-chrome
+ chromium-browser
  compton
  picom
  android-studio
  arandr
  assistant
  avahi-discover
- blueman-adapters
- blueman-manager
- code-oss
+ blueman
+ bluetooth
+ code
  nextcloud
  dbeaver
- electron9
  electron
-
  File Manager
- Mail Reader
+ mail
+ mutter
  Preferred Applications
- Terminal Emulator
+ﱘ ncmpcpp
+ Terminal
+ xterm
  Web Browser
  firefox
- gimp-2.10
- google-chrome-stable
+ gimp
+ ImageMagick
  gucharmap
 ﱩ htop
  java
@@ -35,21 +38,25 @@
 ﳻ openscad
  flameshot
 פֿ ibus
-פֿ ibus-extension-gtk3
-פֿ ibus-setup
  file-roller
  umbrello5
  keepassxc
  zathura
 פֿ qtcreator
-墳 pavucontrol
+墳pavucontrol
  qt5ct
  ranger
  screenkey
+ keyboard
  sxiv
- ThunarBulkRename
  thunar
- thunar-settings
  vim
  virt-manager
-
+ libre
+着wifi
+着wi-fi
+ font
+ network
+ gnome
+ python
+ﰅ printer

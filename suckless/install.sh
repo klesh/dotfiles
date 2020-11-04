@@ -79,6 +79,7 @@ cat <<'EOT' > ~/.profile
 #!/bin/sh
 
 export PATH=$HOME/.local/bin
+export VIM_MODE=enhanced
 
 # auto startx
 [ -z "$DISPLAY" -a -n "$XDG_VTNR" ] && [ "$XDG_VTNR" -eq "1" ] && exec startx
@@ -90,4 +91,6 @@ EOT
 mkdir -p "$XDG_CONFIG_HOME/dwm"
 cp "$DIR/config/dwm/autostart" "$XDG_CONFIG_HOME/dwm/autostart"
 lnsf "$DIR/config/dwm/statusbar" "$XDG_CONFIG_HOME/dwm/statusbar"
+lnsf "$DIR/config/dwm/appicons" "$XDG_CONFIG_HOME/dwm/appicons"
+lnsf "$DIR/config/dwm/usercmds" "$XDG_CONFIG_HOME/dwm/usercmds"
 lnsf "$DIR/config/autorandr/postswitch" "$XDG_CONFIG_HOME/autorandr/postswitch"
