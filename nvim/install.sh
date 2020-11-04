@@ -4,8 +4,8 @@ DIR=$(readlink -f "$(dirname "$0")")
 . "$DIR/../env.sh"
 
 # check dependencies
-! command -v yarnpkg && "$ROOT/nodejs/install.sh"
-! command -v pip && "$ROOT/python/install.sh"
+! command -v yarnpkg && "$PDIR/nodejs/install.sh"
+! command -v pip && "$PDIR/python/install.sh"
 
 # install nvim
 case "$PM" in

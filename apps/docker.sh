@@ -10,7 +10,7 @@ case "$PM" in
         # snap docker will intefere native docker.io, must be dealt with
         sudo snap remove --purge docker
         sudo apt install -y docker.io docker-compose
-        ! command -v pip3 && "$ROOT/python/install.sh"
+        ! command -v pip3 && "$PDIR/python/install.sh"
         sudo pip3 install docker-compose
         ;;
     pacman)

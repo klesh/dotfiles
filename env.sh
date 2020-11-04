@@ -1,10 +1,10 @@
 #!/bin/sh
 
-set -e
-ROOT=$(readlink -f "$(dirname "$0")")
 PM=n/a
 XDG_CONFIG_HOME=${XDG_CONFIG_HOME-"$HOME/.config"}
-echo "dotfiles path: $ROOT"
+PDIR=$(dirname $DIR)
+echo "dir: $DIR"
+echo "parent dir: $PDIR"
 
 if command -v pacman > /dev/null; then
     PM=pacman

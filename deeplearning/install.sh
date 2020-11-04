@@ -4,7 +4,7 @@ DIR=$(readlink -f "$(dirname "$0")")
 . "$DIR/../env.sh"
 
 
-"$ROOT/python/install.sh"
+"$PDIR/python/install.sh"
 
 # install deep learning tools
 case "$PM" in

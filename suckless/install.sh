@@ -3,10 +3,10 @@
 DIR=$(readlink -f "$(dirname "$0")")
 . "$DIR/../env.sh"
 
-"$ROOT/fish/install.sh"
-"$ROOT/gui/install.sh"
-"$ROOT/picom/install.sh"
-"$ROOT/dunst/install.sh"
+"$PDIR/fish/install.sh"
+"$PDIR/gui/install.sh"
+"$PDIR/picom/install.sh"
+"$PDIR/dunst/install.sh"
 
 # install dependencies
 case "$PM" in

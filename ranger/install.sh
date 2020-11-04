@@ -9,7 +9,7 @@ case "$PM" in
     apt)
         # atool/p7zip-full for archive previewing/extracting etc
         sudo apt install -y atool p7zip-full unrar highlight
-        ! command -v pip3 && "$ROOT/python/install.sh"
+        ! command -v pip3 && "$PDIR/python/install.sh"
         sudo pip3 install ranger-fm ueberzug
         ;;
     pacman)

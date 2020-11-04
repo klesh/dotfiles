@@ -7,7 +7,7 @@ DIR=$(readlink -f "$(dirname "$0")")
 echo Installing fish shell
 case "$PM" in
     apt)
-        ! command -v pip3 && "$ROOT/python/install.sh"
+        ! command -v pip3 && "$PDIR/python/install.sh"
         sudo add-apt-repository ppa:fish-shell/release-3 -y
         sudo apt update
         sudo apt install fish libnotify-bin xdotool silversearcher-ag dash -y
