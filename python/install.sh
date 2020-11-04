@@ -10,6 +10,8 @@ if in_china; then
         sudo mkdir -p /root/.pip
         sudo cp "$DIR/pip.conf" /root/.pip/pip.conf
     fi
+    sudo mkdir -p /root/.pip
+    sudo cp python/pip.conf /root/.pip/pip.conf
 fi
 
 # install python3
