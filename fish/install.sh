@@ -49,5 +49,6 @@ lnsf "$DIR/config/functions/fish_right_prompt.fish" "$XDG_CONFIG_HOME/fish/funct
 lnsf "$DIR/config/functions/fisher.fish" "$XDG_CONFIG_HOME/fish/functions/fisher.fish"
 
 # install plugins
-#fish -c "fisher add jethrokuan/fzf"
+# for better keybinding: C-o open file with $EDITOR / C-r search history / C-g open with xdg-open
+fish -c "fisher add jethrokuan/fzf"
 
