@@ -78,7 +78,7 @@ EOT
 cat <<'EOT' > ~/.profile
 #!/bin/sh
 
-export PATH=$HOME/.local/bin
+export PATH=$HOME/dotfiles/bin:$HOME/.local/bin:$PATH
 export VIM_MODE=enhanced
 
 # auto startx
