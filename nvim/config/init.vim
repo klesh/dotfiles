@@ -171,12 +171,14 @@ nnoremap <leader>gl :Glog<CR>
 nnoremap <leader>gms :Gvdiffsplit!<CR>
 nnoremap <leader>gmh :diffget //2<CR>
 nnoremap <leader>gml :diffget //3<CR>
+nnoremap <leader>gsc :exec "!git switch -c " . input("Enter new branch name:")<CR>
 
 " ==== ctrlp configuration ====
 "let g:ctrlp_user_command = ['.git', 'git ls-files -co --exclude-standard']
 
 " ==== fzf configuration ====
 nnoremap <C-p> :FZF<CR>
+nnoremap <leader>gco :call fzf#run({'source': 'git branch \| cut -c 3-', 'sink': '!git checkout'})<CR>
 
 
 " ==== gruvbox configuration ====
