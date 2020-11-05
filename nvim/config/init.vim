@@ -178,7 +178,7 @@ nnoremap <leader>gsc :exec "!git switch -c " . input("Enter new branch name:")<C
 
 " ==== fzf configuration ====
 nnoremap <C-p> :FZF<CR>
-nnoremap <leader>gco :call fzf#run({'source': 'git branch \| cut -c 3-', 'sink': '!git checkout'})<CR>
+nnoremap <leader>gco :call fzf#run({'source': 'git branch \| cut -c 3-; git tag -l', 'sink': '!git checkout'})<CR>
 
 
 " ==== gruvbox configuration ====
