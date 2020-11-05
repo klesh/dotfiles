@@ -109,7 +109,8 @@ Plug 'chrisbra/Colorizer'
 Plug 'alvan/vim-closetag', { 'for': ['vue', 'html', 'xml'] }
 "Plug 'airblade/vim-gitgutter'
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
-Plug 'junegunn/fzf'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 call plug#end()
 
 " ==== vim-markdown configuration ====
