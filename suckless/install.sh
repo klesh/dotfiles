@@ -70,9 +70,14 @@ export SSH_AUTH_SOCK=$(/usr/bin/gnome-keyring-daemon --start --components=pkcs11
 autorandr --change --force
 
 # restart dwm if it existed without error
+echo $$(date "+%Y%m%d-%H%M%S") '=============== xrdb -query' >> /tmp/xinit.log
+xrdb -query >> /tmp/dwm.log
+echo $$(date "+%Y%m%d-%H%M%S") '=============== enter dwm' >> /tmp/xinit.log
 while :; do
-    ssh-agent dwm 2>/tmp/dwm.log || break
+    ssh-agent dwm 2>>/tmp/dwm.log || break
+    echo $$(date "+%Y%m%d-%H%M%S") '=============== restart dwm' >> /tmp/xinit.log
 done
+echo $$(date "+%Y%m%d-%H%M%S") '=============== exit xinit' >> /tmp/xinit.log
 EOT
 
 cat <<'EOT' > ~/.profile
@@ -82,7 +87,9 @@ export PATH=$HOME/dotfiles/bin:$HOME/.local/bin:$PATH
 export VIM_MODE=enhanced
 
 # auto startx
-[ -z "$DISPLAY" -a -n "$XDG_VTNR" ] && [ "$XDG_VTNR" -eq "1" ] && exec startx
+[ -z "$DISPLAY" ] && [ -n "$XDG_VTNR" ] && [ "$XDG_VTNR" -eq "1" ] \
+    && echo $(date "+%Y%m%d-%H%M%S") '=============== auto start xinit' >> /tmp/xinit.log \
+    && startx
 EOT
 
 
