@@ -153,8 +153,14 @@ let g:AutoPairsShortcutToggle = ''
 
 
 " ==== grepper configuration ====
+"
 nnoremap <leader>sg :Grepper -tool git<CR>
 nnoremap <leader>sc :Grepper -tool grep<CR>
+nnoremap <leader>sa :Grepper -tool ag<CR>
+
+" ==== quickfix configuration ====
+nnoremap <leader>j :cn<CR>
+nnoremap <leader>k :cp<CR>
 
 
 " ==== NERDTree configuration ====
