@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DIR=$(readlink -f "$(dirname "$0")")
+DIR=$(dirname "$(readlink -f "$0")")
 . "$DIR/../env.sh"
 
 # install nvim
@@ -14,5 +14,6 @@ case "$PM" in
 esac
 
 # symlink configuration
-lnsf "$DIR/config/dunstrc" "$XDG_CONFIG_HOME/dunst/dunstrc"
-lnsf "$DIR/config/launch.sh" "$XDG_CONFIG_HOME/dunst/launch.sh"
+lnsf "$DIR/content/dunstrc" "$XDG_CONFIG_HOME/dunst/dunstrc"
+sudo cp -f "$DIR/content/dunstctl" "$PREFIX/bin"
+sudo chmod +x "$PREFIX/bin/dunstctl"

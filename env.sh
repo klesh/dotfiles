@@ -3,9 +3,14 @@
 set -e
 PM=n/a
 XDG_CONFIG_HOME=${XDG_CONFIG_HOME-"$HOME/.config"}
+PREFIX=/usr/local
 PDIR=$(dirname "${DIR-$0}")
+GITHUB_PROXY=${GITHUB_PROXY-$HTTPS_PROXY}
 echo "dir: $DIR"
 echo "parent dir: $PDIR"
+echo "prefix dir: $PREFIX"
+
+sudo mkdir -p $PREFIX
 
 if command -v pacman > /dev/null; then
     PM=pacman
@@ -31,7 +36,7 @@ in_china () {
 
 lnsf () {
     [ "$#" -ne 2 ] && echo "lnsf <target> <symlink>" && return 1
-    TARGET=$(readlink -f "$1")
+    TARGET=$(readlink -f "$1") || echo failed: readlink -f "$1" && return 1
     SYMLNK=$2
     [ -z "$TARGET" ] && echo "$1 not exists" && return 1
     SYMDIR=$(dirname "$SYMLNK")
@@ -53,6 +58,22 @@ eqv () {
     [ ! -f "$VERSION_PATH" ] && return 1
     VERSION2="$(cat "$VERSION_PATH")"
     [ "$VERSION" = "$VERSION2" ]
+}
+
+intorepo() {
+    ODIR=$(pwd)
+    REPO=$2
+    if [ ! -d "$REPO" ]; then
+        HTTPS_PROXY=$GITHUB_PROXY git clone --depth 1 "$1" "$REPO"
+        cd "$REPO"
+    else
+        cd "$REPO"
+        git pull
+    fi
+}
+
+exitrepo() {
+    cd "$ODIR"
 }
 
 

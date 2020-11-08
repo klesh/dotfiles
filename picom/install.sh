@@ -1,11 +1,11 @@
 #!/bin/sh
 
 set -e
-DIR=$(readlink -f "$(dirname "$0")")
+DIR=$(dirname "$(readlink -f "$0")")
 . "$DIR/../env.sh"
 
 
-# install ranger
+# install dpes
 case "$PM" in
     apt)
         # install build tools
@@ -20,24 +20,13 @@ case "$PM" in
 esac
 
 # build and install picom
-VERSION=next
-VERSION_PATH=$XDG_CONFIG_HOME/picom/version
-if [ "$VERSION" = "next" ] || ! eqv "$VERSION_PATH" "$VERSION"; then
-    echo Downloading picom $VERSION
-    [ ! -f /tmp/picom-$VERSION.zip ] && \
-        curl "https://github.com/yshui/picom/archive/$VERSION.zip" -Lo /tmp/picom-$VERSION.zip
-    unzip /tmp/picom-$VERSION.zip -d /tmp
-    FD=$(unzip -l /tmp/picom-$VERSION.zip | awk 'NR==5{print $4}')
-    cd "/tmp/$FD"
-    meson --buildtype=release . build
-    sudo ninja -C build install
-    cd -
-    mkdir -p "$(dirname "$VERSION_PATH")"
-    echo "$VERSION" > "$VERSION_PATH"
-    sudo rm -rf /tmp/picom-$VERSION*
-fi
+intorepo https://github.com/yshui/picom.git "$DIR/repo"
+meson --buildtype=release . build
+sudo ninja -C build install
+exitrepo
+sudo cp -f "$DIR/content/picomdaemon" "$PREFIX/bin"
+sudo chmod +x "$PREFIX/bin/picomdaemon"
+echo 'picom installed'
 
 # configuration
-lnsf "$DIR/config/launch.sh" "$XDG_CONFIG_HOME/picom/launch.sh"
-lnsf "$DIR/config/toggle.sh" "$XDG_CONFIG_HOME/picom/toggle.sh"
-lnsf "$DIR/config/picom.conf" "$XDG_CONFIG_HOME/picom/picom.conf"
+lnsf "$DIR/content/picom.conf" "$XDG_CONFIG_HOME/picom/picom.conf"

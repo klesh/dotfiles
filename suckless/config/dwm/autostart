@@ -1,13 +1,13 @@
 #!/bin/sh
 
 # start compositor daemon
-"$HOME/.config/picom/launch.sh"
+picomdaemon
 
 # start desktop notification daemon
-"$HOME/.config/dunst/launch.sh"
+dunstdaemon
 
 # start dwmbar daemon
-"$HOME/.config/dwm/statusbar"
+statusbar
 
 # disable screen saver / turn off monitor if inactived for 300 secs
 xset s off

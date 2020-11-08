@@ -11,3 +11,5 @@ Thunar/config/accels.scm
 nvim/config/autoload
 nvim/config/plugged
 nvim/config/.*
+repos/
+repo/

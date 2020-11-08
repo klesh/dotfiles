@@ -1,6 +1,7 @@
 #!/bin/sh
 
-DIR=$(readlink -f "$(dirname "$0")")
+set -e
+DIR=$(dirname "$(readlink -f "$0")")
 . "$DIR/../env.sh"
 
 "$PDIR/fish/install.sh"
@@ -36,19 +37,23 @@ case "$PM" in
 esac
 
 # clone / compile utilities and dwm itself
-mkdir -p ~/Projects/suckless
+REPOS="$DIR/suckless/repos"
+mkdir -p "$REPOS"
 
-[ ! -d ~/Projects/suckless/st ] && git clone https://gitee.com/klesh/st.git ~/Projects/suckless/st
-cd ~/Projects/suckless/st && sudo rm -f config.h && sudo make clean install
+installrepo () {
+    ODIR=$(pwd)
+    REPO="$DIR/suckless/repos/$2"
+    [ ! -d "$REPO" ] && git clone --depth "$1" "$REPO"
+    cd "$REPO"
+    make && sudo make install
+    cd "$ODIR"
+}
 
-[ ! -d ~/Projects/suckless/dmenu ] &&git clone https://gitee.com/klesh/dmenu.git ~/Projects/suckless/dmenu
-cd ~/Projects/suckless/dmenu && sudo rm -f config.h && sudo make clean install
-
-[ ! -d ~/Projects/suckless/slock ] &&git clone https://gitee.com/klesh/slock.git ~/Projects/suckless/slock
-cd ~/Projects/suckless/slock && sudo rm -f config.h && sudo make clean install
-
-[ ! -d ~/Projects/suckless/dwm ] &&git clone https://gitee.com/klesh/dwm.git ~/Projects/suckless/dwm
-cd ~/Projects/suckless/dwm && sudo rm -f config.h && sudo make clean install
+installrepo https://gitee.com/klesh/st.git st
+installrepo https://gitee.com/klesh/dmenu.git dmenu
+installrepo https://gitee.com/klesh/slock.git slock
+installrepo https://github.com/klesh/dict.sh.git dict.sh
+installrepo https://gitee.com/klesh/dwm.git dwm
 
 # config xinit to start for dwm
 rm ~/.xinitrc
@@ -70,14 +75,10 @@ export SSH_AUTH_SOCK=$(/usr/bin/gnome-keyring-daemon --start --components=pkcs11
 autorandr --change --force
 
 # restart dwm if it existed without error
-echo $$(date "+%Y%m%d-%H%M%S") '=============== xrdb -query' >> /tmp/xinit.log
-xrdb -query >> /tmp/dwm.log
-echo $$(date "+%Y%m%d-%H%M%S") '=============== enter dwm' >> /tmp/xinit.log
+xrdb -query > /tmp/dwm.log
 while :; do
     ssh-agent dwm 2>>/tmp/dwm.log || break
-    echo $$(date "+%Y%m%d-%H%M%S") '=============== restart dwm' >> /tmp/xinit.log
 done
-echo $$(date "+%Y%m%d-%H%M%S") '=============== exit xinit' >> /tmp/xinit.log
 EOT
 
 cat <<'EOT' > ~/.profile
@@ -85,6 +86,7 @@ cat <<'EOT' > ~/.profile
 
 export PATH=$HOME/dotfiles/bin:$HOME/.local/bin:$PATH
 export VIM_MODE=enhanced
+export DMENU_DEFAULT_OPTS='-i -c -fn monospace:13 -nb #222222 -nf #bbbbbb -sb #5b97f7 -sf #eeeeee -l 20'
 
 # auto startx
 [ -z "$DISPLAY" ] && [ -n "$XDG_VTNR" ] && [ "$XDG_VTNR" -eq "1" ] \
@@ -97,5 +99,4 @@ EOT
 [ -L "$XDG_CONFIG_HOME/dwm/autostart" ] && rm "$XDG_CONFIG_HOME/dwm/autostart"
 mkdir -p "$XDG_CONFIG_HOME/dwm"
 cp "$DIR/config/dwm/autostart" "$XDG_CONFIG_HOME/dwm/autostart"
-lnsf "$DIR/config/dwm/statusbar" "$XDG_CONFIG_HOME/dwm/statusbar"
 lnsf "$DIR/config/autorandr/postswitch" "$XDG_CONFIG_HOME/autorandr/postswitch"

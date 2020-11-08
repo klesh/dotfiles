@@ -1,7 +1,7 @@
 #!/bin/sh
 
 set -e
-DIR=$(readlink -f "$(dirname "$0")")
+DIR=$(dirname "$(readlink -f "$0")")
 . "$DIR/../env.sh"
 
 TMUX_VER=3.1b

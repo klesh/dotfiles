@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DIR=$(readlink -f "$(dirname "$0")")
+DIR=$(dirname "$(readlink -f "$0")")
 . "$DIR/../env.sh"
 
 # install fish shell

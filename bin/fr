@@ -1,0 +1,74 @@
+#!/bin/gawk -f
+
+BEGIN {
+    PAT = "(" ENVIRON["PAT"] ")"
+    STR = ENVIRON["STR"]
+    REP = ENVIRON["REP"]
+    COL = ENVIRON["COL"]
+    OLD = "\033[31m"
+    NEW = "\033[32m"
+    LNN = "\033[30m\033[47m"
+    LNH = "\033[30m\033[41m"
+    RST = "\033[0m"
+    CTX = 2
+    #print "PAT:" PAT
+    #print "STR:" STR
+}
+
+function min(a, b) {
+    return a > b ? b : a
+}
+
+function fileend() {
+    if (REP) exit
+    split(buffer, lines, "\n")
+    if (!length(lines)) exit
+    printf "\033[42m\033[30m%s%" COL-length(filename) "s\033[0m\n", filename, " "
+    pad = length(length(lines) - 1)
+    for (i in lines) {
+        if (!match(lines[i], /([[:digit:]]+)(:|-)(.*)$/, m))
+            continue
+        linno = m[1]
+        found = m[2] == ":"
+        line = m[3]
+        print (found ? LNH : LNN) sprintf(" %"pad"d ", linno) RST line
+    }
+}
+
+
+!REP && FNR == 1 {
+    if (buffer) fileend()
+    filename = FILENAME
+    delete before
+    buffer = ""
+    printed = 0
+}
+
+!REP {
+    delete data
+    line = gensub(PAT, OLD "\\1" NEW STR RST, "g", $0)
+    found = index(line, OLD)
+    fmted = FNR (found ? ":" : "-") line
+    if (found) {
+        for (i = min(FNR-printed-1, CTX); i > 0; i--) {
+            if (before[i]) buffer = buffer "\n" before[i]
+        }
+        buffer = buffer "\n" fmted
+        printed = FNR
+        keep = CTX
+    } else if (keep-- > 0) {
+        buffer = buffer "\n" fmted
+        printed = FNR
+    }
+
+    for (i = CTX; i > 1; i--) {
+        before[i] = before[i - 1]
+    }
+    before[1] =  fmted
+}
+
+END { fileend() }
+
+REP {
+    print gensub(PAT, STR, "g", $0)
+}

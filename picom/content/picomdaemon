@@ -1,0 +1,36 @@
+#!/bin/sh
+
+set -e
+
+stop() {
+    echo stop
+    killall -q picom || true
+    while pgrep -x picom >/dev/null; do sleep 1; done
+}
+
+start() {
+    echo start
+    picom -b --experimental-backends \
+        --blur-method dual_kawase --blur-strength 6 \
+        --no-fading-openclose
+    sleep 1
+    ! pgrep -x picom >/dev/null && echo 'fallback' && picom -b --no-fading-openclose
+}
+
+toggle() {
+    if pgrep -x picom > /dev/null; then
+        stop
+    else
+        start
+    fi
+}
+
+case $1 in
+    toggle)
+        toggle
+        ;;
+    *)
+        stop
+        start
+        ;;
+esac

@@ -1,21 +1,25 @@
 #!/bin/sh
 
-if [ "$#" -lt 2 ]; then
-    echo "Usage: $0 <target> <replacement>"
-    exit 1
+# rule 1: use single quote '
+# rule 2: //// for literal /
+
+set -e
+FILES=$(awk '{print}')
+COL=$(tput cols)
+PAT=$1
+STR=$2
+export COL PAT STR
+
+echo "$FILES" | while IFS= read -r FILE; do
+    bin/fr "$FILE"
+done | less
+
+printf "Are you sure [y/N]? "
+read -r YN < /dev/tty
+if [ "$YN" = 'y' ]; then
+    echo "$FILES" | while IFS= read -r FILE; do
+        TMP=$(mktemp)
+        REP=1 bin/fr "$FILE" > "$TMP"
+        mv "$TMP" "$FILE"
+    done
 fi
-
-REDFG=$(printf '\033[31m')
-BLUBG=$(printf '\033[42m')
-ag --color "$1" . | sed -E "s/$1/\\0$REDFG$BLUBG$2/g"
-echo Are they ok for you?
-read -r YN
-
-case "$YN" in
-    y|Y)
-        ag "$1" . -l -0 | xargs -0 sed -Ei "s/$1/$2/g"
-        ;;
-    *)
-        exit
-        ;;
-esac

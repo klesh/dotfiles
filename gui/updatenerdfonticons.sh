@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DIR=$(readlink -f "$(dirname "$0")")
+DIR=$(dirname "$(readlink -f "$0")")
 . "$DIR/../env.sh"
 
 [ -z "$1" ] && echo Usage: $0 path/to/nerdfont.git/bin/scrips/lib && exit 1
