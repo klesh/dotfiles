@@ -42,7 +42,7 @@ mkdir -p "$REPOS"
 
 installrepo () {
     ODIR=$(pwd)
-    REPO="$DIR/suckless/repos/$2"
+    REPO="$DIR/repos/$2"
     [ ! -d "$REPO" ] && git clone --depth "$1" "$REPO"
     cd "$REPO"
     make && sudo make install

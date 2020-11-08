@@ -37,7 +37,7 @@ esac
 # use dash as default shell because it much faster and will be used  vim-fugitive,
 # leads to a much faster responsive speed
 sudo /usr/bin/ln -sfT dash /usr/bin/sh
-chsh -s /bin/sh
+[ "$(awk -F':' '/^'"$USER"'/{print $7}' /etc/passwd)" != "/bin/sh" ] && chsh -s /bin/sh
 
 
 # symlink config

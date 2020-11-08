@@ -15,5 +15,5 @@ esac
 
 # symlink configuration
 lnsf "$DIR/content/dunstrc" "$XDG_CONFIG_HOME/dunst/dunstrc"
-sudo cp -f "$DIR/content/dunstctl" "$PREFIX/bin"
-sudo chmod +x "$PREFIX/bin/dunstctl"
+sudo cp -f "$DIR/content/dunstdaemon" "$PREFIX/bin"
+sudo chmod +x "$PREFIX/bin/dunstdaemon"

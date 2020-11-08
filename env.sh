@@ -36,7 +36,7 @@ in_china () {
 
 lnsf () {
     [ "$#" -ne 2 ] && echo "lnsf <target> <symlink>" && return 1
-    TARGET=$(readlink -f "$1") || echo failed: readlink -f "$1" && return 1
+    TARGET=$(readlink -f "$1") || (echo failed: readlink -f "$1" ; return 1)
     SYMLNK=$2
     [ -z "$TARGET" ] && echo "$1 not exists" && return 1
     SYMDIR=$(dirname "$SYMLNK")
