@@ -21,7 +21,7 @@ set incsearch
 set signcolumn=yes
 set laststatus=2
 set fillchars=vert:\ ,fold:-
-set clipboard=unnamed,unnamedplus
+set clipboard=unnamedplus  " system clipboard as default register. for vim to work need installing gvim package
 filetype plugin indent on
 syntax on
 au! BufWritePost $MYVIMRC source %
@@ -58,6 +58,13 @@ nnoremap <leader>5 :b5<CR>
 nnoremap <leader>w :w<CR>
 nnoremap <leader><Esc> :noh<return><esc>
 
+nmap <leader>"" ysiW"
+nmap <leader>'' ysiW'
+nmap <leader>" ysiw"
+nmap <leader>' ysiw'
+nmap <leader>`` ysiW`
+nmap <leader>` ysiw`
+
 inoremap <C-w> <esc><C-w>
 nmap <silent> <leader>ss :syntax sync fromstart<CR>
 
@@ -77,6 +84,7 @@ if has('nvim')
     endif
 else
     let vim_plug_path = expand("~/.vim/autoload/plug.vim")
+    set listchars=eol:\ ,tab:>\ ,trail:~,extends:>,precedes:<
 endif
 let vim_plug_just_installed = 0
 if !filereadable(vim_plug_path)
@@ -123,7 +131,15 @@ let g:closetag_filetypes = 'html,xhtml,phtml,vue'
 
 if $VIM_MODE == 'enhanced'
     " ==== coc configuration ====
-    let g:coc_disable_startup_warning = 1
+    let g:coc_global_extensions = [
+                \ 'coc-diagnostic',
+                \ 'coc-json',
+                \ 'coc-vetur',
+                \ 'coc-tsserver',
+                \ 'coc-eslint',
+                \ 'coc-clangd'
+                \ ]
+    "let g:coc_disable_startup_warning = 1
     set statusline^=%{coc#status()}
     nmap <silent> gd <Plug>(coc-definition)
     nmap <silent> gy <Plug>(coc-type-definition)
@@ -132,19 +148,21 @@ if $VIM_MODE == 'enhanced'
 
     xmap <silent> <leader>fs <Plug>(coc-format-selected)
     nmap <silent> <leader>fs <Plug>(coc-format-selected)
-    nmap <silent> <leader>fb <Plug>(coc-format)
+    nmap <silent> <leader>fd <Plug>(coc-format)
     nmap <silent> <leader>rn <Plug>(coc-rename)
     nmap <silent> <leader>ne <Plug>(coc-diagnostic-next-error)
     nmap <silent> <leader>pe <Plug>(coc-diagnostic-prev-error)
-    nmap <silent> <leader>if :CocInfo<CR>
-    nmap <silent> <leader>cl :CocList<CR>
-    nmap <silent> <leader>sd :call CocAction('doHover')<CR>
+    nmap <silent> <leader>oi :CocInfo<CR>
+    nmap <silent> <leader>olr :<C-u>CocListResume<CR>
+    nmap <silent> <leader>od :call CocAction('doHover')<CR>
     nmap <silent> <leader>ol <Plug>(coc-openlink)
     nmap <silent> <leader>oc :CocCommand<CR>
 
+    autocmd BufEnter,BufRead,BufNewFile *.js set syntax=typescript
+
     " ==== vimspector configuration ====
-    let g:vimspector_enable_mappings = 'HUMAN'
-    let g:vimspector_install_gadgets = [ 'debugpy' ]
+    let g:vimspector_enable_mappings = 'VISUAL_STUDIO'
+    let g:vimspector_install_gadgets = [ 'debugpy', 'vscode-cpptools' ]
 endif
 
 " ==== auto-pairs configuration ====
@@ -188,6 +206,7 @@ nnoremap <leader>gsc :exec "!git switch -c " . input("Enter new branch name:")<C
 let g:fugitive_no_maps=1
 nnoremap <C-p> :FZF<CR>
 nnoremap <leader>gco :call fzf#run({'source': 'git branch \| cut -c 3-; git tag -l', 'sink': '!git checkout'})<CR>
+nnoremap <leader>gm :call fzf#run({'source': 'git branch \| cut -c 3-', 'sink': '!git merge'})<CR>
 
 
 " ==== gruvbox configuration ====
