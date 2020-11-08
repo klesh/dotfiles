@@ -77,7 +77,7 @@ if status is-interactive
         end
     end
 
-    function ranger
+    function r --description='sync ranger pwd to shell when exit'
         set tempfile (mktemp -t tmp.XXXXXX)
         command ranger --choosedir=$tempfile $argv
         if test -s $tempfile
