@@ -1,8 +1,9 @@
 #!/bin/sh
 
+set -e
 PM=n/a
 XDG_CONFIG_HOME=${XDG_CONFIG_HOME-"$HOME/.config"}
-PDIR=$(dirname $DIR)
+PDIR=$(dirname "${DIR-$0}")
 echo "dir: $DIR"
 echo "parent dir: $PDIR"
 

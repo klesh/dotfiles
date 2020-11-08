@@ -9,7 +9,7 @@ TMUX_VER=3.1b
 # install ranger
 case "$PM" in
     apt)
-        if command -v tmux &>/dev/null && [ "$(tmux -V)" != "tmux $TMUX_VER" ]; then
+        if command -v tmux 2>/dev/null && [ "$(tmux -V)" != "tmux $TMUX_VER" ]; then
             sudo apt install libevent-dev libncurses5-dev bison autoconf bc -y
             TMUX_SRC_URL=https://github.com/tmux/tmux/releases/download/$TMUX_VER/tmux-$TMUX_VER.tar.gz
             if in_china; then
