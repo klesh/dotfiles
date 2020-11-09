@@ -11,7 +11,7 @@ case "$PM" in
         sudo add-apt-repository ppa:fish-shell/release-3 -y
         sudo apt update
         sudo apt install fish libnotify-bin xdotool silversearcher-ag dash -y
-        git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+        [ ! -d ~/.fzf ] && git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
         ~/.fzf/install
         ;;
     pacman)
