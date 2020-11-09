@@ -21,21 +21,12 @@ esac
 sudo systemctl enable docker
 sudo systemctl start docker
 
-
-
 # configuration
 sudo usermod -aG docker "$USER"
 
-# completion
-case "$DEFAULT_SHELL" in
-    $FISH)
-        curl -sLo "$HOME/.config/fish/completions/docker.fish" --create-dirs \
-            'https://github.com/docker/cli/raw/master/contrib/completion/fish/docker.fish'
-        ;;
-esac
-
-# set mirror
-if in_china && [ -d /etc/docker ]; then
+# set mirror for GREAT CHINA
+if in_china; then
+    sudo mkdir -p /etc/docker
     if [ -f /etc/docker/daemon.json ]; then
         # backup
         [ ! -f /etc/docker/daemon.bak.json ] && \
