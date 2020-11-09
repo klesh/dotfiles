@@ -52,3 +52,32 @@ lnsf "$DIR/config/functions/fisher.fish" "$XDG_CONFIG_HOME/fish/functions/fisher
 # for better keybinding: C-o open file with $EDITOR / C-r search history / C-g open with xdg-open
 fish -c "fisher add jethrokuan/fzf"
 
+# set color theme: Old School
+fish -c '
+set -L
+set -U fish_color_normal normal
+set -U fish_color_command 00FF00
+set -U fish_color_quote 44FF44
+set -U fish_color_redirection 7BFF7B
+set -U fish_color_end FF7B7B
+set -U fish_color_error A40000
+set -U fish_color_param 30BE30
+set -U fish_color_comment 30BE30
+set -U fish_color_match --background=brblue
+set -U fish_color_selection white --bold --background=brblack
+set -U fish_color_search_match bryellow --background=brblack
+set -U fish_color_history_current --bold
+set -U fish_color_operator 00a6b2
+set -U fish_color_escape 00a6b2
+set -U fish_color_cwd green
+set -U fish_color_cwd_root red
+set -U fish_color_valid_path --underline
+set -U fish_color_autosuggestion 777777
+set -U fish_color_user brgreen
+set -U fish_color_host normal
+set -U fish_color_cancel -r
+set -U fish_pager_color_completion normal
+set -U fish_pager_color_description B3A06D yellow
+set -U fish_pager_color_prefix white --bold --underline
+set -U fish_pager_color_progress brwhite --background=cyan
+'
