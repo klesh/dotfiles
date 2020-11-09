@@ -37,16 +37,11 @@ case "$PM" in
 esac
 
 # clone / compile utilities and dwm itself
-REPOS="$DIR/suckless/repos"
-mkdir -p "$REPOS"
 
 installrepo () {
-    ODIR=$(pwd)
-    REPO="$DIR/repos/$2"
-    [ ! -d "$REPO" ] && git clone --depth "$1" "$REPO"
-    cd "$REPO"
+    intorepo "$1" "$DIR/repos/$2"
     make && sudo make install
-    cd "$ODIR"
+    exitrepo
 }
 
 installrepo https://gitee.com/klesh/st.git st
