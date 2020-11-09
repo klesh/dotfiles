@@ -53,6 +53,8 @@ if status is-interactive
     set -gx LS_COLORS 'ow=34;42;40'
     # ranger highlighting color theme
     set -gx HIGHLIGHT_OPTIONS --style=solarized-dark
+    # dict.sh
+    set -gx D_SELECTOR 'plainsel'
 
     # tune git icon for nerdfont
     set -g __fish_git_prompt_char_upstream_ahead '>'
