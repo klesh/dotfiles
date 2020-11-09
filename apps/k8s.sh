@@ -15,11 +15,9 @@ case "$PM" in
 esac
 
 # completion for fish
-case "$DEFAULT_SHELL" in
-    "$FISH")
-        [ ! -f "$HOME/.config/fish/completions/docker.fish" ] && \
-            curl -Lo "$HOME/.config/fish/completions/docker.fish" --create-dirs \
-            'https://github.com/docker/cli/raw/master/contrib/completion/fish/docker.fish'
-        fish -c "fisher add evanlucas/fish-kubectl-completions"
-        ;;
-esac
+if command -v fish 2>/dev/null ; then
+    [ ! -f "$HOME/.config/fish/completions/docker.fish" ] && \
+        curl -Lo "$HOME/.config/fish/completions/docker.fish" --create-dirs \
+        'https://github.com/docker/cli/raw/master/contrib/completion/fish/docker.fish'
+    fish -c "fisher add evanlucas/fish-kubectl-completions"
+fi
