@@ -90,13 +90,11 @@ export DMENU_DEFAULT_OPTS='-i -c -fn monospace:13 -nb #222222 -nf #bbbbbb -sb #5
 
 # auto startx
 [ -z "$DISPLAY" ] && [ -n "$XDG_VTNR" ] && [ "$XDG_VTNR" -eq "1" ] \
-    && echo $(date "+%Y%m%d-%H%M%S") '=============== auto start xinit' >> /tmp/xinit.log \
     && startx
 EOT
 
 
 # config dwm
-[ -L "$XDG_CONFIG_HOME/dwm/autostart" ] && rm "$XDG_CONFIG_HOME/dwm/autostart"
 mkdir -p "$XDG_CONFIG_HOME/dwm"
-cp "$DIR/config/dwm/autostart" "$XDG_CONFIG_HOME/dwm/autostart"
+lnsf "$DIR/config/dwm/autostart" "$XDG_CONFIG_HOME/dwm/autostart"
 lnsf "$DIR/config/autorandr/postswitch" "$XDG_CONFIG_HOME/autorandr/postswitch"
