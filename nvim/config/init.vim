@@ -153,6 +153,7 @@ if $VIM_MODE == 'enhanced'
     nmap <silent> <leader>ne <Plug>(coc-diagnostic-next-error)
     nmap <silent> <leader>pe <Plug>(coc-diagnostic-prev-error)
     nmap <silent> <leader>oi :CocInfo<CR>
+    nmap <silent> <leader>ol :<C-u>CocList<CR>
     nmap <silent> <leader>olr :<C-u>CocListResume<CR>
     nmap <silent> <leader>od :call CocAction('doHover')<CR>
     nmap <silent> <leader>ol <Plug>(coc-openlink)
