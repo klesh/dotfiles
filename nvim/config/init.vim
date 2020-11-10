@@ -215,7 +215,8 @@ nnoremap <leader>gsc :exec "!git switch -c " . input("Enter new branch name:")<C
 " ==== fzf configuration ====
 " enable <C-p> for fzf
 let g:fugitive_no_maps=1
-nnoremap <C-o> :GitFiles<Cr>
+
+nnoremap <C-p> :GitFiles<Cr>
 nnoremap <leader>gco :call fzf#run({'source': 'git branch \| cut -c 3-; git tag -l', 'sink': '!git checkout'})<CR>
 nnoremap <leader>gm :call fzf#run({'source': 'git branch \| cut -c 3-', 'sink': '!git merge'})<CR>
 
