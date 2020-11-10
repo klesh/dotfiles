@@ -98,12 +98,18 @@ call plug#begin('~/.vim/plugged')
 Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-surround'
 Plug 'jiangmiao/auto-pairs'
-Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
+"Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
+if has('nvim')
+    Plug 'rbgrouleff/bclose.vim'
+endif
+Plug 'francoiscabrol/ranger.vim'
 Plug 'posva/vim-vue', { 'for': 'vue' }
 Plug 'tpope/vim-repeat'
 if $VIM_MODE == 'enhanced'
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'puremourning/vimspector'
+    Plug 'chrisbra/Colorizer'
+    Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 else
     Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
 endif
@@ -113,10 +119,8 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 Plug 'morhetz/gruvbox'
 Plug 'dag/vim-fish', { 'for': 'fish' }
-Plug 'chrisbra/Colorizer'
 Plug 'alvan/vim-closetag', { 'for': ['vue', 'html', 'xml'] }
 "Plug 'airblade/vim-gitgutter'
-Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 call plug#end()
@@ -182,8 +186,14 @@ nnoremap <leader>j :cn<CR>
 nnoremap <leader>k :cp<CR>
 
 
-" ==== NERDTree configuration ====
-nnoremap <leader>fe :NERDTreeToggle<CR>
+"" ==== NERDTree configuration ====
+"nnoremap <leader>fe :NERDTreeToggle<CR>
+
+
+" ==== Ranger configuration ====
+let g:ranger_map_key = 0
+nnoremap <C-t> :Ranger<CR>
+nnoremap <leader>cg :call OpenRangerIn(system('git rev-parse --show-toplevel') . '/', 'edit ')<CR>
 
 
 " ==== fugitive configuration ====
@@ -205,7 +215,7 @@ nnoremap <leader>gsc :exec "!git switch -c " . input("Enter new branch name:")<C
 " ==== fzf configuration ====
 " enable <C-p> for fzf
 let g:fugitive_no_maps=1
-nnoremap <C-p> :FZF<CR>
+nnoremap <C-o> :GitFiles<Cr>
 nnoremap <leader>gco :call fzf#run({'source': 'git branch \| cut -c 3-; git tag -l', 'sink': '!git checkout'})<CR>
 nnoremap <leader>gm :call fzf#run({'source': 'git branch \| cut -c 3-', 'sink': '!git merge'})<CR>
 
