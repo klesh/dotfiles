@@ -213,7 +213,9 @@ nnoremap <leader>gm :call fzf#run({'source': 'git branch \| cut -c 3-', 'sink': 
 " ==== gruvbox configuration ====
 color gruvbox
 set background=dark
+" for background transparence to work
 highlight Normal ctermbg=None
+highlight CursorLine ctermbg=240
 
 " ==== NERDCommenter for vue ====
 let g:ft = ''
