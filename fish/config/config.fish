@@ -6,7 +6,7 @@ function dt
 end
 
 function clean-taobao-link
-    echo "$argv" | sed 's/^\(.*\)?\(.*&\)\?\(id=[^&]\+\).*$/\1?\3/g' | xsel -sb
+    xsel -ob | sed 's/^\(.*\)?\(.*&\)\?\(id=[^&]\+\).*$/\1?\3/g' | xsel -b
 end
 
 # for WSL
