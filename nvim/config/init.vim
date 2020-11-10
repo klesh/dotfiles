@@ -193,7 +193,7 @@ nnoremap <leader>k :cp<CR>
 " ==== Ranger configuration ====
 let g:ranger_map_key = 0
 nnoremap <C-t> :Ranger<CR>
-nnoremap <leader>cg :call OpenRangerIn(system('git rev-parse --show-toplevel') . '/', 'edit ')<CR>
+nnoremap <leader>cg :call OpenRangerIn(system('git rev-parse --show-toplevel'), 'edit ')<CR>
 
 
 " ==== fugitive configuration ====
