@@ -11,5 +11,5 @@ function fish_right_prompt
     set active_window (xdotool getactivewindow 2>/dev/null)
     test $active_window -eq $WINDOWID && return
     set message (history --max=1) [$duration]
-    notify-send (test "$s" -ne 0 && echo '--icon' error) $message
+    notify-send (test "$s" -ne 0 && echo '--icon=dialog-warning') $message
 end
