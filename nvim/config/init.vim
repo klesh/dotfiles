@@ -193,7 +193,7 @@ nnoremap <leader>k :cp<CR>
 " ==== Ranger configuration ====
 let g:ranger_map_key = 0
 nnoremap <C-t> :Ranger<CR>
-nnoremap <leader>cg :call OpenRangerIn(system('git rev-parse --show-toplevel'), 'edit ')<CR>
+nnoremap <leader>cg :call OpenRangerIn(system("git rev-parse --show-toplevel || pwd"), 'edit ')<CR>
 
 
 " ==== fugitive configuration ====
@@ -216,7 +216,7 @@ nnoremap <leader>gsc :exec "!git switch -c " . input("Enter new branch name:")<C
 " enable <C-p> for fzf
 let g:fugitive_no_maps=1
 
-nnoremap <C-p> :GitFiles<Cr>
+nnoremap <C-p> :call fzf#vim#files(trim(system("git rev-parse --show-toplevel 2>/dev/null \|\| pwd")))<Cr>
 nnoremap <leader>gco :call fzf#run({'source': 'git branch \| cut -c 3-; git tag -l', 'sink': '!git checkout'})<CR>
 nnoremap <leader>gm :call fzf#run({'source': 'git branch \| cut -c 3-', 'sink': '!git merge'})<CR>
 
