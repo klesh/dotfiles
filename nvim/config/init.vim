@@ -65,6 +65,9 @@ nmap <leader>' ysiw'
 nmap <leader>`` ysiW`
 nmap <leader>` ysiw`
 
+nmap <leader>sb :set scrollbind<CR>
+nmap <leader>nsb :set noscrollbind<CR>
+
 inoremap <C-w> <esc><C-w>
 nmap <silent> <leader>ss :syntax sync fromstart<CR>
 
@@ -193,7 +196,8 @@ nnoremap <leader>k :cp<CR>
 " ==== Ranger configuration ====
 let g:ranger_map_key = 0
 nnoremap <C-t> :Ranger<CR>
-nnoremap <leader>cg :call OpenRangerIn(system("git rev-parse --show-toplevel || pwd"), 'edit ')<CR>
+
+autocmd BufEnter,BufRead nnoremap <leader>cg :<C-u>call OpenRangerIn(system("git rev-parse --show-toplevel >/dev/null || pwd"), 'edit ')<CR>
 
 
 " ==== fugitive configuration ====
