@@ -22,6 +22,7 @@ set signcolumn=yes
 set laststatus=2
 set fillchars=vert:\ ,fold:-
 set clipboard=unnamedplus  " system clipboard as default register. for vim to work need installing gvim package
+set mouse=a
 filetype plugin indent on
 syntax on
 au! BufWritePost $MYVIMRC source %
@@ -71,6 +72,8 @@ nmap <leader>nsb :windo set noscrollbind<CR>:windo set nocursorbind<CR>:set mous
 inoremap <C-w> <esc><C-w>
 nmap <silent> <leader>ss :syntax sync fromstart<CR>
 
+" // to search highlighted text
+vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>
 
 " trailing spaces
 highlight ExtraWhitespace ctermbg=red guibg=red
