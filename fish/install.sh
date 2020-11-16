@@ -47,6 +47,9 @@ lnsf "$DIR/config/config.fish" "$XDG_CONFIG_HOME/fish/config.fish"
 lnsf "$DIR/config/functions/fish_prompt.fish" "$XDG_CONFIG_HOME/fish/functions/fish_prompt.fish"
 lnsf "$DIR/config/functions/fish_right_prompt.fish" "$XDG_CONFIG_HOME/fish/functions/fish_right_prompt.fish"
 lnsf "$DIR/config/functions/fisher.fish" "$XDG_CONFIG_HOME/fish/functions/fisher.fish"
+lnsf "$DIR/config/functions/r.fish" "$XDG_CONFIG_HOME/fish/functions/r.fish"
+lnsf "$DIR/config/functions/append_paths.fish" "$XDG_CONFIG_HOME/fish/functions/append_paths.fish"
+lnsf "$DIR/config/functions/source_files.fish" "$XDG_CONFIG_HOME/fish/functions/source_files.fish"
 
 # install plugins
 # for better keybinding: C-o open file with $EDITOR / C-r search history / C-g open with xdg-open

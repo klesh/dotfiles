@@ -22,6 +22,7 @@ set signcolumn=yes
 set laststatus=2
 set fillchars=vert:\ ,fold:-
 set clipboard=unnamedplus  " system clipboard as default register. for vim to work need installing gvim package
+set mouse=a
 filetype plugin indent on
 syntax on
 au! BufWritePost $MYVIMRC source %
@@ -65,12 +66,14 @@ nmap <leader>' ysiw'
 nmap <leader>`` ysiW`
 nmap <leader>` ysiw`
 
-nmap <leader>sb :set scrollbind<CR>
-nmap <leader>nsb :set noscrollbind<CR>
+nmap <leader>sb :windo set scrollbind<CR>:windo set cursorbind<CR>:set mouse=a<CR>
+nmap <leader>nsb :windo set noscrollbind<CR>:windo set nocursorbind<CR>:set mouse=<CR>
 
 inoremap <C-w> <esc><C-w>
 nmap <silent> <leader>ss :syntax sync fromstart<CR>
 
+" // to search highlighted text
+vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>
 
 " trailing spaces
 highlight ExtraWhitespace ctermbg=red guibg=red
@@ -121,7 +124,8 @@ Plug 'tpope/vim-fugitive'                                         " git 功能
 Plug 'scrooloose/nerdcommenter'
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 Plug 'morhetz/gruvbox'
-Plug 'dag/vim-fish', { 'for': 'fish' }
+Plug 'klesh/vim-fish', { 'for': 'fish' }
+"Plug 'aliva/vim-fish', { 'for': 'fish' }
 Plug 'alvan/vim-closetag', { 'for': ['vue', 'html', 'xml'] }
 "Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }

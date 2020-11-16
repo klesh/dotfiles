@@ -4,18 +4,12 @@
 
 
 xrandr | awk '
-BEGIN {
-    MIN_DPI=99999999
-}
-$2 == "connected" {
-    if (match($0, / ([0-9]+)x([0-9]+)\+([0-9]+)\+([0-9]+) /, m1) &&
+$2 == "connected" && $3 == "primary" {
+    if (match($0, / ([0-9]+)x([0-9]+)\+([0-9]+)\+([0-9]+) (left|right)?/, m1) &&
         match($0, / ([0-9]+)mm x ([0-9]+)mm$/, m2)) {
-        DPI=m1[1]*25.4/m2[1]
-        if (DPI < MIN_DPI) MIN_DPI=DPI
+        DPI=m1[1]*25.4/m2[m1[5]?2:1]
+        printf "Xft.dpi: %i", DPI
     }
-}
-END {
-    printf "Xft.dpi: %i", MIN_DPI+0.5
 }
 ' | xrdb -merge
 
