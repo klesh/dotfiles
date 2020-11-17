@@ -31,8 +31,8 @@ end
 set --append subcmds prepare
 set prepare_help '[w=1920] [h=1080]' 'create virtual monotors if physical size is higher than specified'
 function prepare -a pw ph
-    set -q pw || set pw 1920
-    set -q ph || set pw 1080
+    test -z $pw && set pw 1920
+    test -z $ph && set ph 1080
     set moninfo (xrandr | grep ' primary')
 
     if not set whxy (string match -r '([0-9]+)x([0-9]+)\+([0-9]+)\+([0-9]+)' $moninfo)
