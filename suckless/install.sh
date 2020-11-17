@@ -13,7 +13,7 @@ DIR=$(dirname "$(readlink -f "$0")")
 case "$PM" in
     apt)
         sudo apt install \
-            xorg libx11-dev libxft-dev libxinerama-dev \
+            xorg libx11-dev libxft-dev libxinerama-dev libxcursor-dev \
             libxrandr-dev arandr autorandr \
             ibus ibus-table ibus-table-wubi \
             pavucontrol \
@@ -76,10 +76,10 @@ while :; do
 done
 EOT
 
-cat <<'EOT' > ~/.profile
+cat <<'EOT' | sed "s/__DIR__/$DIR/g" > ~/.profile
 #!/bin/sh
 
-export PATH=$HOME/dotfiles/bin:$HOME/.local/bin:$PATH
+export PATH=__DIR__/bin:$HOME/.local/bin:$PATH
 export VIM_MODE=enhanced
 export DMENU_DEFAULT_OPTS='-i -c -fn monospace:13 -nb #222222 -nf #bbbbbb -sb #5b97f7 -sf #eeeeee -l 20'
 
