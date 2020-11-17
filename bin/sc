@@ -1,0 +1,183 @@
+#!/bin/fish
+
+set VIRTMON virtmon
+
+function _stop
+    killall screenkey 2>/dev/null
+    if test -f /tmp/recording.pid
+        read recpid < /tmp/recording.pid
+        pkill --signal 15 -g $recpid
+        rm /tmp/recording.pid
+    end
+end
+
+function _start -a x y w h fps
+    if test (count $argv) -ne 5
+        echo "expected x y w h fps , got $argv"
+        exit 1
+    end
+    set outfile "$HOME/recording/screencast-"(date '+%y%m%d-%H%M-%S')".mp4"
+    ffmpeg \
+        -f x11grab -s $w'x'$h -i "$DISPLAY+$x,$y" \
+        -f alsa -i default \
+        -r $fps -c:v h264 -crf 0 -preset ultrafast \
+        -c:a aac \
+        $outfile &
+    echo $last_pid > /tmp/recording.pid
+    echo $outfile
+end
+
+
+set --append subcmds prepare
+set prepare_help '[w=1920] [h=1080]' 'create virtual monotors if physical size is higher than specified'
+function prepare -a pw ph
+    set -q pw || set pw 1920
+    set -q ph || set pw 1080
+    set moninfo (xrandr | grep ' primary')
+
+    if not set whxy (string match -r '([0-9]+)x([0-9]+)\+([0-9]+)\+([0-9]+)' $moninfo)
+        echo 'unable to find geometry info of the primary monitor' >&2
+        exit 1
+    end
+    set w $whxy[2]
+    set h $whxy[3]
+    set x $whxy[4]
+    set y $whxy[5]
+    if test $w -le $pw -a $h -le $ph
+        return
+    end
+
+    if not set wmhm (string match -r '([0-9]+)mm x ([0-9]+)mm' $moninfo)
+        echo 'unable to find physical size of the primary monitor'
+        exit 1
+    end
+    set wm $wmhm[-2]
+    set hm $wmhm[-1]
+
+    if not set pn (string match -r '^([A-Za-z0-9_-]+)' $moninfo)
+        echo 'unable to find name of the primary monitor name' >&2
+        exit 1
+    end
+    set name $pn[1]
+
+    set pwm (math "round($pw / $w * $wm)")
+    set phm (math "round($ph / $h * $hm)")
+    set rwm   (math "$wm - $pwm")
+    set rw    (math "$w  - $pw")
+
+    xrandr --setmonitor $VIRTMON-1 $pw/$pwm'x'$ph/$phm+0+0 $name
+    xrandr --setmonitor $VIRTMON-2 $rw/$rwm'x'$h/$hm+$pw+0 none
+    nitrogen --restore
+end
+
+set --append subcmds finish
+set finish_help 'remove all virtual monitors'
+function finish
+    xrandr --delmonitor $VIRTMON-1
+    xrandr --delmonitor $VIRTMON-2
+    nitrogen --restore
+end
+
+set --append subcmds window
+set window_help '[fps=5]' 'record clicked window'
+function window -a fps
+    not set -q fps || set fps 5
+    set wininfo (xwininfo)
+    for line in $wininfo
+        set -l kv (string split ":" $line)
+        set -l k (string trim $kv[1])
+        set -l v (string trim $kv[2])
+        switch $k
+            case 'Absolute upper-left X'
+                set x $v
+            case 'Absolute upper-left Y'
+                set y $v
+            case 'Width'
+                set w $v
+            case 'Height'
+                set h $v
+        end
+    end
+    if not set -q x
+        echo 'unable to find geometry of the window'
+        exit 1
+    end
+    _start $x $y $w $h $fps
+end
+
+set --append subcmds desktop
+set desktop_help 'record desktop'
+function window -a fps
+    not set -q fps || set fps 5
+    set wininfo (xwininfo)
+    for line in $wininfo
+        set -l kv (string split ":" $line)
+        set -l k (string trim $kv[1])
+        set -l v (string trim $kv[2])
+        switch $k
+            case 'Absolute upper-left X'
+                set x $v
+            case 'Absolute upper-left Y'
+                set y $v
+            case 'Width'
+                set w $v
+            case 'Height'
+                set h $v
+        end
+    end
+    if not set -q x
+        echo 'unable to find geometry of the window'
+        exit 1
+    end
+    _start $x $y $w $h $fps
+end
+
+set --append subcmds theend
+set theend_help 'end recording'
+function theend
+    _stop
+    killall screenkey 2>/dev/null
+end
+
+set --append subcmds togif
+set togif_help '<infile> <outfile>' 'convert video file to gif'
+function togif -a infile outfile
+    convert -set delay 10 -layers Optimize $infile -ordered-dither o8x8,23 +map $outfile
+end
+
+set --append subcmds cover
+set cover_help '<infile> <text> [outfile=cover.png]' 'add text to infile(image) and output a cover'
+function cover -a infile text outfile
+    not set -q outfile || set outfile 'cover.png'
+    magick convert $infile -thumbnail 1146x -background black -gravity center -extent 1146x717 resized.png
+    magick convert resized.png \
+        -gravity center \
+        -fill black \
+        -pointsize 120 -font 'WenQuanYi-Micro-Hei' \
+        -interline-spacing 20 \
+        -stroke '#e1e1e1' -strokewidth 40 \
+        -annotate +0+0 "$text" \
+        -stroke '#000000' -strokewidth 5 \
+        -annotate +0+0 "$text"\
+        $outfile
+end
+
+set --append subcmds help
+set help_help '[subcmd]' 'print this menu'
+function help -a subcmd
+    if test -z $subcmd
+        echo "Usage "(basename (status filename))" <subcmd> [...args]"
+        for subcmd in $subcmds
+            set -l help_name $subcmd'_help'
+            set -l help_list $$help_name
+            printf "  %-45s %s\n" "$subcmd $help_list[-2]" "$help_list[-1]"
+        end
+        exit
+    end
+end
+
+if contains $argv[1] $subcmds
+    $argv
+else
+    help
+end
