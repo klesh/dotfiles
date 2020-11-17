@@ -116,6 +116,7 @@ if $VIM_MODE == 'enhanced'
     Plug 'puremourning/vimspector'
     Plug 'chrisbra/Colorizer'
     Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
+    Plug 'cespare/vim-toml', { 'for': 'toml' }
 else
     Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
 endif
