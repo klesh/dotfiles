@@ -1,0 +1,20 @@
+
+# addsound
+ffmpeg -f lavfi -i aevalsrc=0 -i $infile -vcodec copy -acodec aac -map 0:0 -map 1:0 -shortest -y $outfile
+
+# join
+ffmpeg -i head2.mp4 -i input.mp4 ^
+  -filter_complex "[0:v:0][0:a:0][1:v:0][1:a:0]concat=n=2:v=1:a=1[outv][outa]" ^
+  -map "[outv]" -map "[outa]" -y output.mp4
+
+
+# make
+ffmpeg  -f lavfi -i color=c=white:s=640x368:d=10^
+ -vf drawtext=fontfile=sarasa-gothic-sc-regular.ttf:fontsize=40:fontcolor=orange:x=(w-text_w)/2:y=60:text='3.18　勿忘国耻',^
+drawtext=fontfile=sarasa-gothic-sc-regular.ttf:fontsize=16:fontcolor=black:x=(w-text_w)/2:y=130:text='战疫期间，宅家的日子里。',^
+drawtext=fontfile=sarasa-gothic-sc-regular.ttf:fontsize=16:fontcolor=black:x=(w-text_w)/2:y=150:text='拿起两年没时间练习的吉它。弹奏一曲《爱的罗曼史》。',^
+drawtext=fontfile=sarasa-gothic-sc-regular.ttf:fontsize=16:fontcolor=black:x=(w-text_w)-40:y=h-text_h-40-40:text='田东中学',^
+drawtext=fontfile=sarasa-gothic-sc-regular.ttf:fontsize=16:fontcolor=black:x=(w-text_w)-40:y=h-text_h-20-40:text='初二6班',^
+drawtext=fontfile=sarasa-gothic-sc-regular.ttf:fontsize=16:fontcolor=black:x=(w-text_w)-40:y=h-text_h-40:text='黄科宁',^
+fps=fps=29.44 ^
+ -y  head.mp4

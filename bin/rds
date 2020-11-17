@@ -1,0 +1,98 @@
+#!/bin/bash
+
+
+# Following regex is based on https://tools.ietf.org/html/rfc3986#appendix-B with
+# additional sub-expressions to split authority into userinfo, host and port
+#
+readonly URI_REGEX='^(([^:/?#]+):)?(//((([^:/?#]+)?(:([^:/?#]+))?@)?([^:/?#]+)(:([0-9]+))?))(/([^?#]*))?(\?([^#]*))?(#(.*))?'
+#                    ↑↑            ↑  ↑↑↑                           ↑         ↑ ↑            ↑ ↑        ↑  ↑        ↑ ↑
+#                    |2 scheme     |  ||6 userinfo   passwd         7 host    | 9 port       | 11 rpath |  13 query | 15 fragment
+#                    1 scheme:     |  |5 userinfo@                            8 :…           10 path    12 ?…       14 #…
+#                                  |  4 authority
+#                                  3 //…
+IDX_SCHEME=2
+IDX_USER=6
+IDX_PASSWD=8
+IDX_HOST=9
+IDX_PORT=11
+IDX_PATH=12
+IDX_RPATH=13
+IDX_QUERY=15
+IDX_FRAGMENT=17
+
+# processing argument
+POSITIONAL=()
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -s|--ssh)
+            SSH="$2"
+            shift
+            shift
+            ;;
+        --)
+            shift
+            POSITIONAL+=("$@")
+            break
+            ;;
+        *)
+            POSITIONAL+=("$1")
+            shift
+            ;;
+    esac
+done
+set -- "${POSITIONAL[@]}"
+
+# check arguments
+if [[ $# == 0 ]]; then
+    echo "Usage: $0 [-s|--ssh SSH_DESTINATION] <REDIS_URI> [...REDIS_CLI_ARGS]"
+    echo "  -s, --ssh       for ssh tunnel"
+    echo "  REDIS_URI       redis://:passwd@host:port/db"
+    exit -1
+fi
+# pop the REDIS_URI and process it
+if [[ ! ($1 =~ $URI_REGEX) ]]; then
+    echo "Invalid redis uri"
+    exit -1
+fi
+shift
+
+SCHEME=${BASH_REMATCH[$IDX_SCHEME]}
+USER=${BASH_REMATCH[$IDX_USER]}
+PASSWD=${BASH_REMATCH[$IDX_PASSWD]}
+HOST=${BASH_REMATCH[$IDX_HOST]}
+PORT=${BASH_REMATCH[$IDX_PORT]}
+UPATH=${BASH_REMATCH[$IDX_PATH]}
+RPATH=${BASH_REMATCH[$IDX_RPATH]}
+QUERY=${BASH_REMATCH[$IDX_QUERY]}
+FRAGMENT=${BASH_REMATCH[$IDX_FRAGMENT]}
+
+# create ssh tunnel if `--ssh` is assigned
+is-port-used() {
+    lsof -i -P -n | awk '{print $9}' | grep -F ":$1" >/dev/null
+}
+
+if [[ -n $SSH ]]; then
+    # find available
+    read lower_port upper_port < /proc/sys/net/ipv4/ip_local_port_range
+    while :; do
+        for (( port = lower_port ; port <= upper_port ; port++ )); do
+            ! is-port-used $port && break 2
+        done
+    done
+
+    # forward local port to remote destination
+    ssh -N -L localhost:$port:$HOST:$PORT $SSH &
+    SSH_PID=$!
+    # wait until port is ready
+    while ! is-port-used $port; do
+        sleep 0.1
+    done
+
+    HOST=localhost
+    PORT=$port
+fi
+
+redis-cli -h "$HOST" -p "${PORT-6379}" -a "$PASSWD" -n "${RPATH-0}" "$@"
+
+# clean up ssh connection
+[[ -n $SSH_PID ]] && kill -9 $SSH_PID
