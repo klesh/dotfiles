@@ -11,7 +11,7 @@ STR=$2
 export COL PAT STR
 
 echo "$FILES" | while IFS= read -r FILE; do
-    bin/fr "$FILE"
+    fr "$FILE"
 done | less
 
 printf "Are you sure [y/N]? "
@@ -19,7 +19,7 @@ read -r YN < /dev/tty
 if [ "$YN" = 'y' ]; then
     echo "$FILES" | while IFS= read -r FILE; do
         TMP=$(mktemp)
-        REP=1 bin/fr "$FILE" > "$TMP"
+        REP=1 fr "$FILE" > "$TMP"
         mv "$TMP" "$FILE"
     done
 fi
