@@ -81,7 +81,7 @@ end
 set --append subcmds window
 set window_help '[fps=5]' 'record clicked window'
 function window -a fps
-    not set -q fps || set fps 5
+    test -z $fps && set fps 5
     set wininfo (xwininfo)
     for line in $wininfo
         set -l kv (string split ":" $line)
@@ -107,29 +107,15 @@ end
 
 set --append subcmds desktop
 set desktop_help 'record desktop'
-function window -a fps
-    not set -q fps || set fps 5
-    set wininfo (xwininfo)
-    for line in $wininfo
-        set -l kv (string split ":" $line)
-        set -l k (string trim $kv[1])
-        set -l v (string trim $kv[2])
-        switch $k
-            case 'Absolute upper-left X'
-                set x $v
-            case 'Absolute upper-left Y'
-                set y $v
-            case 'Width'
-                set w $v
-            case 'Height'
-                set h $v
-        end
-    end
-    if not set -q x
-        echo 'unable to find geometry of the window'
+function desktop -a fps
+    test -z $fps && set fps 30
+    set monsinfo (xrandr --listmonitors)
+    #0: virtmon-1 1920/445x1080/250+0+0  DP-2
+    if not set m (string match -r ' ([0-9]+)/[0-9]+x([0-9]+)/\d+\+([0-9]+)\+([0-9]+) ' $monsinfo[2])
+        echo 'unable to find geometry of the first monitor'
         exit 1
     end
-    _start $x $y $w $h $fps
+    _start $m[4] $m[5] $m[2] $m[3] $fps
 end
 
 set --append subcmds theend
@@ -178,6 +164,8 @@ end
 
 if contains $argv[1] $subcmds
     $argv
+else if test (count $argv ) -eq 0
+    desktop
 else
     help
 end
