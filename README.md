@@ -1,4 +1,3 @@
-TODO
 # dotfiles
 
     * openurl copy move to dmenu
