@@ -5,10 +5,11 @@ if status is-interactive
     set -gx EDITOR nvim
 
     # === fzf configuration
-    set -gx FZF_DEFAULT_COMMAND 'ag -g ""'
+    set -U FZF_DEFAULT_COMMAND 'ag -g ""'
     set -U FZF_COMPLETE 0
     set -U FZF_FIND_FILE_COMMAND 'ag -g ""'
     set -U FZF_OPEN_COMMAND 'ag -g ""'
+    set -U FZF_DEFAULT_OPTS '--height 40% --preview "bat --style=numbers --color=always --line-range :500 {}"'
 
     # === less configuration
     # no line-wrapping, good for `docker ps`

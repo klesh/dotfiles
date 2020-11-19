@@ -11,11 +11,9 @@ case "$PM" in
         sudo add-apt-repository ppa:fish-shell/release-3 -y
         sudo apt update
         sudo apt install fish libnotify-bin xdotool silversearcher-ag dash bat -y
-        [ ! -d $HOME/.fzf ] && git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf
+        [ ! -d "$HOME/.fzf" ] && git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
         ~/.fzf/install --all
         lnsf /usr/bin/batcat "$HOME/.local/bin/bat"
-        mkdir -p "$(bat --config-dir)/themes"
-        git clone --depth 1 https://github.com/peaceant/gruvbox.git "$(bat --config-dir)/themes/grubox"
         ;;
     pacman)
         sudo pacman -S --needed --needed fish xdotool fzf the_silver_searcher dash bat
@@ -36,6 +34,14 @@ case "$PM" in
         EOT
         ;;
 esac
+
+# install bat theme
+BAT_THEMES="$(bat --config-dir)/themes"
+BAT_GRUVBOX="$BAT_THEMES/gruvbox"
+if [ ! -d  "$BAT_GRUVBOX" ]; then
+    mkdir -p "$BAT_THEMES"
+    git clone --depth 1 https://github.com/peaceant/gruvbox.git "$BAT_GRUVBOX"
+fi
 
 # use dash as default shell because it much faster and will be used  vim-fugitive,
 # leads to a much faster responsive speed
