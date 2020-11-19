@@ -11,9 +11,11 @@ case "$PM" in
         sudo add-apt-repository ppa:fish-shell/release-3 -y
         sudo apt update
         sudo apt install fish libnotify-bin xdotool silversearcher-ag dash bat -y
-        [ ! -d ~/.fzf ] && git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+        [ ! -d $HOME/.fzf ] && git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf
         ~/.fzf/install --all
         lnsf /usr/bin/batcat "$HOME/.local/bin/bat"
+        mkdir -p "$(bat --config-dir)/themes"
+        git clone --depth 1 https://github.com/peaceant/gruvbox.git "$(bat --config-dir)/themes/grubox"
         ;;
     pacman)
         sudo pacman -S --needed --needed fish xdotool fzf the_silver_searcher dash bat
