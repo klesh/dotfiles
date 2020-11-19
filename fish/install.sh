@@ -10,12 +10,13 @@ case "$PM" in
         ! command -v pip3 && "$PDIR/python/install.sh"
         sudo add-apt-repository ppa:fish-shell/release-3 -y
         sudo apt update
-        sudo apt install fish libnotify-bin xdotool silversearcher-ag dash -y
+        sudo apt install fish libnotify-bin xdotool silversearcher-ag dash bat -y
         [ ! -d ~/.fzf ] && git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-        ~/.fzf/install
+        ~/.fzf/install --all
+        lnsf /usr/bin/batcat "$HOME/.local/bin/bat"
         ;;
     pacman)
-        sudo pacman -S --needed --needed fish xdotool fzf the_silver_searcher dash
+        sudo pacman -S --needed --needed fish xdotool fzf the_silver_searcher dash bat
         # prevent bash upgradation relink /bin/sh
         sudo mkdir -p /etc/pacman.d/hooks
         cat <<'        EOT' | sed 's/^ *//' | sudo tee /etc/pacman.d/sh-is-dash.hook

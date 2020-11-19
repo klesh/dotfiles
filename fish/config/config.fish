@@ -21,9 +21,8 @@ if status is-interactive
     # change OTHER-WRITABLE color for `ls` command
     set -gx LS_COLORS 'ow=34;42;40'
 
-    # === ranger configuration
-    # ranger highlighting color theme
-    set -gx HIGHLIGHT_OPTIONS --style=solarized-dark
+    # === bat configuration
+    set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
 
     # === dict.sh configuration
     set -gx D_SELECTOR 'plainsel'
