@@ -13,6 +13,7 @@ case "$PM" in
             fonts-wqy-microhei \
             fonts-symbola \
             fonts-dejavu-core \
+            dunst \
             gucharmap
         # network manager
         sudo apt install \
@@ -36,6 +37,7 @@ case "$PM" in
             gsfonts \
             ttf-cascadia-code \
             ttf-dejavu \
+            dunst \
             gucharmap
         # official wqy-microhei package doesn't fix the Korean Glyphs stacking bug
         # https://code.google.com/p/chromium/issues/detail?id=233851
@@ -104,5 +106,6 @@ sudo systemctl start NetworkManager
 sudo ln -sf /etc/fonts/conf.avail/70-no-bitmaps.conf /etc/fonts/conf.d
 sudo ln -sf /etc/fonts/conf.avail/10-sub-pixel-rgb.conf /etc/fonts/conf.d
 sudo ln -sf /etc/fonts/conf.avail/11-lcdfilter-default.conf /etc/fonts/conf.d
-sudo cp "$DIR/freetype2.sh" "/etc/profile.d/freetype2.sh"
-sudo cp "$DIR/local.conf" "/etc/fonts/local.conf"
+sudo cp "$DIR/content/freetype2.sh" "/etc/profile.d/freetype2.sh"
+sudo cp "$DIR/content/local.conf" "/etc/fonts/local.conf"
+lnsf "$DIR/content/dunstrc" "$XDG_CONFIG_HOME/dunst/dunstrc"
