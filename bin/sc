@@ -132,19 +132,21 @@ function togif -a infile outfile
 end
 
 set --append subcmds cover
-set cover_help '<infile> <text> [outfile=cover.png]' 'add text to infile(image) and output a cover'
-function cover -a infile text outfile
-    not set -q outfile || set outfile 'cover.png'
-    magick convert $infile -thumbnail 1146x -background black -gravity center -extent 1146x717 resized.png
+set cover_help '<infile> <text> [gravity=center] [outfile=cover.png]' 'add text to infile(image) and output a cover'
+function cover -a infile text gravity outfile
+    set x 50
+    test -z $outfile && set outfile 'cover.png'
+    test -z $gravity && set gravity 'center' && set x 0 && set y 0
+    magick convert $infile -thumbnail 1146x -background black -gravity $gravity -extent 1146x717 resized.png
     magick convert resized.png \
-        -gravity center \
+        -gravity $gravity \
         -fill black \
         -pointsize 120 -font 'WenQuanYi-Micro-Hei' \
         -interline-spacing 20 \
         -stroke '#e1e1e1' -strokewidth 40 \
-        -annotate +0+0 "$text" \
+        -annotate +$x+0 "$text" \
         -stroke '#000000' -strokewidth 5 \
-        -annotate +0+0 "$text"\
+        -annotate +$x+0 "$text"\
         $outfile
 end
 
