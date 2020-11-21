@@ -4,7 +4,8 @@ set -e
 DIR=$(dirname "$(readlink -f "$0")")
 . "$DIR/../env.sh"
 
-# for better looking
+log 'Setting up theme'
+
 case "$PM" in
     apt)
         sudo apt install -y \
@@ -17,7 +18,7 @@ case "$PM" in
         cd -
         ;;
     pacman)
-        sudo pacman -S --needed \
+        sudo pacman -S --noconfirm --needed \
             lxappearance arc-gtk-theme arc-icon-theme qt5ct qt5-styleplugins
         ;;
 esac

@@ -1,15 +1,1 @@
-config/mpv/watch_later/
-fish/config/fishd.*
-fish/config/conf.d/
-fish/config/fish_variables
-fish/config/conf.d/virtualfish-loader.fish
-ranger/config/bookmarks
-ranger/config/history
-ranger/config/tagged
-ranger/config/plugins
-Thunar/config/accels.scm
-nvim/config/autoload
-nvim/config/plugged
-nvim/config/.*
 repos/
-repo/

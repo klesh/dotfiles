@@ -1,40 +1,27 @@
 #!/bin/sh
 
 set -e
+[ "$ENVSHED" = "yes" ] && return
+ENVSHED=yes
 PM=n/a
 XDG_CONFIG_HOME=${XDG_CONFIG_HOME-"$HOME/.config"}
 PREFIX=/usr/local
 PDIR=$(dirname "${DIR-$0}")
 GITHUB_PROXY=${GITHUB_PROXY-$HTTPS_PROXY}
-echo "dir: $DIR"
-echo "parent dir: $PDIR"
-echo "prefix dir: $PREFIX"
 
-sudo mkdir -p $PREFIX
-
-if command -v pacman > /dev/null; then
-    PM=pacman
-elif command -v apt > /dev/null; then
-    PM=apt
-fi
-
-if [ "$PM" = "n/a" ]; then
-    echo "Unsupported Package Manager"
-    exit 1
-fi
-
-in_china () {
+in_china() {
     if [ -z "$IS_CHINA" ]; then
         IS_CHINA=no
-        if curl -q myip.ipip.net | grep '中国' > /dev/null; then
+        if curl -s myip.ipip.net | grep -qF '中国' > /dev/null; then
             IS_CHINA=yes
         fi
     fi
-    [ "$IS_CHINA" = "no" ] && return 1
+    [ "$IS_CHINA" = "no" ] && echo "in_china: no" && return 1
+    echo "in_china: yes"
     return 0
 }
 
-lnsf () {
+lnsf() {
     [ "$#" -ne 2 ] && echo "lnsf <target> <symlink>" && return 1
     TARGET=$(readlink -f "$1") || (echo failed: readlink -f "$1" ; return 1)
     SYMLNK=$2
@@ -48,11 +35,11 @@ lnsf () {
     ln -sf "$TARGET" "$SYMLNK"
 }
 
-has_bluetooth () {
+has_bluetooth() {
     dmesg | grep -i bluetooth
 }
 
-eqv () {
+eqv() {
     VERSION_PATH=$1
     VERSION=$2
     [ ! -f "$VERSION_PATH" ] && return 1
@@ -60,24 +47,51 @@ eqv () {
     [ "$VERSION" = "$VERSION2" ]
 }
 
+git_clone() {
+    mkdir -p "$(dirname "$2")"
+    [ -d "$2" ] && return
+    echo "$1" | grep -qF 'github.com' && HTTPS_PROXY=$GITHUB_PROXY git clone --depth 1 "$1" "$2"
+    git clone --depth 1 "$1" "$2"
+}
+
 intorepo() {
     ODIR=$(pwd)
     REPO=$2
-    if [ ! -d "$REPO" ]; then
-        HTTPS_PROXY=$GITHUB_PROXY git clone --depth 1 "$1" "$REPO"
-        cd "$REPO"
-    else
-        cd "$REPO"
-        git pull
-    fi
+    git_clone "$1" "$REPO"
+    cd "$REPO"
 }
 
 exitrepo() {
     cd "$ODIR"
 }
 
+log() {
+    printf "\n\033[32m%s\033[0m\n" "$@"
+}
 
-# install basic common utilities
+has_cmd() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+has_fish() {
+    has_cmd "$1"
+}
+
+
+sudo mkdir -p $PREFIX
+
+if has_cmd pacman; then
+    PM=pacman
+elif has_cmd apt; then
+    PM=apt
+fi
+
+if [ "$PM" = "n/a" ]; then
+    echo "Unsupported Package Manager"
+    exit 1
+fi
+
+log "Installing basic utilities"
 case "$PM" in
     apt)
         sudo apt install \
@@ -88,14 +102,14 @@ case "$PM" in
             man sudo
         ;;
     pacman)
-        sudo pacman -S --needed --needed \
+        sudo pacman -S --noconfirm --needed \
             base-devel \
             unzip p7zip \
             openssh \
             curl wget \
             man sudo
         # install yay
-        if ! command -v yay; then
+        if ! command -v yay >/dev/null; then
             git clone --depth 1 https://aur.archlinux.org/yay.git /tmp/yay
             cd /tmp/yay
             makepkg -si
@@ -104,3 +118,10 @@ case "$PM" in
         ;;
 esac
 
+
+log "Environments"
+echo " PM           : $PM"
+echo " DIR          : $DIR"
+echo " PDIR         : $PDIR"
+echo " PREFIX       : $PREFIX"
+echo " GITHUB_PROXY : $GITHUB_PROXY"
