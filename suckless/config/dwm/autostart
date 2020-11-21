@@ -3,9 +3,6 @@
 # start compositor daemon
 picomdaemon
 
-# start desktop notification daemon
-dunstdaemon
-
 # start dwmbar daemon
 statusbar
 
