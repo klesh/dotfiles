@@ -104,33 +104,32 @@ call plug#begin('~/.vim/plugged')
 Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-surround'
 Plug 'jiangmiao/auto-pairs'
-"Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
-if has('nvim')
-    Plug 'rbgrouleff/bclose.vim'
-endif
-Plug 'francoiscabrol/ranger.vim'
 Plug 'posva/vim-vue', { 'for': 'vue' }
 Plug 'tpope/vim-repeat'
-if $VIM_MODE == 'enhanced'
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
-    Plug 'puremourning/vimspector'
-    Plug 'chrisbra/Colorizer'
-    Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
-    Plug 'cespare/vim-toml', { 'for': 'toml' }
-else
-    Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
-endif
 Plug 'liuchengxu/eleline.vim'
 Plug 'klesh/vim-fugitive'                                         " git 功能
 Plug 'scrooloose/nerdcommenter'
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 Plug 'morhetz/gruvbox'
 Plug 'klesh/vim-fish', { 'for': 'fish' }
-"Plug 'aliva/vim-fish', { 'for': 'fish' }
 Plug 'alvan/vim-closetag', { 'for': ['vue', 'html', 'xml'] }
-"Plug 'airblade/vim-gitgutter'
+Plug 'francoiscabrol/ranger.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+
+if $VIM_MODE == 'enhanced'
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    Plug 'chrisbra/Colorizer'
+    Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
+    Plug 'cespare/vim-toml', { 'for': 'toml' }
+    " vimspector
+    if has('nvim')
+        Plug 'rbgrouleff/bclose.vim'
+    endif
+    Plug 'puremourning/vimspector'
+else
+    Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
+endif
 call plug#end()
 
 " ==== vim-markdown configuration ====
@@ -145,10 +144,6 @@ if $VIM_MODE == 'enhanced'
     " ==== coc configuration ====
     let g:coc_global_extensions = [
                 \ 'coc-diagnostic',
-                \ 'coc-json',
-                \ 'coc-vetur',
-                \ 'coc-tsserver',
-                \ 'coc-eslint',
                 \ 'coc-clangd'
                 \ ]
     "let g:coc_disable_startup_warning = 1
