@@ -121,7 +121,7 @@ else
     Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
 endif
 Plug 'liuchengxu/eleline.vim'
-Plug 'tpope/vim-fugitive'                                         " git 功能
+Plug 'klesh/vim-fugitive'                                         " git 功能
 Plug 'scrooloose/nerdcommenter'
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 Plug 'morhetz/gruvbox'
