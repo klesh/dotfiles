@@ -8,9 +8,12 @@ FILES_PATH=$PREFIX/nodejs
 NODE_BIN=$PREFIX/bin/node
 NODE_URL=https://nodejs.org/dist
 NODE_VERSION=v14.15.1
+NPM_BIN=npm
 if in_china; then
     NODE_URL=https://npm.taobao.org/mirrors/node
+    NPM_BIN=cnpm
 fi
+export NPM_BIN
 
 log "Setting up nodejs"
 
@@ -29,7 +32,7 @@ install() {
     VERSION=$1
     ARCH=x86
     if [ -x "$NODE_BIN" ] && [ "$("$NODE_BIN" --version)" = "$VERSION" ]; then
-        exit 0
+        return
     fi
     case "$(uname -m)" in
         x86_64)
