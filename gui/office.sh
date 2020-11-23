@@ -34,3 +34,4 @@ esac
 
 lnsf "$DIR/zathura/zathurarc" "$XDG_CONFIG_HOME/zathura/zathurarc"
 rm -f "$HOME/.local/share/applications/chrome-*.desktop"
+xdg-mime default org.pwmt.zathura.desktop application/pdf
