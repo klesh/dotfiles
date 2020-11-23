@@ -39,3 +39,9 @@ if has_cmd fish; then
         source $HOME/.cargo/env
     " | sed 's/^ *//' > "$XDG_CONFIG_HOME/fish/conf.d/cargo.fish"
 fi
+
+# coc.nvim
+if enhance_vim; then
+    rustup component add rls rust-analysis rust-src
+    v -c "CocInstall -sync coc-rls|qall"
+fi

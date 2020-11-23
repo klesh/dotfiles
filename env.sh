@@ -80,6 +80,10 @@ has_fish() {
     has_cmd "$1"
 }
 
+enhance_vim() {
+    [ "$VIM_MODE" = "enhanced" ] && has_cmd nvim
+}
+
 
 sudo mkdir -p $PREFIX
 

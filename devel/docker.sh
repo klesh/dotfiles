@@ -11,7 +11,7 @@ case "$PM" in
         sudo snap remove --purge docker
         sudo apt install -y docker.io
         if ! has_cmd python; then
-            . "$PDIR/python/install.sh"
+            "$PDIR/python/install.sh"
         fi
         sudo pip3 install docker-compose
         ;;

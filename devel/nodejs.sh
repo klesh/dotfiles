@@ -22,6 +22,9 @@ lspkgs() {
         | jq '.[] | "\(.version) \(if .lts then "(lts)" else "" end)"' -r
 }
 
+cocsetup() {
+}
+
 uninstall() {
     if [ -f "$FILES_PATH"  ]; then
         tac "$FILES_PATH" | grep -v '/$' | xargs sudo rm -f
@@ -62,6 +65,9 @@ install() {
     rm "/tmp/$NAME"
     if in_china; then
         sudo npm install -g cnpm --registry=https://registry.npm.taobao.org
+    fi
+    if enhance_vim; then
+        v -c "CocInstall -sync coc-json coc-vetur coc-tsserver coc-eslint|qall"
     fi
 }
 

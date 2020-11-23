@@ -15,9 +15,12 @@ case "$PM" in
 esac
 
 # live server for html previewing
-. "$PDIR/devel/nodejs.sh"
-sudo $NPM_BIN install -g live-server
-
+"$PDIR/devel/nodejs.sh"
+if in_china; then
+    sudo cnpm install -g live-server
+else
+    sudo npm install -g live-server
+fi
 # convert to html with embeded <style>: cmark-gfm input.md --to html --unsafe > /path/to/output.html
 # entr watch input.md and rerun convert command
 # live-server to observe html file and reload browser
