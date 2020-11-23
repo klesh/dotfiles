@@ -50,8 +50,11 @@ eqv() {
 git_clone() {
     mkdir -p "$(dirname "$2")"
     [ -d "$2" ] && return
-    echo "$1" | grep -qF 'github.com' && HTTPS_PROXY=$GITHUB_PROXY git clone --depth 1 "$1" "$2"
-    git clone --depth 1 "$1" "$2"
+    if echo "$1" | grep -qF 'github.com'; then
+        HTTPS_PROXY=$GITHUB_PROXY git clone --depth 1 "$1" "$2"
+    else
+        git clone --depth 1 "$1" "$2"
+    fi
 }
 
 intorepo() {
@@ -110,10 +113,9 @@ case "$PM" in
             man sudo
         # install yay
         if ! command -v yay >/dev/null; then
-            git clone --depth 1 https://aur.archlinux.org/yay.git /tmp/yay
-            cd /tmp/yay
+            intorepo https://aur.archlinux.org/yay.git /tmp/yay
             makepkg -si
-            cd -
+            exitrepo
         fi
         ;;
 esac

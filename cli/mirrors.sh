@@ -6,22 +6,27 @@ DIR=$(dirname "$(readlink -f "$0")")
 
 log 'Setting up mirror list'
 
-! in_china && echo 'Skip mirrors configuration' && return
+if ! in_china; then
+    echo 'Skip mirrors configuration'
+    return
+fi
 
 # setup package mirror for CHINA
 case "$PM" in
     apt)
         # backup original sources.list
-        [ ! -f /etc/apt/sources.list.bak ] && \
+        if [ ! -f /etc/apt/sources.list.bak ]; then
             sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak
+        fi
         # replace with aliyun mirror
         awk '$0 ~ /^deb/ {$2="https://mirrors.aliyun.com/ubuntu/"; print}' /etc/apt/sources.list.bak \
             | sudo tee /etc/apt/sources.list
         ;;
     pacman)
         COUNTRY=China
-        [ ! -f /etc/pacman.d/mirrorlist.bak ] && \
+        if [ ! -f /etc/pacman.d/mirrorlist.bak ]; then
             sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+        fi
         awk '
         {
             if (NR < 7) {

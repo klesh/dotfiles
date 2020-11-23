@@ -4,6 +4,9 @@ set -e
 DIR=$(dirname "$(readlink -f "$0")")
 . "$DIR/../env.sh"
 
+if ! has_cmd python
+    . "$PDIR/devel/python.sh"
+fi
 log 'Setting up ranger'
 
 # install ranger
@@ -11,12 +14,10 @@ case "$PM" in
     apt)
         # atool/p7zip-full for archive previewing/extracting etc
         sudo apt install -y atool p7zip-full unrar
-        ! has_cmd pip3 && "$PDIR/devel/python.sh"
         sudo pip3 install ranger-fm ueberzug
         ;;
     pacman)
         sudo pacman -S --noconfirm --needed atool p7zip unrar
-        ! has_cmd pip && "$PDIR/devel/python.sh"
         sudo pip install ranger-fm ueberzug
         ;;
 esac
@@ -29,5 +30,6 @@ lnsf "$DIR/ranger/colorschemes/solarizedmod.py" "$XDG_CONFIG_HOME/ranger/colorsc
 
 # install devicons
 DEVICONS_DIR=$HOME/.config/ranger/plugins/ranger_devicons
-[ ! -d "$DEVICONS_DIR" ] && \
-    git clone https://gitee.com/klesh/ranger_devicons.git "$DEVICONS_DIR"
+if [ ! -d "$DEVICONS_DIR" ]; then
+    git_clone https://gitee.com/klesh/ranger_devicons.git "$DEVICONS_DIR"
+fi

@@ -15,9 +15,10 @@ case "$PM" in
 esac
 
 # completion for fish
-if command -v fish 2>/dev/null ; then
-    [ ! -f "$HOME/.config/fish/completions/docker.fish" ] && \
+if has_cmd fish 2>/dev/null ; then
+    if [ ! -f "$HOME/.config/fish/completions/docker.fish" ]; then
         curl -Lo "$HOME/.config/fish/completions/docker.fish" --create-dirs \
         'https://github.com/docker/cli/raw/master/contrib/completion/fish/docker.fish'
+    fi
     fish -c "fisher add evanlucas/fish-kubectl-completions"
 fi

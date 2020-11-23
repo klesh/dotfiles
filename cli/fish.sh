@@ -8,7 +8,6 @@ log 'Setting up shell'
 
 case "$PM" in
     apt)
-        ! command -v pip3 && "$PDIR/python/install.sh"
         sudo add-apt-repository ppa:fish-shell/release-3 -y
         sudo apt update
         sudo apt install fish silversearcher-ag dash bat -y
@@ -47,7 +46,10 @@ fi
 
 log 'Setting up dash as default shell'
 sudo /usr/bin/ln -sfT dash /usr/bin/sh
-[ "$(awk -F':' '/^'"$USER"'/{print $7}' /etc/passwd)" != "/bin/sh" ] && chsh -s /bin/sh
+
+if [ "$(awk -F':' '/^'"$USER"'/{print $7}' /etc/passwd)" != "/bin/sh" ]; then
+    chsh -s /bin/sh
+fi
 
 
 log 'Setting up fish'

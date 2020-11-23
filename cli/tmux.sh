@@ -15,12 +15,16 @@ case "$PM" in
             if in_china; then
                 TMUX_SRC_URL="https://gitee.com/klesh/tmux/repository/archive/$TMUX_VER?format=tar.gz"
             fi
-            [ ! -f /tmp/tmux.tar.gz ] && curl -L "$TMUX_SRC_URL" -o /tmp/tmux.tar.gz
+            if [ ! -f /tmp/tmux.tar.gz ]; then
+                curl -L "$TMUX_SRC_URL" -o /tmp/tmux.tar.gz
+            fi
             rm -rf /tmp/tmux
             mkdir -p /tmp/tmux
             tar zxvf /tmp/tmux.tar.gz -C /tmp/tmux --strip 1
             cd /tmp/tmux
-            [ -f autogen.sh ] && sh autogen.sh
+            if [ -f autogen.sh ]; then
+                sh autogen.sh
+            fi
             ./configure && make
             sudo make install
             cd -

@@ -29,11 +29,14 @@ case "$PM" in
         # https://code.google.com/p/chromium/issues/detail?id=233851
         # use debian package instead
         DEB_PKG_NAME=fonts-wqy-microhei_0.2.0-beta-3_all.deb
-        [ ! -f "/tmp/$DEB_PKG_NAME" ] && \
+        if [ ! -f "/tmp/$DEB_PKG_NAME" ]; then
             wget http://mirrors.163.com/debian/pool/main/f/fonts-wqy-microhei/$DEB_PKG_NAME -O /tmp/$DEB_PKG_NAME
+        fi
         ar p "/tmp/$DEB_PKG_NAME" data.tar.xz | sudo tar Jxv -C /
         # install symbola for plain emojis(no-color) for st
-        ! fc-list | grep -qi symbola && yay -S --noconfirm --needed ttf-symbola-free
+        if ! fc-list | grep -qi symbola; then
+            yay -S --noconfirm --needed ttf-symbola-free
+        fi
         ;;
 esac
 

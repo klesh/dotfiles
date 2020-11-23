@@ -24,7 +24,7 @@ case "$PM" in
         #sudo apt-get install python3.8
         #sudo apt install python3.8-distutils
         #sudo python3.8 -m pip install --upgrade pip setuptools wheel
-        sudo apt install python3 python3-pip python-is-python3
+        sudo apt install -y python3 python3-pip python-is-python3
         ;;
     pacman)
         sudo pacman -S --noconfirm --needed python python-pip

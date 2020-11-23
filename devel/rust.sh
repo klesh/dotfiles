@@ -9,7 +9,7 @@ if in_china; then
     export RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
     export RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
 
-    if command -v fish >/dev/null; then
+    if has_cmd fish >/dev/null; then
         echo "
             set -x RUSTUP_DIST_SERVER $RUSTUP_DIST_SERVER
             set -x RUSTUP_UPDATE_ROOT $RUSTUP_UPDATE_ROOT
@@ -18,18 +18,24 @@ if in_china; then
     fi
 
     # setup cargo mirrors
-    [ ! -f "$HOME/.cargo/config" ] && mkdir -p "$HOME/.cargo" && echo "
-        [source.crates-io]
-        replace-with = 'ustc'
+    if [ ! -f "$HOME/.cargo/config" ]; then
+        mkdir -p "$HOME/.cargo"
+        echo "
+            [source.crates-io]
+            replace-with = 'ustc'
 
-        [source.ustc]
-        registry = \"git://mirrors.ustc.edu.cn/crates.io-index\"
-    " | sed 's/^ *//' > "$HOME/.cargo/config"
+            [source.ustc]
+            registry = \"git://mirrors.ustc.edu.cn/crates.io-index\"
+        " | sed 's/^ *//' > "$HOME/.cargo/config"
+    fi
 fi
 
-[ ! -f "$HOME/.cargo/bin/rustup" ] \
-    && curl -sSf https://cdn.jsdelivr.net/gh/rust-lang-nursery/rustup.rs/rustup-init.sh | sh
+if [ ! -f "$HOME/.cargo/bin/rustup" ]; then
+    curl -sSf https://cdn.jsdelivr.net/gh/rust-lang-nursery/rustup.rs/rustup-init.sh | sh
+fi
 
-command -v fish >/dev/null && echo "
-    source $HOME/.cargo/env
-" | sed 's/^ *//' > "$XDG_CONFIG_HOME/fish/conf.d/cargo.fish"
+if has_cmd fish; then
+    echo "
+        source $HOME/.cargo/env
+    " | sed 's/^ *//' > "$XDG_CONFIG_HOME/fish/conf.d/cargo.fish"
+fi

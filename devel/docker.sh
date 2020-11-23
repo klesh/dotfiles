@@ -10,7 +10,9 @@ case "$PM" in
         # snap docker will intefere native docker.io, must be dealt with
         sudo snap remove --purge docker
         sudo apt install -y docker.io
-        ! has_cmd pip && . "$PDIR/python/install.sh"
+        if ! has_cmd python; then
+            . "$PDIR/python/install.sh"
+        fi
         sudo pip3 install docker-compose
         ;;
     pacman)
@@ -29,12 +31,15 @@ if in_china; then
     sudo mkdir -p /etc/docker
     if [ -f /etc/docker/daemon.json ]; then
         # backup
-        [ ! -f /etc/docker/daemon.bak.json ] && \
+        if [ ! -f /etc/docker/daemon.bak.json ]; then
             sudo cp /etc/docker/daemon.json /etc/docker/daemon.bak.json
+        fi
         # read
         dj=$(cat /etc/docker/daemon.json)
     fi
-    [ -z "$dj" ] && dj='{}'
+    if [ -z "$dj" ]; then
+        dj='{}'
+    fi
     echo $dj | jq '. + {"registry-mirrors": ["https://izuhlbap.mirror.aliyuncs.com"]}' | \
         sudo tee /etc/docker/daemon.json
     sudo systemctl restart docker

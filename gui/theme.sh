@@ -11,11 +11,11 @@ case "$PM" in
         sudo apt install -y \
             lxappearance arc-theme qt5ct qt5-style-plugins
         # install arc-icon-theme
-        git clone https://github.com/horst3180/arc-icon-theme --depth 1  /tmp/arc-icon-theme && cd /tmp/arc-icon-theme
+        intorepo https://github.com/horst3180/arc-icon-theme /tmp/arc-icon-theme
         ./autogen.sh --prefix=/usr
         sudo make install
         rm -rf /tmp/arc-icon-theme
-        cd -
+        exitrepo
         ;;
     pacman)
         sudo pacman -S --noconfirm --needed \

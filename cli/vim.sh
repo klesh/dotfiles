@@ -8,8 +8,12 @@ log 'Setting up vim'
 
 # check dependencies
 if [ "$VIM_MODE" = "enhanced" ]; then
-    ! has_cmd npm && "$PDIR/devel/nodejs.sh"
-    ! has_cmd pip && "$PDIR/devel/python.sh"
+    if ! has_cmd node; then
+        . "$PDIR/devel/nodejs.sh"
+    fi
+    if ! has_cmd python; then
+        . "$PDIR/devel/python.sh"
+    fi
 fi
 
 # install nvim
@@ -18,11 +22,15 @@ case "$PM" in
         sudo add-apt-repository ppa:neovim-ppa/stable -y
         sudo apt update
         sudo apt install -y neovim
-        [ "$VIM_MODE" = "enhanced" ] && sudo pip3 install pyvim neovim
+        if [ "$VIM_MODE" = "enhanced" ]; then
+            sudo pip3 install pyvim neovim
+        fi
         ;;
     pacman)
         sudo pacman -S --noconfirm --needed neovim
-        [ "$VIM_MODE" = "enhanced" ] && sudo pip install pyvim neovim
+        if [ "$VIM_MODE" = "enhanced" ]; then
+            sudo pip install pyvim neovim
+        fi
         ;;
 esac
 

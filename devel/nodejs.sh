@@ -8,7 +8,9 @@ FILES_PATH=$PREFIX/nodejs
 NODE_BIN=$PREFIX/bin/node
 NODE_URL=https://nodejs.org/dist
 NODE_VERSION=v14.15.1
-in_china && NODE_URL=https://npm.taobao.org/mirrors/node
+if in_china; then
+    NODE_URL=https://npm.taobao.org/mirrors/node
+fi
 
 log "Setting up nodejs"
 
@@ -18,14 +20,17 @@ lspkgs() {
 }
 
 uninstall() {
-    [ -f "$FILES_PATH"  ] \
-        && tac "$FILES_PATH" | grep -v '/$' | xargs sudo rm -f
+    if [ -f "$FILES_PATH"  ]; then
+        tac "$FILES_PATH" | grep -v '/$' | xargs sudo rm -f
+    fi
 }
 
 install() {
     VERSION=$1
     ARCH=x86
-    [ -x "$NODE_BIN" ] && [ "$("$NODE_BIN" --version)" = "$VERSION" ] && exit 0
+    if [ -x "$NODE_BIN" ] && [ "$("$NODE_BIN" --version)" = "$VERSION" ]; then
+        exit 0
+    fi
     case "$(uname -m)" in
         x86_64)
             ARCH=x64
@@ -52,7 +57,9 @@ install() {
         | sudo tee "$FILES_PATH" >/dev/null
     # remove download path
     rm "/tmp/$NAME"
-    in_china && sudo npm install -g cnpm --registry=https://registry.npm.taobao.org
+    if in_china; then
+        sudo npm install -g cnpm --registry=https://registry.npm.taobao.org
+    fi
 }
 
 

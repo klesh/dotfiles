@@ -1,5 +1,5 @@
 {
-    "npm.binPath": "yarnpkg",
+    "npm.binPath": "cnpm",
     "python.linting.enable": true,
     "python.linting.flake8Enabled": true,
     "python.linting.pylintEnabled": false,
