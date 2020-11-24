@@ -194,7 +194,7 @@ nnoremap <leader>k :cp<CR>
 
 
 " ==== Ranger configuration ====
-let g:ranger_map_key = 0
+let g:ranger_map_keys = 0
 nnoremap <C-t> :Ranger<CR>
 
 autocmd BufEnter,BufRead nnoremap <leader>cg :<C-u>call OpenRangerIn(system("git rev-parse --show-toplevel >/dev/null || pwd"), 'edit ')<CR>
