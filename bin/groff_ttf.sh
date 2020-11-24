@@ -19,11 +19,22 @@ DIR=$(dirname "$(readlink -f "$0")")
 FONTPATH=$(readlink -f "$1")
 # with R B I suffix
 STYLE=$2
+case "$STYLE" in
+    R|B|I|BI)
+        ;;
+    *)
+        echo "warning: unknown style $STYLE, are u sure? [y/N]"
+        read -r CONFIRM_STYLE
+        if [ "$CONFIRM_STYLE" != 'y' ]; then
+            exit
+        fi
+        ;;
+esac
 GROFF_CURRENT=$(readlink -f /usr/share/groff/current)
 GROFF_SITEFONT=/usr/share/groff/site-font
 
 TMPDIR="$(mktemp -d)"
-trap 'rm -rf '"$TMPDIR"';cd -' EXIT
+trap 'rm -rf '"$TMPDIR"';cd - >/dev/null' EXIT
 cd "$TMPDIR"
 echo "Change working directory to: $(pwd)"
 
@@ -50,12 +61,20 @@ if ! grep "$PFA" "$GROFF_CURRENT/font/devps/download" ; then
     printf '%s\t%s\n' "$INA" "$PFA" | sudo tee -a "$GROFF_CURRENT/font/devps/download" >/dev/null
 fi
 
+echo
 echo "Done, now you may use this font in your .ms file:"
+printf "\033[32m"
 echo " .ds FAM $FONTNAME"
+if [ "$STYLE" != "R" ] ; then
+echo " .$STYLE \"text\""
+fi
+printf "\033[0m"
 echo
 echo "Then, use following command to generate pdf file:"
+printf "\033[32m"
 echo " groff -ms -U -Kutf8 input.ms > tmp.ps"
 echo " ps2pdf tmp.ps output.pdf"
+printf "\033[0m"
 echo
 
 #sudo ln -sf "/usr/share/groff/site-font/devps/$PFA" "/usr/share/groff/site-font/devpdf/$PFA"

@@ -253,3 +253,22 @@ fu! NERDCommenter_after()
     g:ft
   endif
 endfu
+
+" ==== groff ====
+function! ToggleGroffAutoCompilation()
+    let g:GroffAutoCompilation = !get(g:, "GroffAutoCompilation", 0)
+
+    augroup GroffPdf
+        autocmd!
+    augroup END
+
+    if g:GroffAutoCompilation
+        augroup GroffPdf
+            autocmd BufWritePost,FileWritePost *.ms :silent !groff -Kutf8 -ms % -U > /tmp/tmp.ps && ps2pdf /tmp/tmp.ps %.pdf
+        augroup END
+        echo "Auto compilation enabled"
+    else
+        echo "Auto compilation disabled"
+    endif
+endfunction
+nnoremap <leader>ac :call ToggleGroffAutoCompilation()<CR>
