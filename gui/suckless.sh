@@ -57,10 +57,10 @@ while :; do
 done
 EOT
 
-cat <<'EOT' | sed "s|__DIR__|$DIR|g" > ~/.profile
+cat <<'EOT' | sed "s|__PDIR__|$PDIR|g" > ~/.profile
 #!/bin/sh
 
-export PATH=__DIR__/bin:$HOME/.local/bin:$PATH
+export PATH=__PDIR__/bin:$HOME/.local/bin:$PATH
 export VIM_MODE=enhanced
 export DMENU_DEFAULT_OPTS='-i -c -fn monospace:13 -nb #222222 -nf #bbbbbb -sb #5b97f7 -sf #eeeeee -l 20'
 
