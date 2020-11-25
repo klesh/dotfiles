@@ -1,9 +1,10 @@
 #!/bin/sh
 
+# shellcheck disable=2035
 
 set -e
-# generate pfa
 
+# print help if no arugment supplied
 if [ "$#" -lt 2 ]; then
     CMD=$(basename "$0")
     echo "Usage: $CMD <*.ttf/ttc/otf> <style>"
@@ -15,9 +16,9 @@ if [ "$#" -lt 2 ]; then
     echo "note: the suffix of groff_name (R/I/B/BI) is essential!"
 fi
 
-DIR=$(dirname "$(readlink -f "$0")")
 FONTPATH=$(readlink -f "$1")
-# with R B I suffix
+
+# argument checking
 STYLE=$2
 case "$STYLE" in
     R|B|I|BI)
@@ -33,17 +34,21 @@ esac
 GROFF_CURRENT=$(readlink -f /usr/share/groff/current)
 GROFF_SITEFONT=/usr/share/groff/site-font
 
+# conversion
 TMPDIR="$(mktemp -d)"
 trap 'rm -rf '"$TMPDIR"';cd - >/dev/null' EXIT
 cd "$TMPDIR"
 echo "Change working directory to: $(pwd)"
 
 echo "Using fontforge to generate PFA"
-fontforge -script "$DIR/generate-pfa.pe" "$FONTPATH" >/dev/null 2>&1
-AFM=$(ls ./*.afm)
-PFA=$(ls ./*.pfa)
-
-
+# fontforge do not process -c argument the same way as -script, have to create a temporary script
+cat <<'EOT' > generate-pfa.pe
+Open($1);
+Generate($fontname + ".pfa");
+EOT
+fontforge -script generate-pfa.pe "$FONTPATH" >/dev/null 2>&1
+AFM=$(ls *.afm)
+PFA=$(ls *.pfa)
 FONTNAME=$(awk '$1 == "FamilyName" {print substr($0, 12)}' "$AFM" | sed -r 's/\s+//g')
 GROFFNAME=$FONTNAME$STYLE
 echo "Converting to groff font"
@@ -52,37 +57,43 @@ INA=$(awk '$1 == "internalname" { print $2; exit; }' "$GROFFNAME")
 echo "groff name    : $GROFFNAME"
 echo "internalname  : $INA"
 
+# installation
 echo "Copying to $GROFF_SITEFONT"
 sudo mkdir -p $GROFF_SITEFONT/devps
 sudo cp "$PFA" "$GROFFNAME" /usr/share/groff/site-font/devps
+sudo ln -sf "/usr/share/groff/site-font/devps/$PFA" "/usr/share/groff/site-font/devpdf/$PFA"
+sudo ln -sf "/usr/share/groff/site-font/devps/$GROFFNAME" "/usr/share/groff/site-font/devpdf/$GROFFNAME"
 
 echo "Adding font to downloadable list"
 if ! grep "$PFA" "$GROFF_CURRENT/font/devps/download" ; then
     printf '%s\t%s\n' "$INA" "$PFA" | sudo tee -a "$GROFF_CURRENT/font/devps/download" >/dev/null
 fi
+if ! grep "$PFA"  "$GROFF_CURRENT/font/devpdf/download" ; then
+    printf '\t%s\t%s\n' "$INA" "$PFA" | sudo tee -a "$GROFF_CURRENT/font/devpdf/download" >/dev/null
+fi
 
+# print result and tips
 echo
-echo "Done, now you may use this font in your .ms file:"
+echo "Done, now you may use this font in your .mom file:"
 printf "\033[32m"
-echo " .ds FAM $FONTNAME"
+echo " .class [cjk] \\[u4E00]-\\[u9FFF]"
+echo " .class [fpunc] \\[u3000]-\\[u303F]"
+echo " .cflags 66 \\C'[cjk]'"
+echo " .cflags 68 \\C'[fpunc]'"
+echo " .FAMILY $FONTNAME"
 if [ "$STYLE" != "R" ] ; then
-echo " .$STYLE \"text\""
+echo " .FONT $STYLE"
 fi
 printf "\033[0m"
 echo
 echo "Then, use following command to generate pdf file:"
 printf "\033[32m"
-echo " groff -ms -U -Kutf8 input.ms > tmp.ps"
-echo " ps2pdf tmp.ps output.pdf"
+echo " groff -mom -U -Kutf8 input.ms > /tmp/tmp.ps"
+echo " ps2pdf /tmp/tmp.ps output.pdf"
 printf "\033[0m"
 echo
+echo "PS: to insert image"
+echo " imagemagick covert image: convert input.jpg output.eps"
+echo " in .mom file use        : .PSPIC output.eps"
+echo
 
-#sudo ln -sf "/usr/share/groff/site-font/devps/$PFA" "/usr/share/groff/site-font/devpdf/$PFA"
-#sudo ln -sf "/usr/share/groff/site-font/devps/$GROFFNAME" "/usr/share/groff/site-font/devpdf/$GROFFNAME"
-
-#if ! grep "$PFA"  "$GROFF_CURRENT/font/devpdf/download" ; then
-    #printf '\t%s\t%s\n' "$GROFFNAME" "$PFA" >> "$GROFF_CURRENT/font/devpdf/download"
-#fi
-
-# to insert picture: convert input.jpg output.pdf
-# in msfile use: .PICPDF output.pdf
