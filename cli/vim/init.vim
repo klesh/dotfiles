@@ -127,6 +127,7 @@ if $VIM_MODE == 'enhanced'
         Plug 'rbgrouleff/bclose.vim'
     endif
     Plug 'puremourning/vimspector'
+    Plug 'vim-scripts/mom.vim'
 else
     Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
 endif
@@ -255,20 +256,30 @@ fu! NERDCommenter_after()
 endfu
 
 " ==== groff ====
-function! ToggleGroffAutoCompilation()
-    let g:GroffAutoCompilation = !get(g:, "GroffAutoCompilation", 0)
+fu! SilentOK(cmd)
+    let l:ouput = system(substitute(a:cmd, "%", expand("%"), "g"))
+    if v:shell_error != 0
+        echo ouput
+    endif
+endfu
+
+fu! ToggleGroffMomAutoCompilation()
+    let g:GroffMomAutoCompilation = !get(g:, "GroffMomAutoCompilation", 0)
 
     augroup GroffPdf
         autocmd!
     augroup END
 
-    if g:GroffAutoCompilation
+    if g:GroffMomAutoCompilation
         augroup GroffPdf
-            autocmd BufWritePost,FileWritePost *.ms :silent !groff -Kutf8 -ms % -U > /tmp/tmp.ps && ps2pdf /tmp/tmp.ps %.pdf
+            autocmd BufWritePost,FileWritePost *.mom
+                :call SilentOK("groff -Kutf8 -mom % > /tmp/tmp.ps && ps2pdf /tmp/tmp.ps %.pdf")
         augroup END
-        echo "Auto compilation enabled"
+        echo "Auto compilation for groff_mom enabled"
     else
-        echo "Auto compilation disabled"
+        echo "Auto compilation for groff_mom disabled"
     endif
-endfunction
-nnoremap <leader>ac :call ToggleGroffAutoCompilation()<CR>
+endfu
+nnoremap <leader>ac :call ToggleGroffMomAutoCompilation()<CR>
+autocmd BufEnter,BufRead *.mom :set ft=mom
+
