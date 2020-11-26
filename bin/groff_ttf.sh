@@ -60,9 +60,10 @@ echo "internalname  : $INA"
 # installation
 echo "Copying to $GROFF_SITEFONT"
 sudo mkdir -p $GROFF_SITEFONT/devps
-sudo cp "$PFA" "$GROFFNAME" /usr/share/groff/site-font/devps
-sudo ln -sf "/usr/share/groff/site-font/devps/$PFA" "/usr/share/groff/site-font/devpdf/$PFA"
-sudo ln -sf "/usr/share/groff/site-font/devps/$GROFFNAME" "/usr/share/groff/site-font/devpdf/$GROFFNAME"
+sudo mkdir -p $GROFF_SITEFONT/devpdf
+sudo cp "$PFA" "$GROFFNAME" "$GROFF_SITEFONT/devps"
+sudo ln -sf "$GROFF_SITEFONT/devps/$PFA" "$GROFF_SITEFONT/devpdf/$PFA"
+sudo ln -sf "$GROFF_SITEFONT/devps/$GROFFNAME" "$GROFF_SITEFONT/devpdf/$GROFFNAME"
 
 echo "Adding font to downloadable list"
 if ! grep "$PFA" "$GROFF_CURRENT/font/devps/download" ; then
@@ -77,9 +78,9 @@ echo
 echo "Done, now you may use this font in your .mom file:"
 printf "\033[32m"
 echo " .class [cjk] \\[u4E00]-\\[u9FFF]"
-echo " .class [fpunc] \\[u3000]-\\[u303F]"
+echo " .class [puc] \\[u3000]-\\[u303F]"
 echo " .cflags 66 \\C'[cjk]'"
-echo " .cflags 68 \\C'[fpunc]'"
+echo " .cflags 68 \\C'[puc]'"
 echo " .FAMILY $FONTNAME"
 if [ "$STYLE" != "R" ] ; then
 echo " .FONT $STYLE"
