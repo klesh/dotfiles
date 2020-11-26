@@ -272,8 +272,7 @@ fu! ToggleGroffMomAutoCompilation()
 
     if g:GroffMomAutoCompilation
         augroup GroffPdf
-            autocmd BufWritePost,FileWritePost *.mom
-                :call SilentOK("groff -Kutf8 -mom % > /tmp/tmp.ps && ps2pdf /tmp/tmp.ps %.pdf")
+            autocmd BufWritePost,FileWritePost *.mom :call SilentOK("groff -Kutf8 -mom % > /tmp/tmp.ps && ps2pdf /tmp/tmp.ps %.pdf")
         augroup END
         echo "Auto compilation for groff_mom enabled"
     else
