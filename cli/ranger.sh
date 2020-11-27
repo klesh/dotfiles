@@ -4,7 +4,7 @@ set -e
 DIR=$(dirname "$(readlink -f "$0")")
 . "$DIR/../env.sh"
 
-if ! has_cmd python
+if ! has_cmd python; then
     "$PDIR/devel/python.sh"
 fi
 log 'Setting up ranger'

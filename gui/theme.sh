@@ -19,7 +19,7 @@ case "$PM" in
         ;;
     pacman)
         sudo pacman -S --noconfirm --needed \
-            lxappearance arc-gtk-theme arc-icon-theme qt5ct qt5-styleplugins
+            lxappearance arc-gtk-theme arc-icon-theme qt5ct
         ;;
 esac
 
