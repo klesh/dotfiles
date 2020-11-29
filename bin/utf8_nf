@@ -1,0 +1,249 @@
+#!/bin/env python3
+
+import gzip
+import argparse
+import re
+import sys
+import io
+from typing import List, TextIO
+
+
+def extract_nerdfont_ranges(font_patcher: TextIO):
+    range_re = re.compile(r"'((Src|Sym)(Start|End))':\s*([xXA-Fa-f0-9]+|None)")
+    name_re = re.compile(r"'Name':\s+\"(.*?)\"")
+    for line in font_patcher:
+        results = range_re.findall(line)
+        if len(results) != 4:
+            continue
+        props = {r[0]: int(r[3], base=16) if r[3] != "None" else None for r in results}
+        r = (
+            props["SrcStart"] or props["SymStart"],
+            props["SrcEnd"] or props["SymEnd"],
+        )
+        if r != (0, 0):
+            m = name_re.search(line)
+            if not m:
+                raise Exception("unable to find name: %s" % line)
+            yield r[0], r[1], m[1]
+
+
+def inject_nerdfont_ranges(ranges: List[tuple], textin: TextIO, textout: TextIO):
+    scope = None
+    comment_char = None
+    escape_char = None
+    length = len(ranges)
+    keyword_re = re.compile(r'<(\w+)>\s+(\S+)\s*')
+
+    def charmap_line(start: int, end: int, comment: str):
+        if end < start:
+            return
+        textout.write("<U%04X>" % start)
+        if end > start:
+            textout.write("..<U%04X>" % end)
+        textout.write(" ")
+        escaped = "".join(map(lambda x: "%sx%02x" % (escape_char, x), chr(start).encode('utf-8')))
+        textout.write(escaped)
+        textout.write(" ")
+        textout.write(comment)
+        textout.write("\n")
+
+    charmap = {
+        're': re.compile(r'<U([A-Z0-9]+)>(..<U([A-Z0-9]+)>)?\s+(\S+)\s+(.*?)$'),
+        'cursor': 0,
+        'writeline': charmap_line
+    }
+
+    def width_line(start: int, end: int, comment: str):
+        if end < start:
+            return
+        textout.write("<U%04X>" % start)
+        if end > start:
+            textout.write("...<U%04X>" % end)
+        textout.write("\t%s\n" % comment)
+
+    width = {
+        're': re.compile(r'<U([A-Z0-9]+)>(...<U([A-Z0-9]+)>)?(\s+)(\d+)$'),
+        'cursor': 0,
+        'writeline': width_line,
+        'comment': '2',
+    }
+
+    def pop_scope():
+        ss, se, comment = ranges[scope['cursor']]
+        scope['writeline'](ss, se, scope.get('comment', comment))
+        scope['cursor'] += 1
+        return scope['cursor'] < length
+
+    for line in textin:
+        if textout.closed:
+            return
+        line = line.strip()
+        if line.startswith("CHARMAP"):
+            scope = charmap
+        elif line.startswith("WIDTH"):
+            scope = width
+        elif line.startswith("END "):
+            while scope['cursor'] < length:
+                pop_scope()
+            scope = None
+        elif comment_char and line.startswith(comment_char):
+            pass
+        elif scope and scope['cursor'] < length:
+            m = scope['re'].match(line)
+            if not m:
+                raise Exception("unkown line: " + line)
+            ts = int(m[1], base=16)
+            te = int(m[3], base=16) if m[3] else ts
+            ss, se, comment = ranges[scope['cursor']]
+            # if ts == 0x5e00:
+                # import ipdb; ipdb.set_trace()
+            if te < ss:          # no intersection
+                pass
+            # elif ts > se:
+                # while ts > se and pop_scope():
+                    # ss, se, comment = ranges[scope['cursor']]
+            elif ts >= ss and te <= se:     # subset
+                continue
+            else:
+                if ss <= te:
+                    scope['writeline'](ts, ss - 1, m[5])
+                # if se <= te:
+                    # pop_scope()
+                while se <= te and pop_scope():
+                    if ts <= se:
+                        scope['writeline'](se + 1, te, m[5])
+                    ss, se, comment = ranges[scope['cursor']]
+                continue
+        elif line:
+            m = keyword_re.match(line)
+            if m:
+                if m[1] == "comment_char":
+                    comment_char = m[2]
+                elif m[1] == 'escape_char':
+                    escape_char = m[2]
+
+        textout.write(line + "\n")
+
+
+def test():
+    TARGET = (
+        "<comment_char> %\n"
+        "<escape_char> /\n\n"
+        "CHARMAP\n"
+        "<U0000>                /x00         no\n"
+        "<U0001>..<U0005>       /x01         left\n"
+        "<U0006>                /x06         subset\n"
+        "<U0007>                /x07         subset\n"
+        "<U0008>..<U0009>       /x08         right\n"
+        "<U4E00>..<U4E99>       /xe4/xb8/x80 superset\n"
+        "<U5E00>                /x00         gap\n"
+        "END CHARMAP\n"
+        "WIDTH\n"
+        "<U0000>...<U0004>\t0\n"
+        "<U6F00>...<U7FFF>\t1\n"
+        "END WIDTH\n"
+    )
+    ranges = [
+        (4, 8, "test"),
+        (0x4e03, 0x4e0a, "test2"),
+        (0x4F00, 0x4F00, "test3"),
+        (0x6F00, 0x6F00, "tail"),
+    ]
+    EXPECT = (
+        "<comment_char> %\n"
+        "<escape_char> /\n\n"
+        "CHARMAP\n"
+        "<U0000>                /x00         no\n"
+        "<U0001>..<U0003> /x01 left\n"
+        "<U0004>..<U0008> /x04 test\n"
+        "<U0009> /x09 right\n"
+        "<U4E00>..<U4E02> /xe4/xb8/x80 superset\n"
+        "<U4E03>..<U4E0A> /xe4/xb8/x83 test2\n"
+        "<U4E0B>..<U4E99> /xe4/xb8/x8b superset\n"
+        "<U4F00> /xe4/xbc/x80 test3\n"
+        "<U5E00>                /x00         gap\n"
+        "<U6F00> /xe6/xbc/x80 tail\n"
+        "END CHARMAP\n"
+        "WIDTH\n"
+        "<U0000>...<U0003>\t0\n"
+        "<U0004>...<U0008>\t2\n"
+        "<U4E03>...<U4E0A>\t2\n"
+        "<U4F00>\t2\n"
+        "<U6F00>\t2\n"
+        "<U6F01>...<U7FFF>\t1\n"
+        "END WIDTH\n"
+    )
+    target = io.StringIO(TARGET)
+    result = io.StringIO()
+    inject_nerdfont_ranges(ranges, target, result)
+    if result.getvalue() != EXPECT:
+        print("\033[42m origin\033[0m")
+        print(TARGET)
+        print()
+        print("\033[42m inject\033[0m")
+        for r in ranges:
+            print("%04X %04X %s" % r)
+        print()
+        print("\033[42m expect \033[0m", len(EXPECT))
+        print(EXPECT)
+        print()
+        print("\033[42m result \033[0m", len(result.getvalue()))
+        print(result.getvalue())
+    else:
+        print("pass")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+            description="patch charmap to make NerdFont icons double width"
+    )
+    parser.add_argument(
+        "-i", "--in-charmap",
+        dest="in_charmap",
+        default="/usr/share/i18n/charmaps/UTF-8.gz",
+        help="input charmap file path")
+    parser.add_argument(
+        "-o", "--out",
+        dest="out_charmap",
+        default="/usr/share/i18n/charmaps/UTF-8NF.gz",
+        help="output charmap file path")
+    parser.add_argument(
+        "-f", "--font-patcher",
+        dest="font_patcher",
+        required=True,
+        help="file path of font_patcher from NerdFont")
+    parser.add_argument(
+        "--plainout",
+        dest="plainout",
+        action="store_true",
+        help="write to stdout in plain-text")
+    parser.add_argument(
+        "--test",
+        dest="test",
+        action="store_true",
+        help="run test case")
+    args = parser.parse_args()
+
+    font_patcher = open(args.font_patcher, 'r',)
+    double_width_ranges = extract_nerdfont_ranges(font_patcher)
+
+    if args.test:
+        test()
+        exit()
+
+    in_charmap = gzip.open(args.in_charmap, 'rt', encoding="ascii")
+    if args.plainout:
+        out_charmap = sys.stdout
+    elif args.out_charmap.endswith('.gz'):
+        out_charmap = gzip.open(args.out_charmap, 'wt')
+    else:
+        out_charmap = open(args.out_charmap, 'wt')
+    ranges = sorted(double_width_ranges, key=lambda x: x[0])
+    for r in ranges:
+        print("%04X-%04X %s" % r)
+    inject_nerdfont_ranges(ranges, in_charmap, out_charmap)
+
+    # add `en_US.UTF-8NF UTF-8NF` to `/etc/locale.gen`
+    # run `locale-gen`
+    # update `/etc/locale.conf` to `LANG=en_US.UTF-8NF`
+    # restart
