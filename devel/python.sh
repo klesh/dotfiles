@@ -37,3 +37,5 @@ if has_fish; then
     fish -c "yes | vf install && vf addplugins auto_activation"
 fi
 
+# config flake8
+lnsf "$DIR/python/flake8" "$XDG_CONFIG_HOME/flake8"
