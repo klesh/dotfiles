@@ -1,0 +1,80 @@
+#!/usr/bin/env python3
+
+import argparse
+import sys
+from os import path
+
+try:
+    import fontforge
+except ImportError:
+    sys.exit(
+        "FontForge module could not be loaded. Try installing fontforge python bindings "
+        "[e.g. on Linux Debian or Ubuntu: `sudo apt install fontforge python-fontforge`]"
+    )
+
+
+def generate_style(font: fontforge.font, style: str, opts):
+    font.fontname += style
+    font.selection.all()
+    for glyph in font.selection.byGlyphs:
+        if "Bold" in style:
+            glyph.changeWeight(opts.embolden)
+        if 'Italic' in style:
+            glyph.italicize(opts.angle)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Generate Bold/Italic versions for specified font file",
+    )
+
+    parser.add_argument('font', help='The path to the font')
+    parser.add_argument(
+        '-b', '--bold',
+        dest="styles",
+        action="append_const",
+        const="Bold",
+        help="generate bold version")
+    parser.add_argument(
+        '-i', '--italic',
+        dest="styles",
+        action="append_const",
+        const="Italic",
+        help="generate italic version")
+    parser.add_argument(
+        '-bi', '--bolditalic',
+        dest="styles",
+        action="append_const",
+        const="BoldItalic",
+        help="generate bold and italic version")
+    parser.add_argument(
+        '-em', '--embolden-em',
+        dest="embolden",
+        type=int,
+        default=5,
+        help="set embolden scale (by em unit)")
+    parser.add_argument(
+        '-ag', '--italic-angle',
+        dest="angle",
+        type=int,
+        default=-13,
+        help="set italic angle")
+    parser.add_argument(
+        '-o', '--out-dir',
+        dest="outdir",
+        default=".",
+        help="set italic angle")
+
+    args = parser.parse_args()
+
+    if not args.styles:
+        args.styles = ['Bold', 'Italic', 'BoldItalic']
+
+    font = fontforge.open(args.font)
+    for style in args.styles:
+        generate_style(font, style, args)
+        dotindex = args.font.rindex('.')
+        name = args.font[:dotindex]
+        ext = args.font[dotindex:]
+        font.generate(path.join(args.outdir, name + style + ext))
+

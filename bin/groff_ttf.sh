@@ -36,7 +36,7 @@ GROFF_SITEFONT=/usr/share/groff/site-font
 
 # conversion
 TMPDIR="$(mktemp -d)"
-trap 'rm -rf '"$TMPDIR"';cd - >/dev/null' EXIT
+#trap 'rm -rf '"$TMPDIR"';cd - >/dev/null' EXIT
 cd "$TMPDIR"
 echo "Change working directory to: $(pwd)"
 
@@ -45,10 +45,11 @@ echo "Using fontforge to generate PFA"
 cat <<'EOT' > generate-pfa.pe
 Open($1);
 Generate($fontname + ".pfa");
+Generate($fontname + ".t42");
 EOT
 fontforge -script generate-pfa.pe "$FONTPATH" >/dev/null 2>&1
 AFM=$(ls *.afm)
-PFA=$(ls *.pfa)
+T42=$(ls *.t42)
 FONTNAME=$(awk '$1 == "FamilyName" {print substr($0, 12)}' "$AFM" | sed -r 's/\s+//g')
 GROFFNAME=$FONTNAME$STYLE
 echo "Converting to groff font"
@@ -61,16 +62,16 @@ echo "internalname  : $INA"
 echo "Copying to $GROFF_SITEFONT"
 sudo mkdir -p $GROFF_SITEFONT/devps
 sudo mkdir -p $GROFF_SITEFONT/devpdf
-sudo cp "$PFA" "$GROFFNAME" "$GROFF_SITEFONT/devps"
-sudo ln -sf "$GROFF_SITEFONT/devps/$PFA" "$GROFF_SITEFONT/devpdf/$PFA"
+sudo cp "$T42" "$GROFFNAME" "$GROFF_SITEFONT/devps"
+sudo ln -sf "$GROFF_SITEFONT/devps/$T42" "$GROFF_SITEFONT/devpdf/$T42"
 sudo ln -sf "$GROFF_SITEFONT/devps/$GROFFNAME" "$GROFF_SITEFONT/devpdf/$GROFFNAME"
 
 echo "Adding font to downloadable list"
-if ! grep "$PFA" "$GROFF_CURRENT/font/devps/download" ; then
-    printf '%s\t%s\n' "$INA" "$PFA" | sudo tee -a "$GROFF_CURRENT/font/devps/download" >/dev/null
+if ! grep "$T42" "$GROFF_CURRENT/font/devps/download" ; then
+    printf '%s\t%s\n' "$INA" "$T42" | sudo tee -a "$GROFF_CURRENT/font/devps/download" >/dev/null
 fi
-if ! grep "$PFA"  "$GROFF_CURRENT/font/devpdf/download" ; then
-    printf '\t%s\t%s\n' "$INA" "$PFA" | sudo tee -a "$GROFF_CURRENT/font/devpdf/download" >/dev/null
+if ! grep "$T42"  "$GROFF_CURRENT/font/devpdf/download" ; then
+    printf '\t%s\t%s\n' "$INA" "$T42" | sudo tee -a "$GROFF_CURRENT/font/devpdf/download" >/dev/null
 fi
 
 # print result and tips
