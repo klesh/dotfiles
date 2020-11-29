@@ -1,6 +1,6 @@
 {
     "npm.binPath": "cnpm",
-    "python.linting.enable": true,
+    "python.jediEnabled": false,
     "python.linting.flake8Enabled": true,
     "python.linting.pylintEnabled": false,
     "diagnostic-languageserver.filetypes": {
