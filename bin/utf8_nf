@@ -5,6 +5,8 @@ import argparse
 import re
 import sys
 import io
+import os
+from abc import ABC, abstractclassmethod, abstractmethod, abstractstaticmethod
 from typing import List, TextIO
 
 
@@ -27,92 +29,122 @@ def extract_nerdfont_ranges(font_patcher: TextIO):
             yield r[0], r[1], m[1]
 
 
+class Scope(ABC):
+    comment_override = None
+
+    def __init__(self, ranges: List[tuple], output: TextIO):
+        self.ranges = ranges
+        self.length = len(ranges)
+        self.output = output
+        self.cursor = 0
+        self.escape_char = None
+        self.re = re.compile(self.pattern())
+
+    @property
+    def empty(self) -> bool:
+        return self.cursor >= self.length
+
+    @property
+    def current(self) -> tuple:
+        return self.ranges[self.cursor]
+
+    def pop(self) -> bool:
+        if self.empty:
+            return False
+        ss, se, comment = self.current
+        self.write_line(ss, se, self.comment_override or comment)
+        self.cursor += 1
+
+    def read_line(self, line: str) -> bool:
+        m = self.re.match(line)
+        if not m:
+            raise Exception("unkown line: " + line)
+        ts = int(m[1], base=16)
+        te = int(m[3], base=16) if m[3] else ts
+        while not self.empty and self.current[1] < ts:
+            self.pop()
+        if self.empty:
+            return True
+        ss, se, _ = self.current
+        # output no intersection
+        if te < ss:
+            return True
+        # dont output subset
+        if ts >= ss and te <= se:
+            return False
+        if ss <= te:                       # clip left intersection
+            self.write_line(ts, ss - 1, m[5])
+        if se <= te:
+            self.pop()
+        if ts <= se:
+            self.write_line(se + 1, te, m[5])
+        if se < ts:
+            return True
+        return False
+
+    def write_line(self, start: int = None, end: int = None, comment: str = None) -> None:
+        if end < start:
+            return
+        self.output.write(self.format(start, end, comment) + '\n')
+
+    @abstractmethod
+    def pattern(self) -> str:
+        pass
+
+    @abstractmethod
+    def format(self, start: int, end: int, arg: any) -> str:
+        pass
+
+
+class CharmapScope(Scope):
+
+    def pattern(self) -> str:
+        return r'<U([A-Z0-9]+)>(..<U([A-Z0-9]+)>)?\s+(\S+)\s+(.*?)$'
+
+    def format(self, start: int, end: int, comment: str) -> str:
+        return "%s%s %s %s" % (
+            "<U%04X>" % start,
+            "..<U%04X>" % end if end > start else "",
+            "".join(map(lambda x: "%sx%02x" % (self.escape_char, x), chr(start).encode('utf-8'))),
+            comment,
+        )
+
+
+class WidthScope(Scope):
+    comment_override = '2'
+
+    def pattern(self) -> str:
+        return r'<U([A-Z0-9]+)>(...<U([A-Z0-9]+)>)?(\s+)(\d+)$'
+
+    def format(self, start: int, end: int, comment: str) -> str:
+        return "%s%s\t%s" % (
+            "<U%04X>" % start,
+            "...<U%04X>" % end if end > start else "",
+            comment
+        )
+
+
 def inject_nerdfont_ranges(ranges: List[tuple], textin: TextIO, textout: TextIO):
-    scope = None
     comment_char = None
-    escape_char = None
-    length = len(ranges)
     keyword_re = re.compile(r'<(\w+)>\s+(\S+)\s*')
-
-    def charmap_line(start: int, end: int, comment: str):
-        if end < start:
-            return
-        textout.write("<U%04X>" % start)
-        if end > start:
-            textout.write("..<U%04X>" % end)
-        textout.write(" ")
-        escaped = "".join(map(lambda x: "%sx%02x" % (escape_char, x), chr(start).encode('utf-8')))
-        textout.write(escaped)
-        textout.write(" ")
-        textout.write(comment)
-        textout.write("\n")
-
-    charmap = {
-        're': re.compile(r'<U([A-Z0-9]+)>(..<U([A-Z0-9]+)>)?\s+(\S+)\s+(.*?)$'),
-        'cursor': 0,
-        'writeline': charmap_line
-    }
-
-    def width_line(start: int, end: int, comment: str):
-        if end < start:
-            return
-        textout.write("<U%04X>" % start)
-        if end > start:
-            textout.write("...<U%04X>" % end)
-        textout.write("\t%s\n" % comment)
-
-    width = {
-        're': re.compile(r'<U([A-Z0-9]+)>(...<U([A-Z0-9]+)>)?(\s+)(\d+)$'),
-        'cursor': 0,
-        'writeline': width_line,
-        'comment': '2',
-    }
-
-    def pop_scope():
-        ss, se, comment = ranges[scope['cursor']]
-        scope['writeline'](ss, se, scope.get('comment', comment))
-        scope['cursor'] += 1
-        return scope['cursor'] < length
+    charmap_scope = CharmapScope(ranges, textout)
+    width_scope = WidthScope(ranges, textout)
+    scope = None
 
     for line in textin:
-        if textout.closed:
-            return
         line = line.strip()
         if line.startswith("CHARMAP"):
-            scope = charmap
+            scope = charmap_scope
         elif line.startswith("WIDTH"):
-            scope = width
+            scope = width_scope
         elif line.startswith("END "):
-            while scope['cursor'] < length:
-                pop_scope()
+            while not scope.empty:
+                scope.pop()
             scope = None
         elif comment_char and line.startswith(comment_char):
             pass
-        elif scope and scope['cursor'] < length:
-            m = scope['re'].match(line)
-            if not m:
-                raise Exception("unkown line: " + line)
-            ts = int(m[1], base=16)
-            te = int(m[3], base=16) if m[3] else ts
-            ss, se, comment = ranges[scope['cursor']]
-            # if ts == 0x5e00:
-                # import ipdb; ipdb.set_trace()
-            if te < ss:          # no intersection
-                pass
-            # elif ts > se:
-                # while ts > se and pop_scope():
-                    # ss, se, comment = ranges[scope['cursor']]
-            elif ts >= ss and te <= se:     # subset
-                continue
-            else:
-                if ss <= te:
-                    scope['writeline'](ts, ss - 1, m[5])
-                # if se <= te:
-                    # pop_scope()
-                while se <= te and pop_scope():
-                    if ts <= se:
-                        scope['writeline'](se + 1, te, m[5])
-                    ss, se, comment = ranges[scope['cursor']]
+        elif scope and not scope.empty:
+            if scope.read_line(line) is False:
                 continue
         elif line:
             m = keyword_re.match(line)
@@ -120,7 +152,7 @@ def inject_nerdfont_ranges(ranges: List[tuple], textin: TextIO, textout: TextIO)
                 if m[1] == "comment_char":
                     comment_char = m[2]
                 elif m[1] == 'escape_char':
-                    escape_char = m[2]
+                    charmap_scope.escape_char = m[2]
 
         textout.write(line + "\n")
 
@@ -188,60 +220,57 @@ def test():
         print(EXPECT)
         print()
         print("\033[42m result \033[0m", len(result.getvalue()))
-        print(result.getvalue())
+        a = EXPECT.split('\n')
+        b = result.getvalue().split('\n')
+        for i in range(max(len(a), len(b))):
+            print("\033[%dm%s\033[0m" % (32 if a[i] == b[i] else 31, b[i]))
     else:
         print("pass")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-            description="patch charmap to make NerdFont icons double width"
-    )
-    parser.add_argument(
-        "-i", "--in-charmap",
-        dest="in_charmap",
-        default="/usr/share/i18n/charmaps/UTF-8.gz",
-        help="input charmap file path")
-    parser.add_argument(
-        "-o", "--out",
-        dest="out_charmap",
-        default="/usr/share/i18n/charmaps/UTF-8NF.gz",
-        help="output charmap file path")
-    parser.add_argument(
-        "-f", "--font-patcher",
-        dest="font_patcher",
-        required=True,
-        help="file path of font_patcher from NerdFont")
-    parser.add_argument(
-        "--plainout",
-        dest="plainout",
-        action="store_true",
-        help="write to stdout in plain-text")
-    parser.add_argument(
-        "--test",
-        dest="test",
-        action="store_true",
-        help="run test case")
-    args = parser.parse_args()
-
-    font_patcher = open(args.font_patcher, 'r',)
-    double_width_ranges = extract_nerdfont_ranges(font_patcher)
-
-    if args.test:
+    if os.environ.get('DEBUGGING') == '1':
         test()
-        exit()
-
-    in_charmap = gzip.open(args.in_charmap, 'rt', encoding="ascii")
-    if args.plainout:
-        out_charmap = sys.stdout
-    elif args.out_charmap.endswith('.gz'):
-        out_charmap = gzip.open(args.out_charmap, 'wt')
     else:
-        out_charmap = open(args.out_charmap, 'wt')
-    ranges = sorted(double_width_ranges, key=lambda x: x[0])
-    for r in ranges:
-        print("%04X-%04X %s" % r)
-    inject_nerdfont_ranges(ranges, in_charmap, out_charmap)
+        parser = argparse.ArgumentParser(
+                description="patch charmap to make NerdFont icons double width"
+        )
+        parser.add_argument(
+            "-i", "--in-charmap",
+            dest="in_charmap",
+            default="/usr/share/i18n/charmaps/UTF-8.gz",
+            help="input charmap file path")
+        parser.add_argument(
+            "-o", "--out",
+            dest="out_charmap",
+            default="/usr/share/i18n/charmaps/UTF-8NF.gz",
+            help="output charmap file path")
+        parser.add_argument(
+            "-f", "--font-patcher",
+            dest="font_patcher",
+            required=True,
+            help="file path of font_patcher from NerdFont")
+        parser.add_argument(
+            "--plainout",
+            dest="plainout",
+            action="store_true",
+            help="write to stdout in plain-text")
+        args = parser.parse_args()
+
+        font_patcher = open(args.font_patcher, 'r',)
+        double_width_ranges = extract_nerdfont_ranges(font_patcher)
+
+        in_charmap = gzip.open(args.in_charmap, 'rt', encoding="ascii")
+        if args.plainout:
+            out_charmap = sys.stdout
+        elif args.out_charmap.endswith('.gz'):
+            out_charmap = gzip.open(args.out_charmap, 'wt')
+        else:
+            out_charmap = open(args.out_charmap, 'wt')
+        ranges = sorted(double_width_ranges, key=lambda x: x[0])
+        for r in ranges:
+            print("%04X-%04X %s" % r)
+        inject_nerdfont_ranges(ranges, in_charmap, out_charmap)
 
     # add `en_US.UTF-8NF UTF-8NF` to `/etc/locale.gen`
     # run `locale-gen`
