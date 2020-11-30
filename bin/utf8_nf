@@ -267,7 +267,10 @@ if __name__ == "__main__":
             out_charmap = gzip.open(args.out_charmap, 'wt')
         else:
             out_charmap = open(args.out_charmap, 'wt')
-        ranges = sorted(double_width_ranges, key=lambda x: x[0])
+        ranges = sorted(
+            filter(lambda x: x[2] in ['Seti-UI + Custom', 'Devicons'], double_width_ranges),
+            key=lambda x: x[0]
+        )
         for r in ranges:
             print("%04X-%04X %s" % r)
         inject_nerdfont_ranges(ranges, in_charmap, out_charmap)
