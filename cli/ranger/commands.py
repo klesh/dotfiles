@@ -7,39 +7,39 @@ from ranger.gui.widgets.browsercolumn import BrowserColumn
 
 Widget.vcsstatus_symb = {
     'conflict': (
-        'X ', ['vcsconflict']),
+        ' ', ['vcsconflict']),
     'untracked': (
-        '? ', ['vcsuntracked']),
+        ' ', ['vcsuntracked']),
     'deleted': (
-        '- ', ['vcschanged']),
+        ' ', ['vcschanged']),
     'changed': (
-        '+ ', ['vcschanged']),
+        ' ', ['vcschanged']),
     'staged': (
-        '* ', ['vcsstaged']),
+        ' ', ['vcsstaged']),
     'ignored': (
         '· ', ['vcsignored']),
     'sync': (
-        '✓ ', ['vcssync']),
+        ' ', ['vcssync']),
     'none': (
         '  ', []),
     'unknown': (
-        '! ', ['vcsunknown']),
+        ' ', ['vcsunknown']),
 }
 
 
 Widget.vcsremotestatus_symb = {
     'diverged': (
-        ' Y', ['vcsdiverged']),
+        ' |', ['vcsdiverged']),
     'ahead': (
-        ' >', ['vcsahead']),
+        ' |', ['vcsahead']),
     'behind': (
-        ' <', ['vcsbehind']),
+        ' |', ['vcsbehind']),
     'sync': (
-        ' =', ['vcssync']),
+        ' |', ['vcssync']),
     'none': (
-        ' ⌂ ', ['vcsnone']),
+        ' |', ['vcsnone']),
     'unknown': (
-        ' !', ['vcsunknown']),
+        ' |', ['vcsunknown']),
 }
 
 
