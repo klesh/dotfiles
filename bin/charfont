@@ -1,0 +1,3 @@
+#!/bin/sh
+
+FC_DEBUG=4 pango-view --font=monospace -t "$1" | grep family:
