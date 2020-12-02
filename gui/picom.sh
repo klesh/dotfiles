@@ -24,7 +24,8 @@ case "$PM" in
 esac
 
 # build and install picom
-intorepo https://github.com/klesh/picom.git "$DIR/repos/picom"
+#intorepo https://github.com/klesh/picom.git "$DIR/repos/picom"
+intorepo https://github.com/yshui/picom.git "$DIR/repos/picom"
 meson --buildtype=release . build
 sudo ninja -C build install
 exitrepo
