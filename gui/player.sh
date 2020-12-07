@@ -19,7 +19,9 @@ esac
 # symlink configuration
 lnsf "$DIR/mpd/mpd.conf" "$XDG_CONFIG_HOME/mpd/mpd.conf"
 lnsf "$DIR/mpv/mpv.conf" "$XDG_CONFIG_HOME/mpv/mpv.conf"
+lnsf "$DIR/mpv/input.conf" "$XDG_CONFIG_HOME/mpv/input.conf"
 lnsf "$DIR/mpv/scripts/organize.lua" "$XDG_CONFIG_HOME/mpv/scripts/organize.lua"
+lnsf "$DIR/mpv/scripts/cut.lua" "$XDG_CONFIG_HOME/mpv/scripts/cut.lua"
 lnsf "$DIR/ncmpcpp/bindings" "$XDG_CONFIG_HOME/ncmpcpp/bindings"
 lnsf "$DIR/ncmpcpp/config" "$XDG_CONFIG_HOME/ncmpcpp/config"
 
