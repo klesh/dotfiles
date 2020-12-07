@@ -26,7 +26,7 @@ function output_marked()
     })
     output_file = utils.join_path(output_dir, file)
     utils.subprocess({
-        args={'ffmpeg', '-i', path, '-ss', tostring(ss), '-t', tostring(t), '-c', 'copy', output_file},
+        args={'ffmpeg', '-ss', tostring(ss), '-i', path, '-t', tostring(t), '-c', 'copy', output_file},
         cancellable=false
     })
     mp.osd_message('Clip save to ' .. output_file)
