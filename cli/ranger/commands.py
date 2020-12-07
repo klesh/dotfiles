@@ -170,3 +170,26 @@ class fzf_edit(Command):
         if fzf.returncode == 0:
             fzf_file = os.path.abspath(stdout.rstrip('\n'))
             self.fm.edit_file(fzf_file)
+
+
+class mediacut_open(Command):
+    def execute(self):
+        """ play all files in current dir """
+        thisfile = self.fm.thisfile
+        if thisfile.filetype.startswith('inode/directory'):
+            files = [file.path for file in thisfile.files if file.filetype.startswith('video')]
+        else:
+            files = [thisfile.path]
+        descr = "mediacut open"
+        obj = CommandLoader(
+            args=[
+                'mpv',
+                '--no-resume-playback',
+                '--start=0',
+                '--osd-fractions',
+                '--osd-level=3'
+            ] + files,
+            descr=descr,
+            read=False,
+        )
+        self.fm.loader.add(obj)
