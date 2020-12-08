@@ -172,6 +172,36 @@ class fzf_edit(Command):
             self.fm.edit_file(fzf_file)
 
 
+class mediacut_join(Command):
+    def execute(self):
+        """ Concatenate selected video """
+        cwd = self.fm.thisdir
+        marked_files = cwd.get_selection()
+
+        if not marked_files:
+            return
+
+        def refresh(_):
+            cwd = self.fm.get_directory(original_path)
+            cwd.load_content()
+
+        tmppath = '/tmp/concate-recording'
+        with open(tmppath, 'w') as f:
+            f.writelines("file {}".format(f.path) + '\n' for f in marked_files)
+
+        original_path = cwd.path
+
+        descr = "concatenating"
+        obj = CommandLoader(
+            args=['ffmpeg', '-f', 'concat', '-safe', '0', '-i', tmppath, '-c', 'copy', self.args[1]],
+            descr=descr,
+            read=True
+        )
+
+        obj.signal_bind('after', refresh)
+        self.fm.loader.add(obj)
+
+
 class mediacut_open(Command):
     def execute(self):
         """ play all files in current dir """
