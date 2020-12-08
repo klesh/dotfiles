@@ -89,6 +89,8 @@ if has('nvim')
         let vim_plug_path = expand("~/.config/nvim/autoload/plug.vim")
     endif
 else
+    map <ScrollWheelUp> <C-Y>
+    map <ScrollWheelDown> <C-E>
     let vim_plug_path = expand("~/.vim/autoload/plug.vim")
     set listchars=eol:\ ,tab:>\ ,trail:~,extends:>,precedes:<
 endif
@@ -224,6 +226,7 @@ let g:fugitive_no_maps=1
 nnoremap <C-p> :call fzf#vim#files(trim(system("git rev-parse --show-toplevel 2>/dev/null \|\| pwd")))<Cr>
 nnoremap <leader>gco :call fzf#run({'source': 'git branch \| cut -c 3-; git tag -l', 'sink': '!git checkout'})<CR>
 nnoremap <leader>gm :call fzf#run({'source': 'git branch \| cut -c 3-', 'sink': '!git merge'})<CR>
+nnoremap <leader>ls :Buffers<CR>
 
 
 " ==== gruvbox configuration ====
