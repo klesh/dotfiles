@@ -89,8 +89,9 @@ if has('nvim')
         let vim_plug_path = expand("~/.config/nvim/autoload/plug.vim")
     endif
 else
-    map <ScrollWheelUp> <C-Y>
-    map <ScrollWheelDown> <C-E>
+    set ttymouse=sgr
+    "map <ScrollWheelUp> <C-Y>
+    "map <ScrollWheelDown> <C-E>
     let vim_plug_path = expand("~/.vim/autoload/plug.vim")
     set listchars=eol:\ ,tab:>\ ,trail:~,extends:>,precedes:<
 endif
