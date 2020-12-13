@@ -174,9 +174,12 @@ class fzf_edit(Command):
 
 class mediacut_join(Command):
     def execute(self):
-        """ Concatenate selected video """
-        cwd = self.fm.thisdir
-        marked_files = cwd.get_selection()
+        """ Concatenate video inside cursor folder """
+        thisfile = self.fm.thisfile
+        if not thisfile.filetype.startswith('inode/directory'):
+            return
+
+        marked_files = [file.path for file in thisfile.files if file.filetype.startswith('video')]
 
         if not marked_files:
             return
@@ -187,9 +190,9 @@ class mediacut_join(Command):
 
         tmppath = '/tmp/concate-recording'
         with open(tmppath, 'w') as f:
-            f.writelines("file {}".format(f.path) + '\n' for f in marked_files)
+            f.writelines("file {}".format(v) + '\n' for v in marked_files)
 
-        original_path = cwd.path
+        original_path = self.fm.thisdir
 
         descr = "concatenating"
         obj = CommandLoader(
