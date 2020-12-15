@@ -1,0 +1,107 @@
+#!/bin/fish
+
+function preview -a infile -d "preview media with mpv"
+    if test -z $infile
+        help
+        exit 1
+    end
+    mpv --no-resume-playback --start=0 --osd-fractions --osd-level=3 $infile
+end
+
+function cut -a infile from to outfile -d "cut out portion to new media file"
+    if test -z $outfile
+        help
+        exit 1
+    end
+    ffmpeg -ss $from -i $infile -t to -c copy $outfile
+end
+
+function cover -a infile outfile title gravity x y -d "create cover"
+    if test -z $title
+        help
+        exit 1
+    end
+    test -z $x && set x 0
+    test -z $y && set y 0
+    test -z $gravity && set gravity center
+    set tmpblur /tmp/tmpblur.jpg
+    magick convert $infile -blur 0x8 $tmpblur
+    magick convert $tmpblur \
+        -gravity $gravity \
+        -interline-spacing 20 \
+        -pointsize 120 -font "$SC_FONT" \
+        -fill '#fdf6e3' -stroke '#fdf6e3' -strokewidth 40 \
+        -annotate +$x+$y "$title"\
+        -fill '#839496' -stroke '#839496' -strokewidth 5 \
+        -annotate +$x+$y "$title"\
+        $outfile
+end
+
+function chapter -a infile outfile title duration gravity -d "prepend chapter to video"
+    if test -z $title
+        help
+        exit 1
+    end
+    test -z $duration && set duration 3
+    set tmpjpeg /tmp/tmpjpeg.jpg
+    set tmpcover /tmp/tmpcover.jpg
+    set tmpchapter /tmp/chapter.mp4
+    ffmpeg -i $infile -vframes 1 -f image2 -y $tmpjpeg
+    cover $tmpjpeg $tmpcover $title
+    ffmpeg \
+      -loop 1 -framerate 30 -i $tmpcover \
+      -loop 1 -framerate 30 -i $tmpjpeg \
+      -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=48000 \
+      -filter_complex "
+      [0:v]fade=t=out:st=3:d=1:alpha=1[v0];
+      [1:v][v0]overlay" \
+      -c:v h264 -crf 0 -preset ultrafast -pix_fmt yuv444p \
+      -t 5 \
+      -y $tmpchapter
+    join $outfile $tmpchapter $infile
+    preview $outfile
+end
+
+function join -a outfile
+    set infile "/tmp/ffmpeg.concat"
+    rm $infile
+    for file in $argv[2..-1]
+        set file (readlink -f $file)
+        echo "file $file" >> $infile
+    end
+    ffmpeg -f concat -safe 0 -i $infile -c copy $outfile
+end
+
+function concat -a indir outfile -d "concat all media files in folder to a new media file"
+    if test -z $outfile
+        help
+        exit 1
+    end
+    set -e files
+    for file in (ls $indir)
+        set --append files $indir/$file
+    end
+    join $outfile $files
+end
+
+function help
+    echo "Usage: mediacut <command> [...args]"
+    echo " commads:"
+    echo "  preview <infile>"
+    echo "  cut <infile> <from> <to>"
+    echo "  chapter <infile> <title>"
+    echo "  join <outfiles> <...infiles>"
+    echo "  concat <indir> <outfile>"
+end
+
+if test (count $argv) -lt 2
+    help
+    exit 1
+end
+
+switch $argv[1]
+    case preview cut join concat chapter help
+        $argv
+    case "*"
+        help
+end
