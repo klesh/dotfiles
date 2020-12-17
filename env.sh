@@ -107,6 +107,13 @@ case "$PM" in
             openssh-client \
             curl wget \
             man sudo
+        if [ -f /etc/lsb-release ]; then
+            set -a
+            . /etc/lsb-release
+            set +a
+            export DISTRIB_RELEASE_MAJOR=${DISTRIB_RELEASE%.*}
+            export DISTRIB_RELEASE_MINOR=${DISTRIB_RELEASE#.*}
+        fi
         ;;
     pacman)
         sudo pacman -S --noconfirm --needed \

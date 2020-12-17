@@ -5,12 +5,14 @@ DIR=$(dirname "$(readlink -f "$0")")
 . "$DIR/../env.sh"
 
 log 'Setting up shell'
-
 case "$PM" in
     apt)
         sudo add-apt-repository ppa:fish-shell/release-3 -y
         sudo apt update
-        sudo apt install fish silversearcher-ag dash bat -y
+        sudo apt install fish silversearcher-ag -y
+        if [ "$DISTRIB_RELEASE_MAJOR" -gt 19 ] || [ "$DISTRIB_RELEASE" = "19.10" ]; then
+            sudo apt install dash bat  -y
+        fi
         lnsf /usr/bin/batcat "$HOME/.local/bin/bat"
         intorepo https://github.com/junegunn/fzf.git "$HOME/.fzf"
         ./install --all
@@ -36,19 +38,24 @@ case "$PM" in
         ;;
 esac
 
-log 'Setting up bat'
-BAT_THEMES="$(bat --config-dir)/themes"
-BAT_GRUVBOX="$BAT_THEMES/gruvbox"
-if [ ! -d "$BAT_GRUVBOX" ]; then
-    mkdir -p "$BAT_THEMES"
-    git_clone https://github.com/peaceant/gruvbox.git "$BAT_GRUVBOX"
+
+if has_cmd bat; then
+    log 'Setting up bat'
+    BAT_THEMES="$(bat --config-dir)/themes"
+    BAT_GRUVBOX="$BAT_THEMES/gruvbox"
+    if [ ! -d "$BAT_GRUVBOX" ]; then
+        mkdir -p "$BAT_THEMES"
+        git_clone https://github.com/peaceant/gruvbox.git "$BAT_GRUVBOX"
+    fi
 fi
 
-log 'Setting up dash as default shell'
-sudo /usr/bin/ln -sfT dash /usr/bin/sh
+if has_cmd dash; then
+    log 'Setting up dash as default shell'
+    sudo /usr/bin/ln -sfT dash /usr/bin/sh
 
-if [ "$(awk -F':' '/^'"$USER"'/{print $7}' /etc/passwd)" != "/bin/sh" ]; then
-    chsh -s /bin/sh
+    if [ "$(awk -F':' '/^'"$USER"'/{print $7}' /etc/passwd)" != "/bin/sh" ]; then
+        chsh -s /bin/sh
+    fi
 fi
 
 
