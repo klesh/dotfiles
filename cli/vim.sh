@@ -29,7 +29,7 @@ if ! has_cmd "$VIM"; then
             #fi
 
             # gui-common is required for clipboard integration
-            sudo add-apt-repository ppa:jonathonf/vim
+            sudo add-apt-repository ppa:jonathonf/vim -y
             sudo apt-get update
             sudo apt install -y vim vim-gui-common
             if enhance_vim; then
