@@ -1,6 +1,7 @@
 #!/bin/fish
 
 set VIRTMON virtmon
+set -q SC_FONT; or set SC_FONT 'WenQuanYi-Micro-Hei'
 
 function _stop
     killall screenkey 2>/dev/null
@@ -110,6 +111,7 @@ end
 set --append subcmds desktop
 set desktop_help 'record desktop'
 function desktop -a fps
+    _stop
     test -z $fps && set fps 30
     set monsinfo (xrandr --listmonitors)
     #0: virtmon-1 1920/445x1080/250+0+0  DP-2
@@ -126,7 +128,6 @@ set --append subcmds theend
 set theend_help 'end recording'
 function theend
     _stop
-    killall screenkey 2>/dev/null
 end
 
 set --append subcmds togif
@@ -143,9 +144,10 @@ function cover -a infile text gravity outfile
     test -z $gravity && set gravity 'center' && set x 0 && set y 0
     magick convert $infile -thumbnail 1146x -background black -gravity $gravity -extent 1146x717 resized.png
     magick convert resized.png \
+        -blur 0x8 \
         -gravity $gravity \
         -fill black \
-        -pointsize 120 -font 'WenQuanYi-Micro-Hei' \
+        -pointsize 120 -font $SC_FONT \
         -interline-spacing 20 \
         -stroke '#e1e1e1' -strokewidth 40 \
         -annotate +$x+0 "$text" \
