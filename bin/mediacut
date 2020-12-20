@@ -13,7 +13,7 @@ function cut -a infile from to outfile -d "cut out portion to new media file"
         help
         exit 1
     end
-    ffmpeg -ss $from -i $infile -t to -c copy $outfile
+    ffmpeg -ss $from -i $infile -t $to -c copy $outfile
 end
 
 function cover -a infile outfile title gravity x y -d "create cover"
@@ -32,7 +32,7 @@ function cover -a infile outfile title gravity x y -d "create cover"
         -pointsize 120 -font "$SC_FONT" \
         -fill '#fdf6e3' -stroke '#fdf6e3' -strokewidth 40 \
         -annotate +$x+$y "$title"\
-        -fill '#839496' -stroke '#839496' -strokewidth 5 \
+        -fill '#839496' -stroke '#839496' -strokewidth 0 \
         -annotate +$x+$y "$title"\
         $outfile
 end
@@ -45,7 +45,6 @@ function chapter -a infile outfile title duration gravity -d "prepend chapter to
     test -z $duration && set duration 3
     set tmpjpeg /tmp/tmpjpeg.jpg
     set tmpcover /tmp/tmpcover.jpg
-    set tmpchapter /tmp/chapter.mp4
     ffmpeg -i $infile -vframes 1 -f image2 -y $tmpjpeg
     cover $tmpjpeg $tmpcover $title
     ffmpeg \
@@ -57,8 +56,7 @@ function chapter -a infile outfile title duration gravity -d "prepend chapter to
       [1:v][v0]overlay" \
       -c:v h264 -crf 0 -preset ultrafast -pix_fmt yuv444p \
       -t 5 \
-      -y $tmpchapter
-    join $outfile $tmpchapter $infile
+      -y $outfile
     preview $outfile
 end
 
@@ -89,6 +87,7 @@ function help
     echo " commads:"
     echo "  preview <infile>"
     echo "  cut <infile> <from> <to>"
+    echo "  cover <infile> <outfile> <title>"
     echo "  chapter <infile> <title>"
     echo "  join <outfiles> <...infiles>"
     echo "  concat <indir> <outfile>"
@@ -100,7 +99,7 @@ if test (count $argv) -lt 2
 end
 
 switch $argv[1]
-    case preview cut join concat chapter help
+    case preview cut join concat cover chapter help
         $argv
     case "*"
         help

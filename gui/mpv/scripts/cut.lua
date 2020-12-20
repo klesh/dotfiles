@@ -11,10 +11,10 @@ function mark_end()
 end
 
 function output_marked()
-    --if not begin_pos and not end_pos then
-        --mp.osd_message('Please set Begin Position with Ctrl-b, End Position with Ctrl-e')
-        --return
-    --end
+    if not begin_pos and not end_pos then
+        mp.osd_message('Please set Begin Position with Ctrl-b, End Position with Ctrl-e')
+        return
+    end
     ss = begin_pos or 0
     t = end_pos or mp.get_property('duration')
     path = mp.get_property('path')
