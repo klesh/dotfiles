@@ -1,0 +1,68 @@
+#!/bin/fish
+
+set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
+set -q BOOKMARK_PATH; or set BOOKMARK_PATH $XDG_CONFIG_HOME/bookmarks.md
+set LINK_PATTERN '\[(.*?)\]\((.*?)\)'
+
+function _help
+    echo "Usage bm <command> ...args"
+    echo "commands:"
+    echo '  open [-c <category>]'
+end
+
+function _open
+    if test 0 -eq (count $argv)
+        echo search mode
+    else
+        argparse -n open c/category= -- $argv
+        _filter_category $_flag_category < $BOOKMARK_PATH | _open_urls $argv
+    end
+end
+
+function _filter_category -a category
+    if not count $argv >/dev/null
+        cat -
+        return
+    end
+    set -e output_indent
+    while read LINE
+        if set heading (string match -r '^(#+) (.*)$' $LINE)
+            set heading_indent (string length $heading[2])
+            set heading_title $heading[-1]
+            if test -z "$output_indent"
+                if test -z "$output_indent" && string match "*$heading_title*" $category >/dev/null
+                    set output_indent $heading_indent
+                end
+            else
+                if test "$heading_indent" -le "$output_indent"
+                    set -e output_indent
+                else
+                    echo $LINE
+                end
+            end
+        else if test -n "$output_indent"
+            echo $LINE
+        end
+    end
+end
+
+function _open_urls
+    set -q BROWSER; or set BROWSER xdg-open
+    while read LINE
+        if set link (string match -r '\[(.*?)\]\((.*?)\)' $LINE)
+            if count $argv >/dev/null && not contains $link[2] $argv
+                continue
+            end
+            $BROWSER $link[3]
+        end
+    end
+end
+
+
+switch $argv[1]
+    case open
+        _open $argv[2..-1]
+    case '*'
+        _help
+end
+
