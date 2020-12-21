@@ -10,12 +10,16 @@ function _help
     echo '  open [-c <category>]'
 end
 
-function _open
+function list
+    argparse -n open c/category= -- $argv
+    _filter_category $_flag_category < $BOOKMARK_PATH | _filter_name $argv
+end
+
+function open
     if test 0 -eq (count $argv)
         echo search mode
     else
-        argparse -n open c/category= -- $argv
-        _filter_category $_flag_category < $BOOKMARK_PATH | _open_urls $argv
+        list $argv | _open_urls
     end
 end
 
@@ -46,22 +50,34 @@ function _filter_category -a category
     end
 end
 
-function _open_urls
-    set -q BROWSER; or set BROWSER xdg-open
+function _filter_name
+    if not count $argv >/dev/null
+        cat -
+        return
+    end
     while read LINE
         if set link (string match -r '\[(.*?)\]\((.*?)\)' $LINE)
             if count $argv >/dev/null && not contains $link[2] $argv
                 continue
             end
-            $BROWSER $link[3]
+            echo $LINE
         end
     end
 end
 
+function _open_urls
+    set -q BROWSER; or set BROWSER xdg-open
+    while read LINE
+        if set link (string match -r '\[(.*?)\]\((.*?)\)' $LINE)
+             $BROWSER $link[3] &
+             disown
+        end
+    end
+end
 
 switch $argv[1]
-    case open
-        _open $argv[2..-1]
+    case open list
+        $argv[1..-1]
     case '*'
         _help
 end
