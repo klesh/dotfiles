@@ -2,49 +2,67 @@
 
 set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
 set -q BOOKMARK_PATH; or set BOOKMARK_PATH $XDG_CONFIG_HOME/bookmarks.md
-set LINK_PATTERN '\[(.*?)\]\((.*?)\)'
+if set -q BOOKMARK_SEARCHER
+    set BOOKMARK_SEARCHER (string split ' ' $BOOKMARK_SEARCHER)
+else
+    set BOOKMARK_SEARCHER fzf --layout reverse
+end
 
 function _help
-    echo "Usage bm <command> ...args"
+    echo "Organize your bookmark with markdown"
+    echo
+    echo "Usage bm [command ...args]"
+    echo
     echo "commands:"
-    echo '  open [-c <category>]'
+    echo '  list [query]'
+    echo '  open <query>'
+    echo
+    echo 'examples:'
+    echo '  bm list "# daily" "# emails"            list all links under daily/emails folder'
+    echo '  bm list "reddit" "github"               list all links contains specified keywords'
+    echo '  bm open "# daily" "# emails"            open all links under daily/emails folder'
+    echo '  bm open "reddit" "github"               open all links contains specified keywords'
+    echo '  bm                                      search with $BOOKMARK_SEARCHER and then open selected'
 end
 
 function list
-    argparse -n open c/category= -- $argv
-    _filter_category $_flag_category < $BOOKMARK_PATH | _filter_name $argv
+    set -e categories
+    set -e names
+    for arg in $argv
+        if string match -q '#*' $arg
+            set --append categories $arg
+        else
+            set --append names $arg
+        end
+    end
+    _filter_category $categories < $BOOKMARK_PATH | _filter_name $names
 end
 
 function open
-    if test 0 -eq (count $argv)
-        echo search mode
+    if not count $argv &>/dev/null
+        _search
     else
         list $argv | _open_urls
     end
 end
 
-function _filter_category -a category
+function _filter_category
     if not count $argv >/dev/null
         cat -
         return
     end
+    set categories $argv
     set -e output_indent
     while read LINE
         if set heading (string match -r '^(#+) (.*)$' $LINE)
             set heading_indent (string length $heading[2])
-            set heading_title $heading[-1]
             if test -z "$output_indent"
-                if test -z "$output_indent" && string match "*$heading_title*" $category >/dev/null
-                    set output_indent $heading_indent
-                end
+                contains $LINE $categories && set output_indent $heading_indent
             else
-                if test "$heading_indent" -le "$output_indent"
-                    set -e output_indent
-                else
-                    echo $LINE
-                end
+                test "$heading_indent" -le "$output_indent" && set -e output_indent
             end
-        else if test -n "$output_indent"
+        end
+        if test -n "$output_indent"
             echo $LINE
         end
     end
@@ -55,30 +73,40 @@ function _filter_name
         cat -
         return
     end
+    set NAMES_PATTERN (string join '|' $argv)
     while read LINE
-        if set link (string match -r '\[(.*?)\]\((.*?)\)' $LINE)
-            if count $argv >/dev/null && not contains $link[2] $argv
-                continue
-            end
-            echo $LINE
+        if not string match -q -r $NAMES_PATTERN $LINE
+            continue
         end
+        echo $LINE
     end
 end
 
 function _open_urls
     set -q BROWSER; or set BROWSER xdg-open
+    set LINK_PATTERN  '\[(.*?)\]\((.*?)\)'
     while read LINE
-        if set link (string match -r '\[(.*?)\]\((.*?)\)' $LINE)
-             $BROWSER $link[3] &
+        if set link (string match -r $LINK_PATTERN $LINE)
+             $BROWSER $link[3] &>/dev/null &
              disown
         end
     end
 end
 
+function _search
+    set query (sed -r '/^\s*$/d' $BOOKMARK_PATH | $BOOKMARK_SEARCHER)
+    test -z "$query" && return
+    if string match '#*' $query
+        open $query
+    else
+        echo $query | _open_urls
+    end
+end
+
 switch $argv[1]
-    case open list
+    case open list help
         $argv[1..-1]
     case '*'
-        _help
+        _search
 end
 
