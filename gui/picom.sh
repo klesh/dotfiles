@@ -5,7 +5,7 @@ DIR=$(dirname "$(readlink -f "$0")")
 . "$DIR/../env.sh"
 
 if ! has_cmd python; then
-    "$PDIR/python/install.sh"
+    "$PDIR/devel/python.sh"
 fi
 
 log 'Setting up picom'
