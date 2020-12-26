@@ -39,7 +39,7 @@ exitrepo
 
 # enable browserpass for browsers
 cd /usr/lib/browserpass
-has_cmd chromium-browser && make hosts-chromium-user
+has_cmd chromium && make hosts-chromium-user
 has_cmd firefox && make hosts-firefox-user
 has_cmd google-chrome && make hosts-chrome-user
 cd -
