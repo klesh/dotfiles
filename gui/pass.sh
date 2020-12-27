@@ -44,4 +44,8 @@ has_cmd firefox && make hosts-firefox-user
 has_cmd google-chrome && make hosts-chrome-user
 cd -
 
+# android
+# [OpenKeyChain - encryption/decryption](https://f-droid.org/packages/org.sufficientlysecure.keychain/)
+# [PasswordStore - sync / ui](https://f-droid.org/packages/dev.msfjarvis.aps/)
+
 # configuration
