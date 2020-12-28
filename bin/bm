@@ -89,7 +89,7 @@ function _open_urls
         if set link (string match -r $LINK_PATTERN $LINE)
              $BROWSER $link[3] &>/dev/null &
              disown
-             sleep 0.01
+             sleep 0.1
         end
     end
 end
