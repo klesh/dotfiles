@@ -9,6 +9,8 @@ DIR=$(dirname "$(readlink -f "$0")")
 # install deep learning tools
 case "$PM" in
     apt)
+        # auto install nvidia driver
+        sudo ubuntu-drivers autoinstall
         # cuda
         . /etc/lsb-release
         if [ "$DISTRIB_RELEASE" = "18.04" ] && [ "$(uname -m)" = 'x86_64' ]; then
