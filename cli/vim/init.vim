@@ -123,7 +123,7 @@ Plug 'junegunn/fzf.vim'
 if $VIM_MODE == 'enhanced'
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'chrisbra/Colorizer'
-    Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
+    Plug 'tpope/vim-markdown', { 'for': 'markdown' }
     Plug 'cespare/vim-toml', { 'for': 'toml' }
     " vimspector
     if has('nvim')
