@@ -19,7 +19,11 @@ DIR=$(dirname "$(readlink -f "$0")")
 # install tools for kvm
 case "$PM" in
     apt)
-        sudo apt install libvirt-daemon-system libvirt-clients virt-manager bridge-utils
+        #sudo apt install libvirt-daemon-system libvirt-clients virt-manager bridge-utils
+        # cli
+        sudo apt install -y libvirt-daemon-system libvirt-clients
+        # gui
+        sudo apt install -y virt-manager
         ;;
     pacman)
         # TODO
