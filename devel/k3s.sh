@@ -15,58 +15,12 @@ IP=$2
 EMAIL=$3
 CERT_MANAGER=https://github.com/jetstack/cert-manager/releases/download/v0.11.0/cert-manager.yaml
 
-#SHA_URL=https://github.com/k3s-io/k3s/releases/download/v1.20.0%2Bk3s2/sha256sum-amd64.txt
-#K3S_URL=https://github.com/k3s-io/k3s/releases/download/v1.20.0%2Bk3s2/k3s
-#INSTALL_URL=https://github.com/k3s-io/k3s/raw/v1.20.0%2Bk3s2/install.sh
-
-#verify_sha() {
-    #[ -f /tmp/k3s ]
-    #! [ -f /tmp/k3s_sha ] && curl -sL $SHA_URL | grep -oP '\w+\s+k3s$' | awk '{print $1}' > /tmp/k3s_sha
-    #if ! grep -qF "$(sha256sum /tmp/k3s | awk '{print $1}')" /tmp/k3s_sha ;then
-        #echo "invalid sha256sum"
-        #rm -f /tmp/k3s
-        #return 1
-    #fi
-#}
-
-#download_k3s() {
-    #if [ ! -f /tmp/k3s ] ; then
-        #echo "downloading k3s"
-        #curl -Lo /tmp/k3s "$K3S_URL"
-    #fi
-#}
-
-if in_china && [ -z "$HTTPS_PROXY" ] ; then
-    echo "Please setup HTTPS_PROXY first! "
-    exit 1
-fi
-
-# download k3s binary and upload to server
-#if ! ssh "$SSH" "command -v k3s >/dev/null" ;then
-    #while ! verify_sha ; do
-        #download_k3s
-    #done
-    #scp /tmp/k3s "$SSH:~/k3s"
-    #ssh "$SSH" "sudo mv k3s /usr/local/bin/ && sudo chmod +x /usr/local/bin/k3s"
-#fi
-
-# install k3s
-#if ! ssh "$SSH" "command -v crictl >/dev/null"; then
-    #! [ -f /tmp/k3s_install.sh ] && curl -Lo /tmp/k3s_install.sh "$INSTALL_URL"
-    #scp /tmp/k3s_install.sh "$SSH:~/k3s_install.sh"
-    #ssh "$SSH" '
-    #export INSTALL_K3S_SKIP_DOWNLOAD=true
-    #export INSTALL_K3S_EXEC="--tls-san '"$IP"' --node-external-ip '"$IP"'"
-    #sh k3s_install.sh
-    #'
-#fi
-
 # install ks3
 ssh "$SSH" '
 if ! command -v k3s >/dev/null ; then
     export INSTALL_K3S_MIRROR=cn
     export INSTALL_K3S_VERSION=v1.20.0-k3s2
-    export INSTALL_K3S_EXEC="--tls-san '"$IP"' --node-external-ip '"$IP"' --disable traefik"
+    export INSTALL_K3S_EXEC="--tls-san '"$IP"' --node-external-ip '"$IP"' --disable traefik --default-local-storage-path /data"
     curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | sh -
 fi
 '
@@ -93,13 +47,12 @@ sudo systemctl restart k3s
 '
 
 # setup https traefik
-scp $DIR/k3s/*.yaml "$SSH:"
+scp "$DIR"/k3s/*.yaml "$SSH:"
 ssh "$SSH" '
 sudo kubectl apply -f traefik-crd.yaml
 sed -i "s/EMAIL/'"$EMAIL"'/" traefik-dpy.yaml
 sudo kubectl apply -f traefik-dpy.yaml
 sudo kubectl wait --for=condition=available --timeout=600s  deployment/traefik -n default
-#sudo kubectl port-forward --address 0.0.0.0 service/traefik 80:80 8080:8080 443:443 -n default
 '
 
 
