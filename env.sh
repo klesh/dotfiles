@@ -10,15 +10,8 @@ PDIR=$(dirname "${DIR-$0}")
 GITHUB_PROXY=${GITHUB_PROXY-$HTTPS_PROXY}
 
 in_china() {
-    if [ -z "$IS_CHINA" ]; then
-        IS_CHINA=no
-        if curl -s myip.ipip.net | grep -qF '中国' > /dev/null; then
-            IS_CHINA=yes
-        fi
-    fi
-    [ "$IS_CHINA" = "no" ] && echo "in_china: no" && return 1
-    echo "in_china: yes"
-    return 0
+    ! [ -f /tmp/myip ] && curl -s myip.ipip.net > /tmp/myip
+    grep -qF '中国' /tmp/myip
 }
 
 lnsf() {
