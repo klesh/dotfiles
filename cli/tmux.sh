@@ -28,7 +28,7 @@ case "$PM" in
             ./configure && make
             sudo make install
             cd -
-            rm -rf /tmp/tmux*
+            rm -rf /tmp/tmux
         fi
         ;;
     pacman)
