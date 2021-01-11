@@ -21,9 +21,23 @@ case "$PM" in
     apt)
         #sudo apt install libvirt-daemon-system libvirt-clients virt-manager bridge-utils
         # cli
-        sudo apt install -y libvirt-daemon-system libvirt-clients
+        case "$DISTRIB_CODENAME" in
+            xenial)
+                sudo apt install -y qemu-kvm libvirt-bin virtinst bridge-utils cpu-checker
+                ;;
+            focal)
+                sudo apt install -y libvirt-daemon-system libvirt-clients cpu-checker
+                ;;
+            *)
+                echo "unsupported os"
+                exit 1
+                ;;
+        esac
+        kvm-ok
         # gui
-        sudo apt install -y virt-manager
+        if [ -n "$DISPLAY" ] ;then
+            sudo apt install -y virt-manager
+        fi
         ;;
     pacman)
         # TODO
