@@ -59,5 +59,13 @@ if status is-interactive
 
     # === auto cd into last activated directory
     cd $last_pwd
+
+    if test -n "$TMUX"
+        function ssh
+            tmux rename-window $argv[1]
+            command ssh $argv
+            tmux setw automatic-rename
+        end
+    end
 end
 
