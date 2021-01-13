@@ -23,9 +23,9 @@ case "$PM" in
         # cli
         case "$DISTRIB_CODENAME" in
             xenial)
-                sudo apt install -y qemu-kvm libvirt-bin virtinst bridge-utils cpu-checker
+                sudo apt install -y qemu-kvm libvirt-bin bridge-utils cpu-checker
                 ;;
-            focal)
+            focal|bionic)
                 sudo apt install -y libvirt-daemon-system libvirt-clients cpu-checker
                 ;;
             *)
@@ -37,6 +37,8 @@ case "$PM" in
         # gui
         if [ -n "$DISPLAY" ] ;then
             sudo apt install -y virt-manager
+        else
+            sudo apt install -y virtinst
         fi
         ;;
     pacman)
