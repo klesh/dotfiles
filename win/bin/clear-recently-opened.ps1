@@ -1,0 +1,1 @@
+Remove-Item $env:AppData\Microsoft\Windows\Recent\* -Recurse
