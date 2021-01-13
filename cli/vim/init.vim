@@ -98,7 +98,7 @@ endif
 let vim_plug_just_installed = 0
 if !filereadable(vim_plug_path)
     echo "Installing vim-plug..."
-    :exe "!curl -fLo " . vim_plug_path . " --create-dirs https://gitee.com/klesh/vim-plug/raw/master/plug.vim"
+    :exe "!curl -fLo \"" . vim_plug_path . "\" --create-dirs https://gitee.com/klesh/vim-plug/raw/master/plug.vim"
     let vim_plug_just_installed = 1
     echo "vim-plug installed"
 endif
