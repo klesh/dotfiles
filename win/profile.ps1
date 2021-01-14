@@ -5,6 +5,8 @@
 
 Set-PSReadLineOption -EditMode Emacs
 Set-PSReadLineOption -PredictionSource History
+Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
+
 
 $Env:Path += ";$PSScriptRoot\bin"
 $Env:KUBE_EDITOR = 'nvim'
@@ -79,4 +81,22 @@ function ssh-copy-id {
   )
 
   Get-Content $IdentityFile | ssh $UserHost "umask 077; mkdir -p .ssh ; cat >> .ssh/authorized_keys"
+}
+
+function pass-edit {
+  param (
+    [Parameter()]
+    [String]
+    $Path
+  )
+
+  $tmpfile = New-TemporaryFile
+  gpg --decrypt $Path > $tmpfile.FullName
+  nvim $tmpfile.FullName
+  if ($? && ((gpg --list-secret-keys | findstr uid) -match '<(.*?)>')) {
+    $uid=$matches[1]
+    gpg -r $uid -o "${tmpfile.FullName}.gpg" --encrypt $tmpfile.FullName
+    Move-Item -Path "${tmpfile.FullName}.gpg" -Destination "$Path" -Force
+    Remove-Item $tmpfile.FullName -Force
+  }
 }
