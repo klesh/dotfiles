@@ -22,10 +22,10 @@ DISKDIR=${3-'vms'}
 ISOPATH=${4-'CentOS-7-x86_64-Minimal-2003.iso'}
 
 mkdir -p "$DISKDIR"
-sudo virsh destroy centos7
-sudo virsh undefine centos7
+sudo virsh destroy "$NAME"
+sudo virsh undefine "$NAME"
 sudo virt-install \
-    --virt-type=kvm \
+    --virt-type kvm \
     --name "$NAME" \
     --ram 4096 \
     --vcpus=2 \
