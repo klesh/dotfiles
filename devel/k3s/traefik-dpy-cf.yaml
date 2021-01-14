@@ -4,15 +4,16 @@ metadata:
  name: traefik
 spec:
  ports:
- #- protocol: TCP
-   #name: web
-   #port: 80
+#  - protocol: TCP
+#    name: web
+#    port: 80
  #- protocol: TCP
    #name: admin
    #port: 8080
  - protocol: TCP
    name: websecure
    port: 8443
+   targetPort: 443
  type: LoadBalancer
  selector:
   app: traefik
@@ -57,9 +58,9 @@ spec:
             - --certificatesresolvers.myresolver.acme.email={EMAIL}
             - --certificatesresolvers.myresolver.acme.storage=acme.json
          env:
-           - name: CF_API_EMAIL
+           - name: CLOUDFLARE_EMAIL
              value: {CF_API_EMAIL}
-           - name: CF_API_Key
+           - name: CLOUDFLARE_API_KEY
              value: {CF_API_KEY}
          ports:
             - name: web
