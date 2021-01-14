@@ -19,7 +19,7 @@ case "$PM" in
         exitrepo
         ;;
     pacman)
-        sudo pacman -S  --noconfirm --needed fish the_silver_searcher dash bat fzf
+        sudo pacman -S --noconfirm --needed fish the_silver_searcher dash bat fzf
         # prevent bash upgradation relink /bin/sh
         sudo mkdir -p /etc/pacman.d/hooks
         echo "
