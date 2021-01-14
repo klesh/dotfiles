@@ -13,7 +13,6 @@ DIR=$(dirname "$(readlink -f "$0")")
 SSH=$1
 IP=$2
 EMAIL=$3
-CERT_MANAGER=https://github.com/jetstack/cert-manager/releases/download/v0.11.0/cert-manager.yaml
 
 # install ks3
 ssh "$SSH" '
