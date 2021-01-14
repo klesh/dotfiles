@@ -1,8 +1,8 @@
 #!/bin/sh
 
-if [ "$#" -lt 3 ]; then
+if [ "$#" -lt 3 ] || [ "$#" -eq 4 ]; then
     echo "This script will try to setup k3s on a remote server which unfortunately located in YOUR COUNTRY!"
-    echo "      Usage: $0 <user@host> <external-ip> <email>"
+    echo "      Usage: $0 <user@host> <external-ip> <email> [cloudflare-api-email] [cloudflare-api-key]"
     exit 0
 fi
 
@@ -13,6 +13,8 @@ DIR=$(dirname "$(readlink -f "$0")")
 SSH=$1
 IP=$2
 EMAIL=$3
+CF_API_EMAIL=$4
+CF_API_KEY=$5
 
 # install ks3
 ssh "$SSH" '
@@ -46,10 +48,20 @@ sudo systemctl restart k3s
 '
 
 # setup https traefik
-scp "$DIR"/k3s/*.yaml "$SSH:"
+scp "$DIR/k3s/traefik-crd.yaml" "$SSH:"
+if [ -n "$CF_API_EMAIL" ] ; then
+    scp "$DIR/k3s/traefik-dpy-cf.yaml" "$SSH:traefik-dpy.yaml"
+else
+    scp "$DIR/k3s/traefik-dpy.yaml" "$SSH:traefik-dpy.yaml"
+fi
+
 ssh "$SSH" '
 sudo kubectl apply -f traefik-crd.yaml
-sed -i "s/EMAIL/'"$EMAIL"'/" traefik-dpy.yaml
+sed -i "
+s/{EMAIL}/'"$EMAIL"'/g;
+s/{CF_API_EMAIL}/'"$CF_API_EMAIL"'/g;
+s/{CF_API_KEY}/'"$CF_API_KEY"'/g
+" traefik-dpy.yaml
 sudo kubectl apply -f traefik-dpy.yaml
 sudo kubectl wait --for=condition=available --timeout=600s  deployment/traefik -n default
 '
