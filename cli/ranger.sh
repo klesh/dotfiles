@@ -13,7 +13,7 @@ log 'Setting up ranger'
 case "$PM" in
     apt)
         # atool/p7zip-full for archive previewing/extracting etc
-        sudo apt install -y atool p7zip-full unrar
+        sudo apt install -y atool p7zip-full unrar libx11-dev libxext-dev
         sudo pip3 install ranger-fm ueberzug
         ;;
     pacman)
