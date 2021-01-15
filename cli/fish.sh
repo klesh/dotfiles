@@ -8,7 +8,7 @@ log 'Setting up shell'
 case "$PM" in
     apt)
         sudo add-apt-repository ppa:fish-shell/release-3 -y
-        sudo apt update
+        pm_update
         sudo apt install fish silversearcher-ag -y
         if [ "$DISTRIB_RELEASE_MAJOR" -gt 19 ] || [ "$DISTRIB_RELEASE" = "19.10" ]; then
             sudo apt install dash bat  -y
@@ -49,7 +49,8 @@ if has_cmd bat; then
     fi
 fi
 
-if has_cmd dash; then
+# only for local machine with gui
+if [ -z "$SSH_CLIENT" ] && [ -n "$DISPLAY" ] && has_cmd dash; then
     log 'Setting up dash as default shell'
     sudo /usr/bin/ln -sfT dash /usr/bin/sh
 

@@ -77,6 +77,23 @@ enhance_vim() {
     [ "$VIM_MODE" = "enhanced" ] && has_cmd nvim
 }
 
+pm_update() {
+    # skip updation on daily basis
+    TSFILE=/tmp/apt_updated_at_$(date +%Y%m%d)
+    CHECKSUM=$(md5sum $(find /etc/apt -type f | sort))
+    grep -qF "$CHECKSUM" "$TSFILE" && return
+    case "$PM" in
+        apt)
+            sudo apt update
+            ;;
+        *)
+            echo "unsupported os"
+            exit 1
+            ;;
+    esac
+    echo "$CHECKSUM" > "$TSFILE"
+}
+
 
 sudo mkdir -p $PREFIX
 
@@ -91,10 +108,10 @@ if [ "$PM" = "n/a" ]; then
     exit 1
 fi
 
-
 log "Environments"
 echo " PM           : $PM"
 echo " DIR          : $DIR"
 echo " PDIR         : $PDIR"
 echo " PREFIX       : $PREFIX"
 echo " GITHUB_PROXY : $GITHUB_PROXY"
+
