@@ -9,10 +9,9 @@ case "$PM" in
     apt)
         # snap docker will intefere native docker.io, must be dealt with
         sudo snap remove --purge docker
+        pm_update
         sudo apt install -y docker.io
-        if ! has_cmd python; then
-            "$PDIR/python/install.sh"
-        fi
+        "$PDIR/devel/python.sh"
         sudo pip3 install docker-compose
         ;;
     pacman)

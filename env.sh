@@ -10,8 +10,8 @@ PDIR=$(dirname "${DIR-$0}")
 GITHUB_PROXY=${GITHUB_PROXY-$HTTPS_PROXY}
 
 in_china() {
-    ! [ -f /tmp/myip ] && curl -s myip.ipip.net > /tmp/myip
-    grep -qF '中国' /tmp/myip
+    ! [ -f /tmp/myip_full ] && curl -s myip.ipip.net > /tmp/myip_full
+    grep -qF '中国' /tmp/myip_full
 }
 
 lnsf() {
