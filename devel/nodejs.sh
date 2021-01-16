@@ -7,7 +7,7 @@ DIR=$(dirname "$(readlink -f "$0")")
 FILES_PATH=$PREFIX/nodejs
 NODE_BIN=$PREFIX/bin/node
 NODE_URL=https://nodejs.org/dist
-NODE_VERSION=v14.15.1
+NODE_VERSION=v14.15.4
 NPM_BIN=npm
 if in_china; then
     NODE_URL=https://npm.taobao.org/mirrors/node
@@ -20,9 +20,6 @@ log "Setting up nodejs"
 lspkgs() {
     curl -s $NODE_URL/index.json \
         | jq '.[] | "\(.version) \(if .lts then "(lts)" else "" end)"' -r
-}
-
-cocsetup() {
 }
 
 uninstall() {
