@@ -116,7 +116,7 @@ Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 Plug 'morhetz/gruvbox'
 Plug 'klesh/vim-fish', { 'for': 'fish' }
 Plug 'alvan/vim-closetag', { 'for': ['vue', 'html', 'xml'] }
-Plug 'francoiscabrol/ranger.vim'
+"Plug 'francoiscabrol/ranger.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
@@ -133,6 +133,9 @@ if $VIM_MODE == 'enhanced'
     Plug 'vim-scripts/mom.vim'
 else
     Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
+endif
+if has('win32')
+    Plug 'zigford/vim-powershell'
 endif
 call plug#end()
 
@@ -199,7 +202,11 @@ nnoremap <leader>k :cp<CR>
 
 " ==== Ranger configuration ====
 let g:ranger_map_keys = 0
-nnoremap <C-t> :Ranger<CR>
+"nnoremap <C-t> :Ranger<CR>
+
+
+" ==== netrw configuration ====
+nnoremap <C-t> :e .<CR>
 
 autocmd BufEnter,BufRead nnoremap <leader>cg :<C-u>call OpenRangerIn(system("git rev-parse --show-toplevel >/dev/null || pwd"), 'edit ')<CR>
 
@@ -224,7 +231,7 @@ nnoremap <leader>gsc :exec "!git switch -c " . input("Enter new branch name:")<C
 " enable <C-p> for fzf
 let g:fugitive_no_maps=1
 
-nnoremap <C-p> :call fzf#vim#files(trim(system("git rev-parse --show-toplevel 2>/dev/null \|\| pwd")))<Cr>
+nnoremap <C-p> :call fzf#vim#files(trim(system("git rev-parse --show-toplevel \|\| pwd")))<Cr>
 nnoremap <leader>gco :call fzf#run({'source': 'git branch \| cut -c 3-; git tag -l', 'sink': '!git checkout'})<CR>
 nnoremap <leader>gm :call fzf#run({'source': 'git branch \| cut -c 3-', 'sink': '!git merge'})<CR>
 nnoremap <leader>ls :Buffers<CR>
