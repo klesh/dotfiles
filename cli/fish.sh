@@ -13,7 +13,7 @@ case "$PM" in
         if [ "$DISTRIB_RELEASE_MAJOR" -gt 19 ] || [ "$DISTRIB_RELEASE" = "19.10" ]; then
             sudo apt install dash bat  -y
         fi
-        lnsf /usr/bin/batcat "$HOME/.local/bin/bat"
+        lnsf /usr/bin/batcat /usr/bin/bat
         intorepo https://github.com/junegunn/fzf.git "$HOME/.fzf"
         ./install --all
         exitrepo
