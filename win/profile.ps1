@@ -86,6 +86,7 @@ function ssh-copy-id {
 }
 
 function pass-edit {
+  [Cmdletbinding()]
   param (
     [Parameter()]
     [String]
