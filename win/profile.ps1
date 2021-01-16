@@ -8,7 +8,9 @@ Set-PSReadLineOption -PredictionSource History
 Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
 
 
-$Env:Path += ";$PSScriptRoot\bin"
+$Dir = (Get-Item (Get-Item $PSCommandPath).Target).Directory.FullName
+$Env:Path += ";$Dir\bin"
+$Env:PSModulePath += ";$Dir\Modules"
 $Env:KUBE_EDITOR = 'nvim'
 $Env:EDITOR = 'nvim'
 Set-Alias -Name k kubectl
