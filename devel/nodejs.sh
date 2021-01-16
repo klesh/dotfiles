@@ -24,7 +24,7 @@ lspkgs() {
 
 uninstall() {
     if [ -f "$FILES_PATH"  ]; then
-        tac "$FILES_PATH" | grep -v '/$' | xargs sudo rm -f
+        tac "$FILES_PATH" | grep -v '/$' | xargs -n 10 -- sudo rm -f
     fi
 }
 
