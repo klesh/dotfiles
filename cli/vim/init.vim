@@ -81,6 +81,10 @@ au ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
 au Syntax * match ExtraWhitespace /\s\+$/
 nnoremap <leader>es :%s/\s\+$//g<CR>
 
+" location jumping
+nnoremap <leader>n :cnext<CR>
+nnoremap <leader>p :cprev<CR>
+
 " auto install vim-plug
 if has('nvim')
     if has('win32')
