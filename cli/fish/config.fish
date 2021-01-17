@@ -53,12 +53,12 @@ if status is-interactive
     alias dt='date "+%Y%m%d-%H%M%S"'
 
     # === PATH and file sourcing
-    append_paths ~/.yarn/bin ~/dotfiles/bin
+    append_paths ~/.yarn/bin ~/dotfiles/bin ~/dotfiles/devops/bin
     source_files /usr/share/autojump/autojump.fish /usr/local/share/autojump/autojump.fish \
         ~/.profile.fish
 
     # === auto cd into last activated directory
-    cd $last_pwd
+    test -z "$TMUX" && cd $last_pwd
 
     if test -n "$TMUX"
         function ssh
