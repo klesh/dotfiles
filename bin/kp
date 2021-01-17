@@ -6,7 +6,7 @@ CTN=$3
 
 case $1 in
     sh)
-        kubectl exec -it $POD ${CTN+"-c$CTN"} -- sh
+        kubectl exec -it $POD ${CTN:+"-c $CTN"} -- /bin/sh
         ;;
     d) # describe pod
         kubectl describe pod $POD
