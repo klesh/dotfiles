@@ -234,7 +234,7 @@ let g:fugitive_no_maps=1
 nnoremap <C-p> :call fzf#vim#files(trim(system("git rev-parse --show-toplevel \|\| pwd")))<Cr>
 nnoremap <leader>gco :call fzf#run({'source': 'git branch \| cut -c 3-; git tag -l', 'sink': '!git checkout'})<CR>
 nnoremap <leader>gm :call fzf#run({'source': 'git branch \| cut -c 3-', 'sink': '!git merge'})<CR>
-nnoremap <leader>ls :Buffers<CR>
+nnoremap <leader>b :Buffers<CR>
 
 
 " ==== gruvbox configuration ====
