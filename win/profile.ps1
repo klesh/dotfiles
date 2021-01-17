@@ -14,6 +14,7 @@ $Env:PSModulePath += ";$Dir\Modules"
 $Env:KUBE_EDITOR = 'nvim'
 $Env:EDITOR = 'nvim'
 Set-Alias -Name k kubectl
+Set-Alias -Name bm Open-Bookmark
 $isPs7 = $host.Version.Major -ge 7
 if ( $isPs7 ) {
     Set-Prompt
