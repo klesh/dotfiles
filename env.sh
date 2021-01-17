@@ -80,7 +80,7 @@ enhance_vim() {
 pm_update() {
     # skip updation on daily basis
     TSFILE=/tmp/apt_updated_at_$(date +%Y%m%d)
-    CHECKSUM=$(md5sum $(find /etc/apt -type f | sort))
+    CHECKSUM=$(md5sum /etc/apt/sources.list /etc/apt/sources.list.d/*.list | sort | md5sum)
     grep -qF "$CHECKSUM" "$TSFILE" && return
     case "$PM" in
         apt)
@@ -107,6 +107,13 @@ if [ "$PM" = "n/a" ]; then
     echo "Unsupported Package Manager"
     exit 1
 fi
+if [ -f /etc/lsb-release ]; then
+    set -a
+    . /etc/lsb-release
+    set +a
+    export DISTRIB_RELEASE_MAJOR=${DISTRIB_RELEASE%.*}
+    export DISTRIB_RELEASE_MINOR=${DISTRIB_RELEASE#.*}
+fi
 
 log "Environments"
 echo " PM           : $PM"
@@ -114,4 +121,3 @@ echo " DIR          : $DIR"
 echo " PDIR         : $PDIR"
 echo " PREFIX       : $PREFIX"
 echo " GITHUB_PROXY : $GITHUB_PROXY"
-

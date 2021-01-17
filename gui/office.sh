@@ -8,10 +8,10 @@ log 'Settingup office tools: libreoffice keepassxc nextcloud chrome zathura gimp
 
 case "$PM" in
     apt)
-        sudo add-apt-repository -y ppa:libreoffice/libreoffice-7-0
-        sudo add-apt-repository -y ppa:phoerious/keepassxc
-        sudo add-apt-repository -y ppa:nextcloud-devs/client
-        sudo apt update
+        sudo add-apt-repository -y -n ppa:libreoffice/libreoffice-7-0
+        sudo add-apt-repository -y -n ppa:phoerious/keepassxc
+        sudo add-apt-repository -y -n ppa:nextcloud-devs/client
+        pm_update
         sudo apt install -y \
             google-chrome-stable \
             zathura zathura-pdf-poppler sxiv \

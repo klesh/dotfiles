@@ -23,7 +23,7 @@ if status is-interactive
     set -gx LS_COLORS 'ow=34;42;40'
 
     # === bat configuration
-    set -gx BAT_THEME 'gruvbox'
+    set -gx BAT_THEME 'OneHalfDark'
     set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
 
     # === dict.sh configuration

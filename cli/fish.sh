@@ -7,13 +7,15 @@ DIR=$(dirname "$(readlink -f "$0")")
 log 'Setting up shell'
 case "$PM" in
     apt)
-        sudo add-apt-repository ppa:fish-shell/release-3 -y
+        sudo add-apt-repository ppa:fish-shell/release-3 -y -n
         pm_update
         sudo apt install fish silversearcher-ag -y
+        echo DISTRIB_RELEASE_MAJOR: $DISTRIB_RELEASE_MAJOR
+        echo DISTRIB_RELEASE: $DISTRIB_RELEASE
         if [ "$DISTRIB_RELEASE_MAJOR" -gt 19 ] || [ "$DISTRIB_RELEASE" = "19.10" ]; then
             sudo apt install dash bat  -y
         fi
-        lnsf /usr/bin/batcat /usr/bin/bat
+        sudo ln -sf /usr/bin/batcat /usr/bin/bat
         intorepo https://github.com/junegunn/fzf.git "$HOME/.fzf"
         ./install --all
         exitrepo
@@ -38,16 +40,6 @@ case "$PM" in
         ;;
 esac
 
-
-if has_cmd bat; then
-    log 'Setting up bat'
-    BAT_THEMES="$(bat --config-dir)/themes"
-    BAT_GRUVBOX="$BAT_THEMES/gruvbox"
-    if [ ! -d "$BAT_GRUVBOX" ]; then
-        mkdir -p "$BAT_THEMES"
-        git_clone https://github.com/peaceant/gruvbox.git "$BAT_GRUVBOX"
-    fi
-fi
 
 # only for local machine with gui
 if [ -z "$SSH_CLIENT" ] && [ -n "$DISPLAY" ] && has_cmd dash; then
