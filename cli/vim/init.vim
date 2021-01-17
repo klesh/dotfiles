@@ -50,6 +50,8 @@ noremap <C-b> <Left>
 
 vnoremap <leader>p pgvy
 nnoremap <leader>q :qall<CR>
+nnoremap <Leader>v <c-v>
+nnoremap <Leader>s :b#<CR>
 
 nnoremap <leader>1 :b1<CR>
 nnoremap <leader>2 :b2<CR>
@@ -210,7 +212,7 @@ let g:ranger_map_keys = 0
 
 
 " ==== netrw configuration ====
-nnoremap <C-t> :e .<CR>
+nnoremap <C-t> :Explore<CR>
 
 autocmd BufEnter,BufRead nnoremap <leader>cg :<C-u>call OpenRangerIn(system("git rev-parse --show-toplevel >/dev/null || pwd"), 'edit ')<CR>
 
@@ -297,3 +299,5 @@ endfu
 nnoremap <leader>ac :call ToggleGroffMomAutoCompilation()<CR>
 autocmd BufEnter,BufRead *.mom :set ft=mom
 
+" for yaml need cursorcolumn
+autocmd FileType yaml :set cursorcolumn
