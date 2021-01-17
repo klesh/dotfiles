@@ -10,11 +10,13 @@ if [ "$#" -lt 2 ] ;then
 fi
 
 TARGET_DIR=${1%/}
-THRES_DATE=$(date -d "$2 days ago" +%Y%m%d)
+THRES_DATE=$(date -D "%S" -d $(( $(date +%s) - $2 * 24 * 3600 ))"" +%Y%m%d)
 
+echo date prior to $THRES_DATE will be deleted
 for entry in $(ls "$TARGET_DIR") ;do
-    DATE=$(echo "$entry" | grep -oP '\b(\d{8})\b')
+    DATE=$(echo "$entry" | grep -oE '[0-9]{8}')
     if [ -n "DATE" ] && [ "$DATE" -lt "$THRES_DATE" ] ;then
-        rm -f $TARGET_DIR/$entry
+        echo removeing $TARGET_DIR/$entry
+        rm -rf $TARGET_DIR/$entry
     fi
 done
