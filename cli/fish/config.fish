@@ -23,7 +23,7 @@ if status is-interactive
     set -gx LS_COLORS 'ow=34;42;40'
 
     # === bat configuration
-    set -gx BAT_THEME 'gruvbox'
+    set -gx BAT_THEME 'OneHalfDark'
     set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
 
     # === dict.sh configuration
@@ -53,7 +53,7 @@ if status is-interactive
     alias dt='date "+%Y%m%d-%H%M%S"'
 
     # === PATH and file sourcing
-    append_paths ~/.yarn/bin
+    append_paths ~/.yarn/bin ~/dotfiles/bin
     source_files /usr/share/autojump/autojump.fish /usr/local/share/autojump/autojump.fish \
         ~/.profile.fish
 

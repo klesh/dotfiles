@@ -44,9 +44,9 @@ spec:
     spec:
       serviceAccountName: traefik-ingress-controller
       containers:
-       - name: traefik
-         image: traefik:v2.3.6
-         args:
+        - name: traefik
+          image: traefik:v2.3.6
+          args:
             - --api.insecure
             - --accesslog
             - --entrypoints.web.Address=:80
@@ -54,11 +54,19 @@ spec:
             - --providers.kubernetescrd
             - --certificatesresolvers.myresolver.acme.tlschallenge
             - --certificatesresolvers.myresolver.acme.email=EMAIL
-            - --certificatesresolvers.myresolver.acme.storage=acme.json
-         ports:
+            - --certificatesresolvers.myresolver.acme.storage=/data/acme.json
+          ports:
             - name: web
               containerPort: 80
             - name: websecure
               containerPort: 443
             - name: admin
               containerPort: 8080
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          hostPath:
+            path: /data/traefik
+            type: DirectoryOrCreate

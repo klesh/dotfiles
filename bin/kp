@@ -1,0 +1,16 @@
+#!/bin/sh
+
+POD=$(sudo kubectl get pod | grep -P "^$2" | awk '{print $1}')
+CTN=$3
+
+
+case $1 in
+    sh)
+        kubectl exec -it $POD ${CTN+"-c$CTN"} -- sh
+        ;;
+    d) # describe pod
+        kubectl describe pod $POD
+        ;;
+    e) # watch event of pod
+        kubectl get event -w --field-selector=involvedObject.name=$POD
+esac

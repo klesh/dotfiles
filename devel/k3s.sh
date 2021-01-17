@@ -19,6 +19,7 @@ CF_API_KEY=$5
 # install ks3
 ssh "$SSH" '
 if ! command -v k3s >/dev/null ; then
+    export K3S_KUBECONFIG_MODE="644"
     export INSTALL_K3S_MIRROR=cn
     export INSTALL_K3S_VERSION=v1.20.0-k3s2
     export INSTALL_K3S_EXEC="--tls-san '"$IP"' --node-external-ip '"$IP"' --disable traefik --default-local-storage-path /data"
