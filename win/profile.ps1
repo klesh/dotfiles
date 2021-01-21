@@ -17,6 +17,7 @@ $Env:GO111MODULE = 'on'
 $Env:GOPROXY = 'https://mirrors.aliyun.com/goproxy/,direct'
 Set-Alias -Name k kubectl
 Set-Alias -Name bm Open-Bookmark
+Set-Alias -Name v nvim
 $isPs7 = $host.Version.Major -ge 7
 if ( $isPs7 ) {
     Set-Prompt
