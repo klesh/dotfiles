@@ -33,10 +33,10 @@ Return
     VarSetCapacity(Clip0, 0) ; Free memory
 Return
 
-#IfWinActive ahk_class mintty
-  ^+v::Send +{Ins}
-  ^+c::Send ^{Ins}
-#IfWinActive
+; #IfWinActive ahk_class mintty
+;   ^+v::Send +{Ins}
+;   ^+c::Send ^{Ins}
+; #IfWinActive
 
 
 
@@ -69,6 +69,9 @@ MoveMouseAct(x, y) {
   DllCall("SetCursorPos", "int", x, "int", y)
   MouseGetPos, MouseX, MouseY, WinId
   WinActivate, ahk_id %WinId%
+  ; Sleep 0.2
+  WinGetPos x, y, w, h, A
+  DllCall("SetCursorPos", "int", x + w / 2, "int", y + h / 2)
 }
 
 MoveCursorMon(toRight) {
@@ -106,7 +109,6 @@ MoveCursorWin(toRight) {
     if (monLeft < MouseX and monRight > MouseX) {
       x := monLeft + (monRight - monLeft) * (toRight ? 0.75 : 0.25)
       y := monTop + monBottom / 2
-      DllCall("SetCursorPos", "int", x, "int", y)
       MoveMouseAct(x, y)
       break
     }
