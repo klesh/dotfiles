@@ -46,6 +46,21 @@ function open
     end
 end
 
+function update
+    set url (xsel -ob)
+    if ! string match 'http*' $url
+        echo "no url found on clipboard"
+        exit 1
+    end
+    set query (sed -r '/^(#.*|\s*)$/d' $BOOKMARK_PATH | $BOOKMARK_SEARCHER)
+    echo url: $url
+    echo query: $query
+    mv $BOOKMARK_PATH $BOOKMARK_PATH.bak
+    awk '$0 == "'$query'" {
+        sub(/\(http.*\)/, "('$url')")
+    } { print }' $BOOKMARK_PATH.bak > $BOOKMARK_PATH
+end
+
 function _filter_category
     if not count $argv >/dev/null
         cat -
@@ -105,7 +120,7 @@ function _search
 end
 
 switch $argv[1]
-    case open list help
+    case open list help update
         $argv[1..-1]
     case '*'
         _search
