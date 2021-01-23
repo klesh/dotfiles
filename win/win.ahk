@@ -138,7 +138,15 @@ MoveCursorWin(toRight) {
 ~#7 Up::
 ~#8 Up::
 ~#9 Up::
-  Sleep 0.5
+  Sleep 100
+  WinGetPos, x, y, w, h, A
+  DllCall("SetCursorPos", "int", x + w / 2, "int", y + h / 2)
+  return
+~!Tab Up::
+  while (GetKeyState("Alt") != 0 or GetKeyState("Tab") != 0) {
+    Sleep 50
+  }
+  Sleep 100
   WinGetPos, x, y, w, h, A
   DllCall("SetCursorPos", "int", x + w / 2, "int", y + h / 2)
   return
