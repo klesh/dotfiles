@@ -230,6 +230,24 @@ nnoremap <leader>gmh :diffget //2<CR>
 nnoremap <leader>gml :diffget //3<CR>
 nnoremap <leader>gsc :exec "!git switch -c " . input("Enter new branch name:")<CR>
 
+" ==== functions ======
+fu! SilentOK(cmd)
+    let l:ouput = system(substitute(a:cmd, "%", expand("%"), "g"))
+    if v:shell_error != 0
+        echo ouput
+    endif
+endfu
+
+fu! SystemOr(cmd, default)
+    let l:ouput = system(substitute(a:cmd, "%", expand("%"), "g"))
+    if v:shell_error != 0
+        return a:default
+    endif
+    return trim(output)
+endfu
+
+
+
 " ==== ctrlp configuration ====
 "let g:ctrlp_user_command = ['.git', 'git ls-files -co --exclude-standard']
 
@@ -238,7 +256,7 @@ nnoremap <leader>gsc :exec "!git switch -c " . input("Enter new branch name:")<C
 let g:fugitive_no_maps=1
 let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g ""'
 
-nnoremap <C-p> :call fzf#vim#files(trim(system("git rev-parse --show-toplevel \|\| pwd")))<Cr>
+nnoremap <C-p> :call fzf#vim#files(SystemOr("git rev-parse --show-toplevel", "."))<Cr>
 nnoremap <leader>gco :call fzf#run({'source': 'git branch \| cut -c 3-; git tag -l', 'sink': '!git checkout'})<CR>
 nnoremap <leader>gm :call fzf#run({'source': 'git branch \| cut -c 3-', 'sink': '!git merge'})<CR>
 nnoremap <leader>b :Buffers<CR>
@@ -274,12 +292,6 @@ fu! NERDCommenter_after()
 endfu
 
 " ==== groff ====
-fu! SilentOK(cmd)
-    let l:ouput = system(substitute(a:cmd, "%", expand("%"), "g"))
-    if v:shell_error != 0
-        echo ouput
-    endif
-endfu
 
 fu! ToggleGroffMomAutoCompilation()
     let g:GroffMomAutoCompilation = !get(g:, "GroffMomAutoCompilation", 0)
