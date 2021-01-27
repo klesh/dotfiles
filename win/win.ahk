@@ -118,8 +118,14 @@ MoveCursorWin(toRight) {
 }
 
 
-#f:: WinMaximize, A
-#+f:: WinRestore, A
+#f::
+  WinGet, isMax, MinMax, A
+  if (isMax) {
+    WinRestore, A
+  } else {
+    WinMaximize, A
+  }
+  return
 #,:: #Left
 #.:: #Right
 #+u:: #+Left
