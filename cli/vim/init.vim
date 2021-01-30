@@ -127,15 +127,14 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 if $VIM_MODE == 'enhanced'
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    if !executable("node") || !executable("yarnpkg")
+        echo "nodejs/yarnpkg must be installed in order to use coc.nvim"
+    else
+        Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    end
     Plug 'chrisbra/Colorizer'
     Plug 'tpope/vim-markdown', { 'for': 'markdown' }
     Plug 'cespare/vim-toml', { 'for': 'toml' }
-    " vimspector
-    if has('nvim')
-        Plug 'rbgrouleff/bclose.vim'
-    endif
-    Plug 'puremourning/vimspector'
     Plug 'vim-scripts/mom.vim'
 else
     Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
@@ -232,18 +231,18 @@ nnoremap <leader>gsc :exec "!git switch -c " . input("Enter new branch name:")<C
 
 " ==== functions ======
 fu! SilentOK(cmd)
-    let l:ouput = system(substitute(a:cmd, "%", expand("%"), "g"))
+    let l:output = system(substitute(a:cmd, "%", expand("%"), "g"))
     if v:shell_error != 0
-        echo ouput
+        echo l:output
     endif
 endfu
 
 fu! SystemOr(cmd, default)
-    let l:ouput = system(substitute(a:cmd, "%", expand("%"), "g"))
+    let l:output = system(substitute(a:cmd, "%", expand("%"), "g"))
     if v:shell_error != 0
         return a:default
     endif
-    return trim(output)
+    return trim(l:output)
 endfu
 
 
