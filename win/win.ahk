@@ -1,18 +1,33 @@
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+; #Warn  ; Enable warnings to assist with detecting common errors.
+SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+CoordMode, Mouse, Screen ; mouse coordinates relative to the screen
+
+; =========================
+; CONFIGURATION
+; =========================
+global RATIO := 0.618
+
+; =========================
+; BINDINGS
+; =========================
 ^Esc:: Send ^{``}
 *#q:: !F4
 #Esc:: Reload
-
-
 ^BS::
   Send ^a
   Send {BS}
   return
-
-
 #=::SoundSet,+5
 #-::SoundSet,-5
 #BS::#l
-
+#f:: ToggleActiveWinMaximum()
+^#p::ShowActiveWinGeometry()
+#j:: FocusWinByDirection("right")
+#k:: FocusWinByDirection("left")
+#+j::MoveActiveWinByDirection("right")
+#+k::MoveActiveWinByDirection("left")
 
 ; Ctrl + Alt + v : paste as plain text
 ^!v::
@@ -24,6 +39,7 @@
     VarSetCapacity(Clip0, 0) ; Free memory
 Return
 
+; Ctrl + Alt + Shift + v : paste as plain test a replace \ with /
 ^+!v::
     Clip0 = %ClipBoardAll%
     ClipBoard := StrReplace(ClipBoard, "\", "/") ; Convert to plain text
@@ -33,20 +49,36 @@ Return
     VarSetCapacity(Clip0, 0) ; Free memory
 Return
 
-; #IfWinActive ahk_class mintty
-;   ^+v::Send +{Ins}
-;   ^+c::Send ^{Ins}
-; #IfWinActive
+; move cursor to center of window after switching
+~#1 Up::
+~#2 Up::
+~#3 Up::
+~#4 Up::
+~#5 Up::
+~#6 Up::
+~#7 Up::
+~#8 Up::
+~#9 Up::
+  Sleep 100
+  SetCursorToCenterOfActiveWin()
+  return
+~!Tab Up::
+  while (GetKeyState("Alt") != 0 or GetKeyState("Tab") != 0) {
+    Sleep 50
+  }
+  Sleep 100
+  WinGetPos, x, y, w, h, A
+  SetCursorToCenterOfActiveWin()
+  return
 
-
+; =========================
+; CAPSLOCK AS HYBRID KEY
+; =========================
 
 ; Capslock & h:: Send {Left}
 ; Capslock & j:: Send {Down}
 ; Capslock & k:: Send {Up}
 ; Capslock & l:: Send {Right}
-; Capslock & -:: Send {Volume_Down}
-; Capslock & =:: Send {Volume_Up}
-; Capslock & \:: Send {Media_Play_Pause}
 ; Capslock & y:: Send {Browser_Back}
 ; Capslock & u:: Send ^{PgUp}
 ; Capslock & i:: Send ^{PgDn}
@@ -65,88 +97,89 @@ Return
 ; Return
 ; Capslock::return
 
-MoveMouseAct(x, y) {
+; =========================
+; FUNCTIONS
+; =========================
+
+#Include, WinGetPosEx.ahk
+
+ShowGeometry(x, y, w, h) {
+  MsgBox, , Geometry,% Format("x:{}, y:{}, w: {}, h: {}", x, y, w, h)
+}
+
+ShowActiveWinGeometry() {
+  WinGetPos x, y, w, h, A
+  ShowGeometry(x, y, w, h)
+}
+
+SetCursorPos(x, y) {
   DllCall("SetCursorPos", "int", x, "int", y)
+}
+
+FocusWinUnderCursor() {
   MouseGetPos, MouseX, MouseY, WinId
   WinActivate, ahk_id %WinId%
-  ; Sleep 0.2
+}
+
+SetCursorToCenterOfActiveWin() {
   WinGetPos x, y, w, h, A
-  DllCall("SetCursorPos", "int", x + w / 2, "int", y + h / 2)
+  SetCursorPos(x + w / 2,  y + h / 2)
 }
 
-MoveCursorMon(toRight) {
-  CoordMode, Mouse, Screen ; mouse coordinates relative to the screen
+FocusWinByPos(x, y) {
+  SetCursorPos(x, y)
+  FocusWinUnderCursor()
+  SetCursorToCenterOfActiveWin()
+}
+
+GetCursorMonGeometry(ByRef x, ByRef y, ByRef w, ByRef h) {
   MouseGetPos, MouseX, MouseY
   SysGet, mc, MonitorCount
-  mi := 0
-  x := -10000
-  if (toRight)
-    x:= 10000
-  y := MouseY
-  loop {
-    SysGet, mon, Monitor, %mi%
-    monX := Floor((monLeft + monRight) / 2)
-    monY := Floor((monTop + monBottom) / 2)
-    if (toRight and monLeft > MouseX and monX < x) Or (!toRight and monRight < MouseX and monX > x) {
-      x := monX
-      y := monY
-    }
-    if (++mi >= mc)
-      break
-  }
-  ; MouseMove, x, y
-  MoveMouseAct(x, y)
-}
-
-MoveCursorWin(toRight) {
-  CoordMode, Mouse, Screen ; mouse coordinates relative to the screen
-  MouseGetPos, MouseX, MouseY
   ; find current monitor
-  SysGet, mc, MonitorCount
   mi := 0
   loop {
-    SysGet, mon, Monitor, %mi%
+    SysGet, mon, MonitorWorkArea, %mi%
     if (monLeft < MouseX and monRight > MouseX) {
-      x := monLeft + (monRight - monLeft) * (toRight ? 0.75 : 0.25)
-      y := monTop + monBottom / 2
-      MoveMouseAct(x, y)
-      break
+      x := monLeft
+      y := monTop
+      w := monRight - monLeft
+      h := monBottom - monTop
+      return
     }
-    if (++mi >= mc)
-      break
   }
 }
 
+FocusWinByDirection(direction) {
+  global RATIO
+  GetCursorMonGeometry(x, y, w, h)
+  wf := RATIO / 2
+  hf := 0.5
+  if (direction = "right")
+    wf := RATIO + (1 - RATIO) / 2
+  FocusWinByPos(x + w * wf, y + h * hf)
+}
 
-#f:: WinMaximize, A
-#+f:: WinRestore, A
-#,:: #Left
-#.:: #Right
-#+u:: #+Left
-#+i:: #+Right
-#u:: MoveCursorMon(False)
-#i:: MoveCursorMon(True)
-#k:: MoveCursorWin(False)
-#j:: MoveCursorWin(True)
-
-~#1 Up::
-~#2 Up::
-~#3 Up::
-~#4 Up::
-~#5 Up::
-~#6 Up::
-~#7 Up::
-~#8 Up::
-~#9 Up::
-  Sleep 100
-  WinGetPos, x, y, w, h, A
-  DllCall("SetCursorPos", "int", x + w / 2, "int", y + h / 2)
-  return
-~!Tab Up::
-  while (GetKeyState("Alt") != 0 or GetKeyState("Tab") != 0) {
-    Sleep 50
+MoveActiveWinByDirection(direction) {
+  global RATIO
+  GetCursorMonGeometry(x, y, w, h)
+  activeWinId := WinExist("A")
+  WinGetPosEx(activeWinId, wx, wy, ww, wh, l, t, r, b)
+  wx := x 
+  wy := y
+  ww := floor(w * RATIO)
+  wh := h
+  if (direction = "right") {
+    wx := ww
+    ww := w - ww
   }
-  Sleep 100
-  WinGetPos, x, y, w, h, A
-  DllCall("SetCursorPos", "int", x + w / 2, "int", y + h / 2)
-  return
+  WinMove, A,, wx - l, wy - t, ww + l + r, wh + t + b
+}
+
+ToggleActiveWinMaximum() {
+  WinGet, isMax, MinMax, A
+  if (isMax) {
+    WinRestore, A
+  } else {
+    WinMaximize, A
+  }
+}

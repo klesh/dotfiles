@@ -13,7 +13,7 @@ $Env:Path += ";$Dir\bin"
 $Env:PSModulePath += ";$Dir\Modules"
 $Env:KUBE_EDITOR = 'nvim'
 $Env:EDITOR = 'nvim'
-$Env:GOPROXY = 'https://mirrors.aliyun.com/goproxy/,direct'
+$Env:VIM_MODE = 'enhanced'
 Set-Alias -Name k kubectl
 Set-Alias -Name bm Open-Bookmark
 Set-Alias -Name v nvim
