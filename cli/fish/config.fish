@@ -62,7 +62,7 @@ if status is-interactive
 
     if test -n "$TMUX"
         function ssh
-            tmux rename-window $argv[1]
+            tmux rename-window $argv[-1]
             command ssh $argv
             tmux setw automatic-rename
         end
