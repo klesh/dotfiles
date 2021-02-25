@@ -55,6 +55,7 @@ if status is-interactive
     # === PATH and file sourcing
     append_paths ~/bin ~/.local/bin ~/.yarn/bin ~/dotfiles/bin ~/dotfiles/devops/bin
     source_files /usr/share/autojump/autojump.fish /usr/local/share/autojump/autojump.fish \
+        ~/.jabba/jabba.fish \
         ~/.profile.fish
 
     # === auto cd into last activated directory
