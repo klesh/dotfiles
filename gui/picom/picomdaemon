@@ -11,7 +11,7 @@ stop() {
 start() {
     echo start
     picom -b --experimental-backends \
-        --blur-method dual_kawase --blur-strength 6 \
+        --blur-method dual_kawase --blur-strength 7 --blur-size 15 \
         --no-fading-openclose
     sleep 1
     ! pgrep -x picom >/dev/null && echo 'fallback' && picom -b --no-fading-openclose
