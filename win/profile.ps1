@@ -7,6 +7,9 @@ Set-PSReadLineOption -EditMode Emacs
 Set-PSReadLineOption -PredictionSource History
 Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
 
+Import-Module posh-git
+Import-Module oh-my-posh
+
 
 $Dir = (Get-Item (Get-Item $PSCommandPath).Target).Directory.FullName
 $Env:Path += ";$Dir\bin"
@@ -19,7 +22,11 @@ Set-Alias -Name bm Open-Bookmark
 Set-Alias -Name v nvim
 $isPs7 = $host.Version.Major -ge 7
 if ( $isPs7 ) {
-    Set-Prompt
+    if ((Get-Module oh-my-posh).Version.Major -eq 3) {
+        Set-PoshPrompt
+    } else {
+        Set-Prompt
+    }
 }
 
 function kcc { k config get-contexts $args }
