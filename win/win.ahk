@@ -160,6 +160,10 @@ FocusWinByDirection(direction) {
 }
 
 MoveActiveWinByDirection(direction) {
+  WinGet, isMax, MinMax, A
+  if (isMax) {
+    WinRestore, A
+  }
   global RATIO
   GetCursorMonGeometry(x, y, w, h)
   activeWinId := WinExist("A")
