@@ -1,4 +1,5 @@
 set drawbox
+set icons
 cmd mkdir %mkdir "$@"
 
 cmd copyfilepath %echo "$f" | xsel -b
