@@ -1,0 +1,8 @@
+set drawbox
+cmd mkdir %mkdir "$@"
+
+cmd copyfilepath %echo "$f" | xsel -b
+cmd copyfilename %basename "$f" | xsel -b
+
+map Yp copyfilepath
+map Yn copyfilename
