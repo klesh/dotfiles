@@ -3,7 +3,21 @@ set icons
 cmd mkdir %mkdir "$@"
 
 cmd copyfilepath %echo "$f" | xsel -b
-cmd copyfilename %basename "$f" | xsel -b
-
 map Yp copyfilepath
+
+cmd copyfilename %basename "$f" | xsel -b
 map Yn copyfilename
+
+cmd pasteoverwrite %{{
+    load=$(lf -remote 'load')
+    mode=$(echo "$load" | sed -n '1p')
+    list=$(echo "$load" | sed '1d')
+    if [ $mode = 'copy' ]; then
+        cp -R $list .
+    elif [ $mode = 'move' ]; then
+        mv $list .
+    fi
+    lf -remote 'send load'
+    lf -remote 'send clear'
+}}
+map P pasteoverwrite
