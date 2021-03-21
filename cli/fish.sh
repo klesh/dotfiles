@@ -58,6 +58,7 @@ lnsf "$DIR/fish/functions/fish_prompt.fish" "$XDG_CONFIG_HOME/fish/functions/fis
 lnsf "$DIR/fish/functions/fish_right_prompt.fish" "$XDG_CONFIG_HOME/fish/functions/fish_right_prompt.fish"
 lnsf "$DIR/fish/functions/fisher.fish" "$XDG_CONFIG_HOME/fish/functions/fisher.fish"
 lnsf "$DIR/fish/functions/r.fish" "$XDG_CONFIG_HOME/fish/functions/r.fish"
+lnsf "$DIR/fish/functions/f.fish" "$XDG_CONFIG_HOME/fish/functions/f.fish"
 lnsf "$DIR/fish/functions/append_paths.fish" "$XDG_CONFIG_HOME/fish/functions/append_paths.fish"
 lnsf "$DIR/fish/functions/source_files.fish" "$XDG_CONFIG_HOME/fish/functions/source_files.fish"
 
