@@ -113,3 +113,13 @@ function pass-edit {
     Remove-Item $tmpfile.FullName -Force
   }
 }
+
+function f {
+    [Cmdletbinding()]
+
+    $tmpfile = New-TemporaryFile
+    lf -last-dir-path $tmpfile
+    $lastdir = Get-Content $tmpfile
+    Remove-Item $tmpfile
+    cd $lastdir
+}
