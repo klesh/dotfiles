@@ -7,9 +7,9 @@
 // For documentation on these settings, see: https://aka.ms/terminal-documentation
 {
   "$schema": "https://aka.ms/terminal-profiles-schema",
-  "initialPosition": "2118,0",
-  "initialRows": 71,
-  "initialCols": 142,
+  //"initialPosition": "2118,0",
+  //"initialRows": 71,
+  //"initialCols": 142,
 
   "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
 

@@ -1,5 +1,5 @@
 
-$dotfiles=(Get-Item $PSScriptRoot).Parent.FullName
+$dotfiles=(Get-Item $PSScriptRoot).Parent.Parent.FullName
 if ( ! (Test-Path $Env:LOCALAPPDATA\nvim) ) {
     New-Item -ItemType Directory -Path $Env:LOCALAPPDATA\nvim
 }
