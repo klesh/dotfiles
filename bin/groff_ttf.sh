@@ -32,7 +32,7 @@ case "$STYLE" in
         ;;
 esac
 GROFF_CURRENT=$(readlink -f /usr/share/groff/current)
-GROFF_SITEFONT=/usr/share/groff/site-font
+GROFF_SITEFONT="${GROFF_FONT_PATH:-/usr/share/groff/site-font}"
 
 # conversion
 TMPDIR="$(mktemp -d)"
