@@ -583,44 +583,48 @@ def_key "N"
     previous_found_item
 
 # not used but bound
+def_key "space"
+    select_item
 def_key "J"
+    select_item
     move_sort_order_down
 def_key "K"
-    move_sort_order_up
+    select_item
+    move_selected_items_up
 def_key "h"
-  jump_to_parent_directory
+    jump_to_parent_directory
 def_key "l"
-  enter_directory
+    enter_directory
 def_key "l"
-  run_action
+    run_action
 def_key "l"
-  play_item
+    play_item
 def_key "m"
-  show_media_library
+    show_media_library
 def_key "m"
-  toggle_media_library_columns_mode
+    toggle_media_library_columns_mode
 def_key "t"
-  show_tag_editor
+    show_tag_editor
 def_key "v"
-  show_visualizer
+    show_visualizer
 def_key "G"
-  move_end
+    move_end
 def_key "g"
-  move_home
+    move_home
 #jump_to_position_in_song
 def_key "U"
-  update_database
+    update_database
 def_key "s"
-  reset_search_engine
+    reset_search_engine
 def_key "s"
-  show_search_engine
+    show_search_engine
 def_key "f"
-  show_browser
+    show_browser
 def_key "f"
-  change_browse_mode
+    change_browse_mode
 def_key "x"
-  delete_playlist_items
+    delete_playlist_items
 def_key "X"
-  delete_browser_items
+    delete_browser_items
 def_key "P"
-  show_playlist
+    show_playlist
