@@ -587,7 +587,7 @@ def_key "space"
     select_item
 def_key "J"
     select_item
-    move_sort_order_down
+    move_selected_items_down
 def_key "K"
     select_item
     move_selected_items_up
