@@ -1,5 +1,10 @@
+set icons
+set drawbox
 
 cmd mkdir %mkdir "$@"
 
 cmd fp %powershell -NoProfile -Command Set-Clipboard $env:f
 cmd fn %powershell -NoProfile -Command Set-Clipboard (Split-Path -Leaf ($env:f -replace '"',''))
+
+
+map <f-2> rename

@@ -23,6 +23,7 @@ set laststatus=2
 set fillchars=vert:\ ,fold:-
 set clipboard=unnamedplus  " system clipboard as default register. for vim to work need installing gvim package
 set mouse=a
+set spell
 filetype plugin indent on
 syntax on
 au! BufWritePost $MYVIMRC source %
@@ -82,6 +83,7 @@ highlight ExtraWhitespace ctermbg=red guibg=red
 au ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
 au Syntax * match ExtraWhitespace /\s\+$/
 nnoremap <leader>es :%s/\s\+$//g<CR>
+
 
 " location jumping
 nnoremap <leader>n :cnext<CR>
@@ -313,3 +315,8 @@ autocmd BufEnter,BufRead *.mom :set ft=mom
 
 " for yaml need cursorcolumn
 autocmd FileType yaml :set cursorcolumn
+
+" spell highlight
+highlight clear SpellBad
+highlight SpellBad cterm=underline
+highlight SpellBad gui=undercurl

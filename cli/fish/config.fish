@@ -59,7 +59,7 @@ if status is-interactive
         ~/.profile.fish
 
     # === auto cd into last activated directory
-    test -z "$TMUX" && cd $last_pwd
+    test "$PWD" = "$HOME" && cd $last_pwd
 
     if test -n "$TMUX"
         function ssh
