@@ -23,9 +23,9 @@ Set-Alias -Name v nvim
 $isPs7 = $host.Version.Major -ge 7
 if ( $isPs7 ) {
     if ((Get-Module oh-my-posh).Version.Major -eq 3) {
-        Set-PoshPrompt
+        Set-PoshPrompt -Theme fish
     } else {
-        Set-Prompt
+        Set-Prompt -Theme fish
     }
 }
 
