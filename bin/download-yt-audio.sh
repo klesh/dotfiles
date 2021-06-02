@@ -15,6 +15,7 @@ fi
 # https://github.com/TheFrenchGhosty
 #
 #
+    #--output "%(title)s - %(uploader)s - %(upload_date)s/%(title)s - %(uploader)s - %(upload_date)s [%(id)s].%(ext)s" \
 
 yt-dlp \
     --format "(bestaudio[acodec^=opus]/bestaudio)/best" \
@@ -34,6 +35,6 @@ yt-dlp \
     --embed-thumbnail \
     --extract-audio \
     --match-filter "!is_live & !live" \
-    --output "%(title)s - %(uploader)s - %(upload_date)s/%(title)s - %(uploader)s - %(upload_date)s [%(id)s].%(ext)s" \
+    --output "%(uploader)s - %(title)s.%(ext)s" \
     --merge-output-format "mkv" \
     "$@" 2>/tmp/download-yt-audio-error.log
