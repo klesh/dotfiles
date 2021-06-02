@@ -53,14 +53,26 @@ function GetUid {
     }
 }
 
+function FzfPass {
+    Get-ChildItem $PASSWORD_STORE_DIR -Recurse -Filter *.gpg | %{
+        $_.FullName.SubString(
+                $PASSWORD_STORE_DIR.FullName.Length+1,
+                $_.FullName.Length-$PASSWORD_STORE_DIR.FullName.Length-5
+                )
+    } | Invoke-Fzf
+}
+
 function Edit-Pass {
     [Cmdletbinding()]
     param(
-            [Parameter(Mandatory=$true)] [String] $Path
+            [String] $Path
          )
 
-    $Path = EnsurePath($Path)
-    echo $Path
+    if (!$Path) {
+        $Path = FzfPass
+    }
+
+    $Path = EnsurePath $Path
 
     $tmpfile = (New-TemporaryFile).FullName
     gpg --decrypt $Path > $tmpfile
@@ -84,10 +96,10 @@ function New-Pass {
   if (Test-Path -PathType Leaf $Path) {
       $text = gpg --decrypt $Path
       $text[0] = $pass
+      Remove-Item $Path -Force
   } else {
       $text = @($pass)
   }
-  Remove-Item $Path -Force
   $text | gpg -r (GetUid) -o $Path --encrypt -
   Set-Clipboard $pass
   Write-Host $pass
@@ -117,12 +129,7 @@ function Get-Pass {
 }
 
 function Find-Pass {
-  $selected = Get-ChildItem $PASSWORD_STORE_DIR -Recurse -Filter *.gpg | %{
-      $_.FullName.SubString(
-              $PASSWORD_STORE_DIR.FullName.Length+1,
-              $_.FullName.Length-$PASSWORD_STORE_DIR.FullName.Length-5
-              )
-  } | Invoke-Fzf
+  $selected = FzfPass
 
   if ($selected) {
       Get-Pass $selected
