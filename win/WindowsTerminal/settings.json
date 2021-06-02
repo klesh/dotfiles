@@ -34,7 +34,8 @@
       "colorScheme": "One Half Dark",
       "cursorShape": "filledBox",
       // install the non-window-compatible version
-      "fontFace": "agave Nerd Font r",
+      // "fontFace": "agave Nerd Font r",
+      "fontFace": "Sarasa Mono SC",
       "fontSize": 12
     },
     "list": [
