@@ -168,7 +168,7 @@ MoveActiveWinByDirection(direction) {
   GetCursorMonGeometry(x, y, w, h)
   activeWinId := WinExist("A")
   WinGetPosEx(activeWinId, wx, wy, ww, wh, l, t, r, b)
-  wx := x 
+  wx := x
   wy := y
   ww := floor(w * RATIO)
   wh := h
