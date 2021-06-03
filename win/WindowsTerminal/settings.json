@@ -33,10 +33,9 @@
       "acrylicOpacity": 0.6,
       "colorScheme": "One Half Dark",
       "cursorShape": "filledBox",
-      // install the non-window-compatible version
-      // "fontFace": "agave Nerd Font r",
-      "fontFace": "Sarasa Mono SC",
-      "fontSize": 12
+      // https://github.com/laishulu/Sarasa-Mono-SC-Nerd/releases/latest
+      "fontFace": "Sarasa Mono SC Nerd",
+      "fontSize": 10
     },
     "list": [
       {
