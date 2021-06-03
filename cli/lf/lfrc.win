@@ -1,4 +1,4 @@
-set icons
+#set icons
 set drawbox
 
 cmd mkdir %mkdir "$@"
