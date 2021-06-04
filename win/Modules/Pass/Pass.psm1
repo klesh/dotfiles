@@ -141,5 +141,15 @@ function Find-Pass {
   }
 }
 
-Export-ModuleMember -Function Edit-Pass,New-Pass,Get-Pass,Find-Pass
+function Find-Login {
+  $selected = FzfPass
+
+  if ($selected) {
+      $login = Split-Path -Leaf $selected
+      Write-Host $login
+      Set-Clipboard $login
+  }
+}
+
+Export-ModuleMember -Function Edit-Pass,New-Pass,Get-Pass,Find-Pass,Find-Login
 
