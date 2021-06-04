@@ -1,4 +1,4 @@
-$PASSWORD_STORE_DIR = Get-Item "~\.password-store"
+$PASSWORD_STORE_DIR = (Get-Item "~\.password-store").FullName
 
 function GeneratePassword {
     param(
@@ -29,20 +29,21 @@ function GeneratePassword {
 
 function EnsurePath {
     param(
-            [String] $Path
+            [String] $PassPath
          )
 
-    $dir = Split-Path $Path
+    $PassPath = Join-Path $PASSWORD_STORE_DIR $PassPath
+    if (!$PassPath.EndsWith(".gpg")) {
+        $PassPath = $PassPath + ".gpg"
+    }
+    $dir = Split-Path $PassPath
     if (!$dir) {
         $dir = "."
     }
     if (!(Test-Path -PathType Container $dir)) {
         New-Item -ItemType Directory -Path $dir
     }
-    if (!$Path.EndsWith(".gpg")) {
-        $Path = $Path + ".gpg"
-    }
-    Join-Path $PASSWORD_STORE_DIR.FullName $Path
+    return $PassPath
 }
 
 function GetUid {
@@ -56,8 +57,8 @@ function GetUid {
 function FzfPass {
     Get-ChildItem $PASSWORD_STORE_DIR -Recurse -Filter *.gpg | %{
         $_.FullName.SubString(
-                $PASSWORD_STORE_DIR.FullName.Length+1,
-                $_.FullName.Length-$PASSWORD_STORE_DIR.FullName.Length-5
+                $PASSWORD_STORE_DIR.Length+1,
+                $_.FullName.Length-$PASSWORD_STORE_DIR.Length-5
                 )
     } | Invoke-Fzf
 }
@@ -65,22 +66,22 @@ function FzfPass {
 function Edit-Pass {
     [Cmdletbinding()]
     param(
-            [String] $Path
+            [String] $PassPath
          )
 
-    if (!$Path) {
-        $Path = FzfPass
+    if (!$PassPath) {
+        $PassPath = FzfPass
     }
 
-    $Path = EnsurePath $Path
+    $PassPath = EnsurePath $PassPath
 
     $tmpfile = (New-TemporaryFile).FullName
-    gpg --decrypt $Path > $tmpfile
+    gpg --decrypt $PassPath > $tmpfile
     nvim $tmpfile
 
     if ($?) {
         gpg -r (GetUid) -o "$tmpfile.gpg" --encrypt $tmpfile
-        Move-Item -Path "$tmpfile.gpg" -Destination "$Path" -Force
+        Move-Item -Path "$tmpfile.gpg" -Destination "$PassPath" -Force
         Remove-Item $tmpfile -Force
     }
 }
@@ -88,19 +89,23 @@ function Edit-Pass {
 function New-Pass {
   [Cmdletbinding()]
   param(
-          [Parameter(Mandatory=$true)] [String] $Path
+          [Parameter(Mandatory=$true)] [String] $PassPath
        )
 
-  $Path = EnsurePath $Path
+  $PassPath = EnsurePath $PassPath
   $pass = GeneratePassword
-  if (Test-Path -PathType Leaf $Path) {
-      $text = gpg --decrypt $Path
-      $text[0] = $pass
-      Remove-Item $Path -Force
+  if (Test-Path -PathType Leaf $PassPath) {
+      $text = gpg --decrypt $PassPath
+      if ($text -is [string]) {
+        $text = @($pass)
+      } else {
+        $text[0] = $pass
+      }
+      Remove-Item $PassPath -Force
   } else {
       $text = @($pass)
   }
-  $text | gpg -r (GetUid) -o $Path --encrypt -
+  $text | gpg -r (GetUid) -o $PassPath --encrypt -
   Set-Clipboard $pass
   Write-Host $pass
   Write-Host "new password is saved and copied to Clipboard"
@@ -109,13 +114,13 @@ function New-Pass {
 function Get-Pass {
   [Cmdletbinding()]
   param(
-          [Parameter(Mandatory=$true)] [String] $Path,
+          [Parameter(Mandatory=$true)] [String] $PassPath,
           [Bool] $Clipboard=$true
        )
 
-  $Path = EnsurePath $Path
+  $PassPath = EnsurePath $PassPath
   if ($Clipboard) {
-      $pass = gpg --decrypt $Path | Select -First 1
+      $pass = gpg --decrypt $PassPath | Select -First 1
       if ($pass) {
           Set-Clipboard $pass
           Write-Host "password is copied to Clipboard successfully"
