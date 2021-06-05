@@ -1,6 +1,6 @@
 # curl:     https://curl.se/windows/
 # ag:       https://github.com/k-takata/the_silver_searcher-win32/releases
-# fzf:      https://github.com/junegunn/fzf/releases/latest
+# fzf:      https://github.com/junegunn/fzf/releases/latest     (2.7.2 not working with psfzf)
 $PSDefaultParameterValues = @{ "*:Proxy"="http://localhost:8123" }
 #Install-Module -Name PowerShellGet -Force -AllowPrerelease
 Register-PSRepository -Default -InstallationPolicy Trusted
