@@ -62,6 +62,8 @@ nnoremap <leader>5 :b5<CR>
 nnoremap <leader>w :w<CR>
 nnoremap <leader><Esc> :noh<return><esc>
 
+xnoremap <leader>y <esc>:'<,'>:w !clip.exe<CR>
+
 nmap <leader>"" ysiW"
 nmap <leader>'' ysiW'
 nmap <leader>" ysiw"
