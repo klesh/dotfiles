@@ -68,5 +68,10 @@ if status is-interactive
             tmux setw automatic-rename
         end
     end
+
+    # ruby version manager
+    if command -v rvm
+        rvm default
+    end
 end
 
