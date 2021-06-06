@@ -7,8 +7,8 @@ CoordMode, Mouse, Screen ; mouse coordinates relative to the screen
 ; =========================
 ; CONFIGURATION
 ; =========================
-global RATIO := 0.618
-
+; global RATIO := 0.618
+global RATIO := 0.382
 ; =========================
 ; BINDINGS
 ; =========================

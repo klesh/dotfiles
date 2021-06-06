@@ -18,6 +18,7 @@ $Env:PSModulePath += ";$Dir\Modules"
 $Env:KUBE_EDITOR = 'nvim'
 $Env:EDITOR = 'nvim'
 $Env:VIM_MODE = 'enhanced'
+$Env:hosts = 'C:\Windows\System32\drivers\etc\hosts'
 Set-Alias -Name k kubectl
 Set-Alias -Name bm Open-Bookmark
 Set-Alias -Name v nvim
