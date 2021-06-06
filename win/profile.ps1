@@ -2,7 +2,7 @@
 # Set-ExecutionPolicy RemoteSigned
 # new-item -ItemType SymbolicLink -Target "D:\Nextcloud\klesh\config\win\profile.ps1" -Path $profile
 
-$env:POSH_GIT_ENABLED = $true
+#$env:POSH_GIT_ENABLED = $true
 
 Set-PSReadLineOption -EditMode Emacs
 Set-PSReadLineOption -PredictionSource History
@@ -23,10 +23,11 @@ Set-Alias -Name bm Open-Bookmark
 Set-Alias -Name v nvim
 $isPs7 = $host.Version.Major -ge 7
 if ( $isPs7 ) {
+    $GitPromptSettings.EnableFileStatus = $false
     if ((Get-Module oh-my-posh).Version.Major -eq 3) {
-        Set-PoshPrompt -Theme emodipt
+        Set-PoshPrompt -Theme fish
     } else {
-        Set-Prompt -Theme emodipt
+        Set-Prompt -Theme fish
     }
 }
 
