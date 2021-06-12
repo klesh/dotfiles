@@ -32,6 +32,10 @@ function EnsurePath {
             [String] $PassPath
          )
 
+    if (!$PassPath) {
+        throw "path is empty!"
+    }
+
     $PassPath = Join-Path $PASSWORD_STORE_DIR $PassPath
     if (!$PassPath.EndsWith(".gpg")) {
         $PassPath = $PassPath + ".gpg"
@@ -60,7 +64,7 @@ function FzfPass {
                 $PASSWORD_STORE_DIR.Length+1,
                 $_.FullName.Length-$PASSWORD_STORE_DIR.Length-5
                 )
-    } | Invoke-Fzf
+    } | fzf
 }
 
 function Edit-Pass {
@@ -71,6 +75,9 @@ function Edit-Pass {
 
     if (!$PassPath) {
         $PassPath = FzfPass
+        if (!$?) {
+            return
+        }
     }
 
     $PassPath = EnsurePath $PassPath
