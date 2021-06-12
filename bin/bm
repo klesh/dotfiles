@@ -7,6 +7,10 @@ if set -q BOOKMARK_SEARCHER
 else
     set BOOKMARK_SEARCHER fzf --layout reverse
 end
+if string match -iq '*microsoft*' (uname -r)
+    alias open='powershell.exe -noprofile start-process'
+    alias disown='echo done'  # no need to disown on WSL
+end
 
 function _help
     echo "Organize your bookmark with markdown"
@@ -25,7 +29,7 @@ function _help
     echo '  bm                                      search with $BOOKMARK_SEARCHER and then open selected'
 end
 
-function list
+function list_all
     set -e categories
     set -e names
     for arg in $argv
@@ -38,7 +42,7 @@ function list
     _filter_category $categories < $BOOKMARK_PATH | _filter_name $names
 end
 
-function open
+function open_by_keyword
     if not count $argv &>/dev/null
         _search
     else
@@ -98,11 +102,10 @@ function _filter_name
 end
 
 function _open_urls
-    set -q BROWSER; or set BROWSER xdg-open
     set LINK_PATTERN  '\[(.*?)\]\((.*?)\)'
     while read LINE
         if set link (string match -r $LINK_PATTERN $LINE)
-             $BROWSER $link[3] &>/dev/null &
+             open $link[3] &>/dev/null &
              disown
              sleep 0.1
         end
@@ -120,7 +123,11 @@ function _search
 end
 
 switch $argv[1]
-    case open list help update
+    case list
+        list_all $argv[2..-1]
+    case open
+        open_by_keyword $argv[2..-1]
+    case help update
         $argv[1..-1]
     case '*'
         _search

@@ -51,6 +51,10 @@ if status is-interactive
     alias issh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
     alias iscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
     alias dt='date "+%Y%m%d-%H%M%S"'
+    if string match -iq '*microsoft*' (uname -r)
+        alias open='powershell.exe -noprofile start-process'
+        alias xdg-open='open'
+    end
 
     # === PATH and file sourcing
     append_paths ~/go/bin ~/bin ~/.local/bin ~/.yarn/bin ~/dotfiles/bin ~/dotfiles/devops/bin
