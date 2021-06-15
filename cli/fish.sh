@@ -61,6 +61,8 @@ lnsf "$DIR/fish/functions/r.fish" "$XDG_CONFIG_HOME/fish/functions/r.fish"
 lnsf "$DIR/fish/functions/f.fish" "$XDG_CONFIG_HOME/fish/functions/f.fish"
 lnsf "$DIR/fish/functions/append_paths.fish" "$XDG_CONFIG_HOME/fish/functions/append_paths.fish"
 lnsf "$DIR/fish/functions/source_files.fish" "$XDG_CONFIG_HOME/fish/functions/source_files.fish"
+lnsf "$DIR/fish/functions/git_clone_all.fish" "$XDG_CONFIG_HOME/fish/functions/git_clone_all.fish"
+lnsf "$DIR/fish/functions/winip.fish" "$XDG_CONFIG_HOME/fish/functions/winip.fish"
 
 # install plugins
 # for better keybinding: C-o open file with $EDITOR / C-r search history / C-g open with xdg-open
