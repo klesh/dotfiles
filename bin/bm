@@ -8,7 +8,9 @@ else
     set BOOKMARK_SEARCHER fzf --layout reverse
 end
 if string match -iq '*microsoft*' (uname -r)
-    alias xdg-open='powershell.exe -noprofile start-process'
+    function xdg-open
+        powershell.exe -noprofile "start-process '$argv'"
+    end
     alias disown='echo done'  # no need to disown on WSL
 end
 
