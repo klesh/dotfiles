@@ -1,13 +1,9 @@
 set drawbox
 set icons
+
 cmd mkdir %mkdir "$@"
-
 cmd copyfilepath %echo "$f" | xsel -b
-map Yp copyfilepath
-
 cmd copyfilename %basename "$f" | xsel -b
-map Yn copyfilename
-
 cmd pasteoverwrite %{{
     load=$(lf -remote 'load')
     mode=$(echo "$load" | sed -n '1p')
@@ -20,4 +16,8 @@ cmd pasteoverwrite %{{
     lf -remote 'send load'
     lf -remote 'send clear'
 }}
+cmd e $$EDITOR "$@"
+
+map Yp copyfilepath
+map Yn copyfilename
 map P pasteoverwrite

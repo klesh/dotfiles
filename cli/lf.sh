@@ -10,7 +10,9 @@ fi
 log 'Setting up lf'
 
 # install lf
-env GOPROXY= CGO_ENABLED=0 GO111MODULE=on go get -u -ldflags="-s -w" github.com/gokcehan/lf
+if ! has_cmd "lf"; then
+    env GOPROXY= CGO_ENABLED=0 GO111MODULE=on go get -u -ldflags="-s -w" github.com/gokcehan/lf
+fi
 
 # linking configuration files
 lnsf "$DIR/lf/lfrc" "$XDG_CONFIG_HOME/lf/lfrc"
