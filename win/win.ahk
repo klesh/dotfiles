@@ -187,3 +187,13 @@ ToggleActiveWinMaximum() {
     WinMaximize, A
   }
 }
+
+GetSelectedText() {
+  tmp = %ClipboardAll% ; save clipboard
+  Clipboard := "" ; clear clipboard
+  Send, ^c ; simulate Ctrl+C (=selection in clipboard)
+  ClipWait, 0, 1 ; wait until clipboard contains data
+  selection = %Clipboard% ; save the content of the clipboard
+  Clipboard = %tmp% ; restore old content of the clipboard
+  return selection
+}
