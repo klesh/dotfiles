@@ -1,4 +1,5 @@
 $PASSWORD_STORE_DIR = (Get-Item "~\.password-store").FullName
+$CLEAR_TIMEOUT = 45
 
 function GeneratePassword {
     param(
@@ -133,7 +134,15 @@ function Get-Pass {
       if ($pass) {
           Set-Clipboard $pass
           Write-Host "password is copied to Clipboard successfully"
-          #TODO clear clipboard after centain period
+          if ($CLEAR_TIMEOUT -gt 0) {
+            Write-Host "and will be cleared out in $CLEAR_TIMEOUT seconds"
+            Start-Job -ArgumentList $pass,$CLEAR_TIMEOUT -ScriptBlock {
+                start-sleep -s $args[1] > $null
+                if ( (get-clipboard) -eq $args[0]) {
+                    $null | clip.exe
+                }
+            } > $null
+          }
       } else {
           throw "password is empty"
       }
