@@ -29,14 +29,15 @@ function GeneratePassword {
 
 function EnsurePath {
     param(
-            [String] $PassPath
+            [String] $OrigPassPath,
+            [Bool] $CreateParents=$false
          )
 
-    if (!$PassPath) {
+    if (!$OrigPassPath) {
         throw "path is empty!"
     }
 
-    $PassPath = Join-Path $PASSWORD_STORE_DIR $PassPath
+    $PassPath = Join-Path $PASSWORD_STORE_DIR $OrigPassPath
     if (!$PassPath.EndsWith(".gpg")) {
         $PassPath = $PassPath + ".gpg"
     }
@@ -44,8 +45,9 @@ function EnsurePath {
     if (!$dir) {
         $dir = "."
     }
-    if (!(Test-Path -PathType Container $dir)) {
-        New-Item -ItemType Directory -Path $dir
+    if ($CreateParents -and !(Test-Path -PathType Container $dir)) {
+        # all output will be returned, suppress all output for all subcommands
+        New-Item -ItemType Directory -Path $dir > $null
     }
     return $PassPath
 }
@@ -80,7 +82,7 @@ function Edit-Pass {
         }
     }
 
-    $PassPath = EnsurePath $PassPath
+    $PassPath = EnsurePath -CreateParents $true $PassPath
 
     $tmpfile = (New-TemporaryFile).FullName
     gpg --decrypt $PassPath > $tmpfile
@@ -99,7 +101,7 @@ function New-Pass {
           [Parameter(Mandatory=$true)] [String] $PassPath
        )
 
-  $PassPath = EnsurePath $PassPath
+  $PassPath = EnsurePath -CreateParents $true $PassPath
   $pass = GeneratePassword
   if (Test-Path -PathType Leaf $PassPath) {
       $text = gpg --decrypt $PassPath
