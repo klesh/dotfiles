@@ -44,9 +44,9 @@ git_clone() {
     mkdir -p "$(dirname "$2")"
     [ -d "$2" ] && return
     if echo "$1" | grep -qF 'github.com'; then
-        HTTPS_PROXY=$GITHUB_PROXY git clone --depth 1 "$1" "$2"
+        HTTPS_PROXY=$GITHUB_PROXY git clone --depth 1 "$@"
     else
-        git clone --depth 1 "$1" "$2"
+        git clone --depth 1 "$@"
     fi
 }
 

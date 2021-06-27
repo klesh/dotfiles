@@ -60,6 +60,7 @@ if status is-interactive
     append_paths ~/go/bin ~/bin ~/.local/bin ~/.yarn/bin ~/dotfiles/bin ~/dotfiles/devops/bin
     source_files /usr/share/autojump/autojump.fish /usr/local/share/autojump/autojump.fish \
         ~/.jabba/jabba.fish \
+        ~/.asdf/asdf.fish \
         ~/.profile.fish
 
     # === auto cd into last activated directory
