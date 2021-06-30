@@ -9,6 +9,11 @@ CoordMode, Mouse, Screen ; mouse coordinates relative to the screen
 ; =========================
 ; global RATIO := 0.618
 global RATIO := 0.382
+global ARRANGEMENT := Object()
+global ID_SEEN := Object()
+global ARRANGEMENT_PATH := A_AppData . "\arrangement.json"
+LoadArrangement()
+WatchNewWindow()
 ; =========================
 ; BINDINGS
 ; =========================
@@ -28,6 +33,8 @@ global RATIO := 0.382
 #k:: FocusWinByDirection("left")
 #+j::MoveActiveWinByDirection("right")
 #+k::MoveActiveWinByDirection("left")
+#+r::reload
+#t::ShowDebug()
 
 ; Ctrl + Alt + v : paste as plain text
 ^!v::
@@ -102,6 +109,7 @@ Return
 ; =========================
 
 #Include, WinGetPosEx.ahk
+#Include, JSON.ahk
 
 ShowGeometry(x, y, w, h) {
   MsgBox, , Geometry,% Format("x:{}, y:{}, w: {}, h: {}", x, y, w, h)
@@ -176,8 +184,68 @@ MoveActiveWinByDirection(direction) {
     wx := ww
     ww := w - ww
   }
-  WinMove, A,, wx - l, wy - t, ww + l + r, wh + t + b
+  pos := [wx - l, wy - t, ww + l + r, wh + t + b]
+  ; store arrangement
+  global ARRANGEMENT
+  key := GetActiveWindowClassPath()
+  ARRANGEMENT[key] := pos
+  SaveArrangement()
+  ; end store arrangement
+  WinMove, A,, pos[1], pos[2], pos[3], pos[4]
 }
+
+
+SaveArrangement() {
+  global ARRANGEMENT
+  global ARRANGEMENT_PATH
+  file := FileOpen(ARRANGEMENT_PATH, "w")
+  file.Write(JSON.Dump(ARRANGEMENT,, 2))
+  file.Close()
+}
+
+LoadArrangement() {
+  global ARRANGEMENT
+  global ARRANGEMENT_PATH
+  try {
+    FileRead, temp, %ARRANGEMENT_PATH%
+    ARRANGEMENT := JSON.Load(temp)
+    ShowObject(ARRANGEMENT)
+  } catch {
+    ARRANGEMENT := Object()
+  }
+  if not IsObject(ARRANGEMENT) {
+    ARRANGEMENT := Object()
+  }
+}
+
+GetActiveWindowClassPath() {
+  WinGet processPath, ProcessPath, A
+  WinGetClass windowClass, A
+  return processPath . ":" . windowClass
+}
+
+IsActiveWindowSeen() {
+  global ID_SEEN
+  WinGet winId, ID, A
+  seen := ID_SEEN.HasKey(winId)
+  ID_SEEN[winId] := true
+}
+
+WatchNewWindow() {
+  global ARRANGEMENT
+  Loop {
+      WinWaitActive A        ; makes the active window to be the Last Found
+      if not IsActiveWindowSeen() {
+        classPath := GetActiveWindowClassPath()
+        if ARRANGEMENT.HasKey(classPath) {
+          pos := ARRANGEMENT[classPath]
+          WinMove, A,, pos[1], pos[2], pos[3], pos[4]
+        }
+      }
+      WinWaitNotActive       ; waits until the active window changes
+  }
+}
+
 
 ToggleActiveWinMaximum() {
   WinGet, isMax, MinMax, A
@@ -196,4 +264,14 @@ GetSelectedText() {
   selection = %Clipboard% ; save the content of the clipboard
   Clipboard = %tmp% ; restore old content of the clipboard
   return selection
+}
+
+ShowDebug() {
+  global ARRANGEMENT
+  ShowObject(ARRANGEMENT)
+}
+
+ShowObject(obj) {
+  msg := JSON.Dump(obj)
+  MsgBox, %msg%
 }
