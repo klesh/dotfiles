@@ -209,7 +209,6 @@ LoadArrangement() {
   try {
     FileRead, temp, %ARRANGEMENT_PATH%
     ARRANGEMENT := JSON.Load(temp)
-    ShowObject(ARRANGEMENT)
   } catch {
     ARRANGEMENT := Object()
   }
@@ -239,6 +238,7 @@ WatchNewWindow() {
         classPath := GetActiveWindowClassPath()
         if ARRANGEMENT.HasKey(classPath) {
           pos := ARRANGEMENT[classPath]
+          WinRestore, A
           WinMove, A,, pos[1], pos[2], pos[3], pos[4]
         }
       }
@@ -267,8 +267,7 @@ GetSelectedText() {
 }
 
 ShowDebug() {
-  global ARRANGEMENT
-  ShowObject(ARRANGEMENT)
+  ShowActiveWinGeometry()
 }
 
 ShowObject(obj) {
