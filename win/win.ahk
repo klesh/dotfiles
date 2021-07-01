@@ -9,9 +9,10 @@ CoordMode, Mouse, Screen ; mouse coordinates relative to the screen
 ; =========================
 ; global RATIO := 0.618
 global RATIO := 0.382
-global ARRANGEMENT := Object()
 global ID_SEEN := Object()
+global ARRANGEMENT := Object()
 global ARRANGEMENT_PATH := A_AppData . "\arrangement.json"
+global PADDING := 10
 LoadArrangement()
 WatchNewWindow()
 ; =========================
@@ -24,8 +25,9 @@ WatchNewWindow()
   Send ^a
   Send {BS}
   return
-#=::SoundSet,+5
-#-::SoundSet,-5
+#=::SoundSet, +5
+#-::SoundSet, -5
+#\::Send {Volume_Mute}
 #BS::#l
 #f:: ToggleActiveWinMaximum()
 ^#p::ShowActiveWinGeometry()
@@ -34,6 +36,8 @@ WatchNewWindow()
 #+j::MoveActiveWinByDirection("right")
 #+k::MoveActiveWinByDirection("left")
 #+r::reload
+#i::IgnoreArrangementForActiveWindow()
+#+i::UnignoreArrangementForActiveWindow()
 #t::ShowDebug()
 
 ; Ctrl + Alt + v : paste as plain text
@@ -97,7 +101,7 @@ Return
 ; Capslock & ,:: Send {PgDn}
 ; Capslock & .:: Send {End}
 
-; Capslock & Space:: SetCapsLockState % !GetKeyState("CapsLock", "T") 
+; Capslock & Space:: SetCapsLockState % !GetKeyState("CapsLock", "T")
 ; +CapsLock::
 ;   Send {~}
 ;   SetCapsLockState % !GetKeyState("CapsLock", "T")
@@ -173,6 +177,7 @@ MoveActiveWinByDirection(direction) {
     WinRestore, A
   }
   global RATIO
+  global PADDING
   GetCursorMonGeometry(x, y, w, h)
   activeWinId := WinExist("A")
   WinGetPosEx(activeWinId, wx, wy, ww, wh, l, t, r, b)
@@ -181,17 +186,16 @@ MoveActiveWinByDirection(direction) {
   ww := floor(w * RATIO)
   wh := h
   if (direction = "right") {
-    wx := ww
+    wx := ww + floor(PADDING / 2)
     ww := w - ww
+  } else {
+    wx := wx + PADDING
   }
-  pos := [wx - l, wy - t, ww + l + r, wh + t + b]
-  ; store arrangement
-  global ARRANGEMENT
-  key := GetActiveWindowClassPath()
-  ARRANGEMENT[key] := pos
-  SaveArrangement()
-  ; end store arrangement
-  WinMove, A,, pos[1], pos[2], pos[3], pos[4]
+  ww := ww - floor(PADDING * 1.5)
+  wy := wy + PADDING
+  wh := wh - PADDING * 2
+  WinMove, A,, wx - l, wy - t, ww + l + r, wh + t + b
+  SaveActiveWindowDirection(direction)
 }
 
 
@@ -215,6 +219,12 @@ LoadArrangement() {
   if not IsObject(ARRANGEMENT) {
     ARRANGEMENT := Object()
   }
+  if not IsObject(ARRANGEMENT["windows"]) {
+    ARRANGEMENT["windows"] := Object()
+  }
+  if not IsObject(ARRANGEMENT["ignore"]) {
+    ARRANGEMENT["ignore"] := Object()
+  }
 }
 
 GetActiveWindowClassPath() {
@@ -228,18 +238,42 @@ IsActiveWindowSeen() {
   WinGet winId, ID, A
   seen := ID_SEEN.HasKey(winId)
   ID_SEEN[winId] := true
+  return seen
+}
+
+IgnoreArrangementForActiveWindow() {
+  global ARRANGEMENT
+  ARRANGEMENT["ignore"][GetActiveWindowClassPath()] := true
+  SaveArrangement()
+}
+
+UnignoreArrangementForActiveWindow() {
+  global ARRANGEMENT
+  ARRANGEMENT["ignore"].Delete(GetActiveWindowClassPath())
+  SaveArrangement()
+}
+
+IsActiveWindowIgnore() {
+  global ARRANGEMENT
+  WinGetTitle, title, A
+  return ARRANGEMENT["ignore"].HasKey(GetActiveWindowClassPath()) or title = ""
+}
+
+SaveActiveWindowDirection(direction) {
+  global ARRANGEMENT
+  key := GetActiveWindowClassPath()
+  ARRANGEMENT["windows"][key] := direction
+  SaveArrangement()
 }
 
 WatchNewWindow() {
   global ARRANGEMENT
   Loop {
       WinWaitActive A        ; makes the active window to be the Last Found
-      if not IsActiveWindowSeen() {
+      if not IsActiveWindowSeen() and not IsActiveWindowIgnore() {
         classPath := GetActiveWindowClassPath()
-        if ARRANGEMENT.HasKey(classPath) {
-          pos := ARRANGEMENT[classPath]
-          WinRestore, A
-          WinMove, A,, pos[1], pos[2], pos[3], pos[4]
+        if ARRANGEMENT["windows"].HasKey(classPath) {
+          MoveActiveWinByDirection(ARRANGEMENT["windows"][classPath])
         }
       }
       WinWaitNotActive       ; waits until the active window changes
