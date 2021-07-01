@@ -17,7 +17,9 @@ cmd pasteoverwrite %{{
     lf -remote 'send clear'
 }}
 cmd e $$EDITOR "$@"
+cmd setexecutable %chmod +x "$f"
 
 map Yp copyfilepath
 map Yn copyfilename
 map P pasteoverwrite
+map X setexecutable
