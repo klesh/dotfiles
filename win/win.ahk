@@ -9,6 +9,12 @@ CoordMode, Mouse, Screen ; mouse coordinates relative to the screen
 ; =========================
 ; global RATIO := 0.618
 global RATIO := 0.382
+global ID_SEEN := Object()
+global ARRANGEMENT := Object()
+global ARRANGEMENT_PATH := A_AppData . "\arrangement.json"
+global PADDING := 10
+LoadArrangement()
+WatchNewWindow()
 ; =========================
 ; BINDINGS
 ; =========================
@@ -19,8 +25,9 @@ global RATIO := 0.382
   Send ^a
   Send {BS}
   return
-#=::SoundSet,+5
-#-::SoundSet,-5
+#=::SoundSet, +5
+#-::SoundSet, -5
+#\::Send {Volume_Mute}
 #BS::#l
 #f:: ToggleActiveWinMaximum()
 ^#p::ShowActiveWinGeometry()
@@ -28,6 +35,10 @@ global RATIO := 0.382
 #k:: FocusWinByDirection("left")
 #+j::MoveActiveWinByDirection("right")
 #+k::MoveActiveWinByDirection("left")
+#+r::reload
+#i::IgnoreArrangementForActiveWindow()
+#+i::UnignoreArrangementForActiveWindow()
+#t::ShowDebug()
 
 ; Ctrl + Alt + v : paste as plain text
 ^!v::
@@ -90,7 +101,7 @@ Return
 ; Capslock & ,:: Send {PgDn}
 ; Capslock & .:: Send {End}
 
-; Capslock & Space:: SetCapsLockState % !GetKeyState("CapsLock", "T") 
+; Capslock & Space:: SetCapsLockState % !GetKeyState("CapsLock", "T")
 ; +CapsLock::
 ;   Send {~}
 ;   SetCapsLockState % !GetKeyState("CapsLock", "T")
@@ -102,6 +113,7 @@ Return
 ; =========================
 
 #Include, WinGetPosEx.ahk
+#Include, JSON.ahk
 
 ShowGeometry(x, y, w, h) {
   MsgBox, , Geometry,% Format("x:{}, y:{}, w: {}, h: {}", x, y, w, h)
@@ -165,6 +177,7 @@ MoveActiveWinByDirection(direction) {
     WinRestore, A
   }
   global RATIO
+  global PADDING
   GetCursorMonGeometry(x, y, w, h)
   activeWinId := WinExist("A")
   WinGetPosEx(activeWinId, wx, wy, ww, wh, l, t, r, b)
@@ -173,11 +186,100 @@ MoveActiveWinByDirection(direction) {
   ww := floor(w * RATIO)
   wh := h
   if (direction = "right") {
-    wx := ww
+    wx := ww + floor(PADDING / 2)
     ww := w - ww
+  } else {
+    wx := wx + PADDING
   }
+  ww := ww - floor(PADDING * 1.5)
+  wy := wy + PADDING
+  wh := wh - PADDING * 2
   WinMove, A,, wx - l, wy - t, ww + l + r, wh + t + b
+  SaveActiveWindowDirection(direction)
 }
+
+
+SaveArrangement() {
+  global ARRANGEMENT
+  global ARRANGEMENT_PATH
+  file := FileOpen(ARRANGEMENT_PATH, "w")
+  file.Write(JSON.Dump(ARRANGEMENT,, 2))
+  file.Close()
+}
+
+LoadArrangement() {
+  global ARRANGEMENT
+  global ARRANGEMENT_PATH
+  try {
+    FileRead, temp, %ARRANGEMENT_PATH%
+    ARRANGEMENT := JSON.Load(temp)
+  } catch {
+    ARRANGEMENT := Object()
+  }
+  if not IsObject(ARRANGEMENT) {
+    ARRANGEMENT := Object()
+  }
+  if not IsObject(ARRANGEMENT["windows"]) {
+    ARRANGEMENT["windows"] := Object()
+  }
+  if not IsObject(ARRANGEMENT["ignore"]) {
+    ARRANGEMENT["ignore"] := Object()
+  }
+}
+
+GetActiveWindowClassPath() {
+  WinGet processPath, ProcessPath, A
+  WinGetClass windowClass, A
+  return processPath . ":" . windowClass
+}
+
+IsActiveWindowSeen() {
+  global ID_SEEN
+  WinGet winId, ID, A
+  seen := ID_SEEN.HasKey(winId)
+  ID_SEEN[winId] := true
+  return seen
+}
+
+IgnoreArrangementForActiveWindow() {
+  global ARRANGEMENT
+  ARRANGEMENT["ignore"][GetActiveWindowClassPath()] := true
+  SaveArrangement()
+}
+
+UnignoreArrangementForActiveWindow() {
+  global ARRANGEMENT
+  ARRANGEMENT["ignore"].Delete(GetActiveWindowClassPath())
+  SaveArrangement()
+}
+
+IsActiveWindowIgnore() {
+  global ARRANGEMENT
+  WinGetTitle, title, A
+  return ARRANGEMENT["ignore"].HasKey(GetActiveWindowClassPath()) or title = ""
+}
+
+SaveActiveWindowDirection(direction) {
+  global ARRANGEMENT
+  key := GetActiveWindowClassPath()
+  ARRANGEMENT["windows"][key] := direction
+  SaveArrangement()
+}
+
+WatchNewWindow() {
+  global ARRANGEMENT
+  Loop {
+      WinWaitActive A        ; makes the active window to be the Last Found
+      if not IsActiveWindowSeen() and not IsActiveWindowIgnore() {
+        classPath := GetActiveWindowClassPath()
+        if ARRANGEMENT["windows"].HasKey(classPath) {
+          MoveActiveWinByDirection(ARRANGEMENT["windows"][classPath])
+        }
+      }
+      WinWaitNotActive       ; waits until the active window changes
+  }
+}
+
 
 ToggleActiveWinMaximum() {
   WinGet, isMax, MinMax, A
@@ -196,4 +298,13 @@ GetSelectedText() {
   selection = %Clipboard% ; save the content of the clipboard
   Clipboard = %tmp% ; restore old content of the clipboard
   return selection
+}
+
+ShowDebug() {
+  ShowActiveWinGeometry()
+}
+
+ShowObject(obj) {
+  msg := JSON.Dump(obj)
+  MsgBox, %msg%
 }
