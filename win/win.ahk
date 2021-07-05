@@ -255,8 +255,18 @@ UnignoreArrangementForActiveWindow() {
 
 IsActiveWindowIgnore() {
   global ARRANGEMENT
-  WinGetTitle, title, A
-  return ARRANGEMENT["ignore"].HasKey(GetActiveWindowClassPath()) or title = ""
+  if (ARRANGEMENT["ignore"].HasKey(GetActiveWindowClassPath())) {
+    return true
+  }
+  ; WinGetTitle, title, A
+  ; if (title = "") {
+  ;   return true
+  ; }
+  WinGet s, Style, A
+  if (not s & +0xC00000) {
+    return true
+  }
+  return false
 }
 
 SaveActiveWindowDirection(direction) {
@@ -301,7 +311,10 @@ GetSelectedText() {
 }
 
 ShowDebug() {
-  ShowActiveWinGeometry()
+  WinGet, s, Style, A
+  if (s & +0xC00000) {
+    SoundBeep, 750, 200
+  }
 }
 
 ShowObject(obj) {

@@ -45,9 +45,9 @@
     "copyFormatting": "none",
     "copyOnSelect": false,
     "defaultProfile": "{2c4de342-38b7-51cf-b940-2309a097f518}",
-    "profiles": 
+    "profiles":
     {
-        "defaults": 
+        "defaults":
         {
             "acrylicOpacity": 0.59999999999999998,
             "colorScheme": "One Half Dark",
@@ -56,7 +56,7 @@
             "fontSize": 12,
             "useAcrylic": false
         },
-        "list": 
+        "list":
         [
             {
                 "commandline": "powershell.exe",
