@@ -14,7 +14,8 @@ global ARRANGEMENT := Object()
 global ARRANGEMENT_PATH := A_AppData . "\arrangement.json"
 global PADDING := 10
 LoadArrangement()
-WatchNewWindow()
+;WatchNewWindow()
+SetTimer, AdjustNewWindow, 1000
 ; =========================
 ; BINDINGS
 ; =========================
@@ -198,7 +199,6 @@ MoveActiveWinByDirection(direction) {
   SaveActiveWindowDirection(direction)
 }
 
-
 SaveArrangement() {
   global ARRANGEMENT
   global ARRANGEMENT_PATH
@@ -253,7 +253,20 @@ UnignoreArrangementForActiveWindow() {
   SaveArrangement()
 }
 
-IsActiveWindowIgnore() {
+IsActiveWindowBorderless() {
+  WinGet s, Style, A
+  if (not s & +0xC00000) {
+    return true
+  }
+  return false
+}
+
+IsActiveWindowSizeboxed() {
+  WinGet, s, Style, A
+  return s & 0x40000
+}
+
+IsActiveWindowIgnored() {
   global ARRANGEMENT
   if (ARRANGEMENT["ignore"].HasKey(GetActiveWindowClassPath())) {
     return true
@@ -262,8 +275,7 @@ IsActiveWindowIgnore() {
   ; if (title = "") {
   ;   return true
   ; }
-  WinGet s, Style, A
-  if (not s & +0xC00000) {
+  if (not IsActiveWindowSizeboxed()) {
     return true
   }
   return false
@@ -276,20 +288,28 @@ SaveActiveWindowDirection(direction) {
   SaveArrangement()
 }
 
-WatchNewWindow() {
-  global ARRANGEMENT
-  Loop {
-      WinWaitActive A        ; makes the active window to be the Last Found
-      if not IsActiveWindowSeen() and not IsActiveWindowIgnore() {
-        classPath := GetActiveWindowClassPath()
-        if ARRANGEMENT["windows"].HasKey(classPath) {
-          MoveActiveWinByDirection(ARRANGEMENT["windows"][classPath])
-        }
-      }
-      WinWaitNotActive       ; waits until the active window changes
-  }
+ActiveWinInfo() {
+  WinGetTitle, title, A
+  WinGetClass, klass, A
+  WinGet processPath, ProcessPath, A
+  return processPath . " " . klass . " " . title
 }
 
+AdjustNewWindow() {
+  global log
+  seen := IsActiveWindowSeen()
+  ignored := IsActiveWindowIgnored()
+  wininfo := ActiveWinInfo()
+  if not seen {
+    LogDebug(Format("win: {1}, seen: {2}, ignore: {3}", wininfo, seen, ignored))
+  }
+  if not seen and not ignored  {
+    classPath := GetActiveWindowClassPath()
+    if ARRANGEMENT["windows"].HasKey(classPath) {
+      MoveActiveWinByDirection(ARRANGEMENT["windows"][classPath])
+    }
+  }
+}
 
 ToggleActiveWinMaximum() {
   WinGet, isMax, MinMax, A
@@ -311,13 +331,17 @@ GetSelectedText() {
 }
 
 ShowDebug() {
-  WinGet, s, Style, A
-  if (s & +0xC00000) {
-    SoundBeep, 750, 200
-  }
+  ShowObject(IsActiveWindowSizeboxed())
 }
 
 ShowObject(obj) {
   msg := JSON.Dump(obj)
   MsgBox, %msg%
+}
+
+LogDebug(msg) {
+  FormatTIme, now, , MM-dd HH:mm:ss
+  log := FileOpen("d:\win.ahk.log", "a")
+  log.WriteLine(Format("[{1}] {2}", now, msg))
+  log.Close()
 }
