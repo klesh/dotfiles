@@ -5,87 +5,89 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 CoordMode, Mouse, Screen ; mouse coordinates relative to the screen
 
 ; =========================
-; CONFIGURATION
+; DEBUGGING
 ; =========================
-; global RATIO := 0.618
-global RATIO := 0.382
-global ID_SEEN := Object()
-global ARRANGEMENT := Object()
-global ARRANGEMENT_PATH := A_AppData . "\arrangement.json"
-global PADDING := 10
-LoadArrangement()
-;WatchNewWindow()
-SetTimer, AdjustNewWindow, 1000
+global DEBUGGING := false
+
+ToggleDebugging() {
+    global DEBUGGING
+    DEBUGGING := not DEBUGGING
+}
+
+LogDebug(msg) {
+    global DEBUGGING
+    if (not DEBUGGING) {
+      return
+    }
+    FormatTIme, now, , MM-dd HH:mm:ss
+    log := FileOpen("d:\win.ahk.log", "a")
+    log.WriteLine(Format("[{1}] {2}", now, msg))
+    log.Close()
+}
+
+
 ; =========================
-; BINDINGS
+; LIBS
 ; =========================
+InitWindowManager()
+InitClipboardManager()
+#Include, ahk\JSON.ahk
+#Include, ahk\WinGetPosEx.ahk
+#Include, ahk\WindowManager.ahk
+#Include, ahk\ClipboardManager.ahk
+
+
+; =========================
+; KEY BINDINGS
+; =========================
+; Super + Shift + r             => Reload ahk
+#+r::Reload
+; Ctrl + ESC                    => Ctrl+`
 ^Esc:: Send ^{``}
-*#q:: !F4
-#Esc:: Reload
+; Win + q                     => Close window
+#q:: !F4
+; Ctrl+ backspace               => Delete all text
 ^BS::
-  Send ^a
-  Send {BS}
-  return
+    Send ^a
+    Send {BS}
+    return
+; Win + =                       => Increase Volume
 #=::SoundSet, +5
+; Win + -                       => Decrease volume
 #-::SoundSet, -5
+; Win + \                       => Toggle mute
 #\::Send {Volume_Mute}
+; Win + backspace               => Lock
 #BS::#l
+
+; WINDOW MANAGER
+
+; Win + f                       => Toggle window maximum
 #f:: ToggleActiveWinMaximum()
-^#p::ShowActiveWinGeometry()
+; Win + j                       => Focus right window
 #j:: FocusWinByDirection("right")
+; Win + k                       => Focus left window
 #k:: FocusWinByDirection("left")
+; Win + Shift + j               => Move active window to right side
 #+j::MoveActiveWinByDirection("right")
+; Win + Shift + k               => Move active window to left side
 #+k::MoveActiveWinByDirection("left")
-#+r::reload
-#i::IgnoreArrangementForActiveWindow()
-#+i::UnignoreArrangementForActiveWindow()
-#t::ShowDebug()
+; Win + Shift + b               => Blacklist active window so it won't be arranged when launched
+#+b::BlacklistArrangementForActiveWindow()
+; Win + Shift + b               => Whitelist active window so it always be arranged when launched
+#+w::WhitelistArrangementForActiveWindow()
+; Win + Shift + i               => Remove active window from Blacklist/Whitelist
+#+i::IgnoreArrangementForActiveWindow()
+; Win + Shift + d               => Toggle debug logging
+#+d::ToggleDebugging()
 
-; Ctrl + Alt + v : paste as plain text
-^!v::
-    Clip0 = %ClipBoardAll%
-    ClipBoard = %ClipBoard% ; Convert to plain text
-    Send ^v
-    Sleep 1000
-    ClipBoard = %Clip0%
-    VarSetCapacity(Clip0, 0) ; Free memory
-Return
 
-; Ctrl + Alt + Shift + v : paste as plain test a replace \ with /
-^+!v::
-    Clip0 = %ClipBoardAll%
-    ClipBoard := StrReplace(ClipBoard, "\", "/") ; Convert to plain text
-    Send ^v
-    Sleep 1000
-    ClipBoard = %Clip0%
-    VarSetCapacity(Clip0, 0) ; Free memory
-Return
+; CLIPBOARD MANAGER
+#c::AlternativeCopy()
+#v::AlternativePaste()
 
-; move cursor to center of window after switching
-~#1 Up::
-~#2 Up::
-~#3 Up::
-~#4 Up::
-~#5 Up::
-~#6 Up::
-~#7 Up::
-~#8 Up::
-~#9 Up::
-  Sleep 100
-  SetCursorToCenterOfActiveWin()
-  return
-~!Tab Up::
-  while (GetKeyState("Alt") != 0 or GetKeyState("Tab") != 0) {
-    Sleep 50
-  }
-  Sleep 100
-  WinGetPos, x, y, w, h, A
-  SetCursorToCenterOfActiveWin()
-  return
 
-; =========================
 ; CAPSLOCK AS HYBRID KEY
-; =========================
 
 ; Capslock & h:: Send {Left}
 ; Capslock & j:: Send {Down}
@@ -108,240 +110,3 @@ Return
 ;   SetCapsLockState % !GetKeyState("CapsLock", "T")
 ; Return
 ; Capslock::return
-
-; =========================
-; FUNCTIONS
-; =========================
-
-#Include, WinGetPosEx.ahk
-#Include, JSON.ahk
-
-ShowGeometry(x, y, w, h) {
-  MsgBox, , Geometry,% Format("x:{}, y:{}, w: {}, h: {}", x, y, w, h)
-}
-
-ShowActiveWinGeometry() {
-  WinGetPos x, y, w, h, A
-  ShowGeometry(x, y, w, h)
-}
-
-SetCursorPos(x, y) {
-  DllCall("SetCursorPos", "int", x, "int", y)
-}
-
-FocusWinUnderCursor() {
-  MouseGetPos, MouseX, MouseY, WinId
-  WinActivate, ahk_id %WinId%
-}
-
-SetCursorToCenterOfActiveWin() {
-  WinGetPos x, y, w, h, A
-  SetCursorPos(x + w / 2,  y + h / 2)
-}
-
-FocusWinByPos(x, y) {
-  SetCursorPos(x, y)
-  FocusWinUnderCursor()
-  SetCursorToCenterOfActiveWin()
-}
-
-GetCursorMonGeometry(ByRef x, ByRef y, ByRef w, ByRef h) {
-  MouseGetPos, MouseX, MouseY
-  SysGet, mc, MonitorCount
-  ; find current monitor
-  mi := 0
-  loop {
-    SysGet, mon, MonitorWorkArea, %mi%
-    if (monLeft < MouseX and monRight > MouseX) {
-      x := monLeft
-      y := monTop
-      w := monRight - monLeft
-      h := monBottom - monTop
-      return
-    }
-  }
-}
-
-FocusWinByDirection(direction) {
-  global RATIO
-  GetCursorMonGeometry(x, y, w, h)
-  wf := RATIO / 2
-  hf := 0.5
-  if (direction = "right")
-    wf := RATIO + (1 - RATIO) / 2
-  FocusWinByPos(x + w * wf, y + h * hf)
-}
-
-MoveActiveWinByDirection(direction) {
-  WinGet, isMax, MinMax, A
-  if (isMax) {
-    WinRestore, A
-  }
-  global RATIO
-  global PADDING
-  GetCursorMonGeometry(x, y, w, h)
-  activeWinId := WinExist("A")
-  WinGetPosEx(activeWinId, wx, wy, ww, wh, l, t, r, b)
-  wx := x
-  wy := y
-  ww := floor(w * RATIO)
-  wh := h
-  if (direction = "right") {
-    wx := ww + floor(PADDING / 2)
-    ww := w - ww
-  } else {
-    wx := wx + PADDING
-  }
-  ww := ww - floor(PADDING * 1.5)
-  wy := wy + PADDING
-  wh := wh - PADDING * 2
-  WinMove, A,, wx - l, wy - t, ww + l + r, wh + t + b
-  SaveActiveWindowDirection(direction)
-}
-
-SaveArrangement() {
-  global ARRANGEMENT
-  global ARRANGEMENT_PATH
-  file := FileOpen(ARRANGEMENT_PATH, "w")
-  file.Write(JSON.Dump(ARRANGEMENT,, 2))
-  file.Close()
-}
-
-LoadArrangement() {
-  global ARRANGEMENT
-  global ARRANGEMENT_PATH
-  try {
-    FileRead, temp, %ARRANGEMENT_PATH%
-    ARRANGEMENT := JSON.Load(temp)
-  } catch {
-    ARRANGEMENT := Object()
-  }
-  if not IsObject(ARRANGEMENT) {
-    ARRANGEMENT := Object()
-  }
-  if not IsObject(ARRANGEMENT["windows"]) {
-    ARRANGEMENT["windows"] := Object()
-  }
-  if not IsObject(ARRANGEMENT["ignore"]) {
-    ARRANGEMENT["ignore"] := Object()
-  }
-}
-
-GetActiveWindowClassPath() {
-  WinGet processPath, ProcessPath, A
-  WinGetClass windowClass, A
-  return processPath . ":" . windowClass
-}
-
-IsActiveWindowSeen() {
-  global ID_SEEN
-  WinGet winId, ID, A
-  seen := ID_SEEN.HasKey(winId)
-  ID_SEEN[winId] := true
-  return seen
-}
-
-IgnoreArrangementForActiveWindow() {
-  global ARRANGEMENT
-  ARRANGEMENT["ignore"][GetActiveWindowClassPath()] := true
-  SaveArrangement()
-}
-
-UnignoreArrangementForActiveWindow() {
-  global ARRANGEMENT
-  ARRANGEMENT["ignore"].Delete(GetActiveWindowClassPath())
-  SaveArrangement()
-}
-
-IsActiveWindowBorderless() {
-  WinGet s, Style, A
-  if (not s & +0xC00000) {
-    return true
-  }
-  return false
-}
-
-IsActiveWindowSizeboxed() {
-  WinGet, s, Style, A
-  return s & 0x40000
-}
-
-IsActiveWindowIgnored() {
-  global ARRANGEMENT
-  if (ARRANGEMENT["ignore"].HasKey(GetActiveWindowClassPath())) {
-    return true
-  }
-  ; WinGetTitle, title, A
-  ; if (title = "") {
-  ;   return true
-  ; }
-  if (not IsActiveWindowSizeboxed()) {
-    return true
-  }
-  return false
-}
-
-SaveActiveWindowDirection(direction) {
-  global ARRANGEMENT
-  key := GetActiveWindowClassPath()
-  ARRANGEMENT["windows"][key] := direction
-  SaveArrangement()
-}
-
-ActiveWinInfo() {
-  WinGetTitle, title, A
-  WinGetClass, klass, A
-  WinGet processPath, ProcessPath, A
-  return processPath . " " . klass . " " . title
-}
-
-AdjustNewWindow() {
-  global log
-  seen := IsActiveWindowSeen()
-  ignored := IsActiveWindowIgnored()
-  wininfo := ActiveWinInfo()
-  if not seen {
-    LogDebug(Format("win: {1}, seen: {2}, ignore: {3}", wininfo, seen, ignored))
-  }
-  if not seen and not ignored  {
-    classPath := GetActiveWindowClassPath()
-    if ARRANGEMENT["windows"].HasKey(classPath) {
-      MoveActiveWinByDirection(ARRANGEMENT["windows"][classPath])
-    }
-  }
-}
-
-ToggleActiveWinMaximum() {
-  WinGet, isMax, MinMax, A
-  if (isMax) {
-    WinRestore, A
-  } else {
-    WinMaximize, A
-  }
-}
-
-GetSelectedText() {
-  tmp = %ClipboardAll% ; save clipboard
-  Clipboard := "" ; clear clipboard
-  Send, ^c ; simulate Ctrl+C (=selection in clipboard)
-  ClipWait, 0, 1 ; wait until clipboard contains data
-  selection = %Clipboard% ; save the content of the clipboard
-  Clipboard = %tmp% ; restore old content of the clipboard
-  return selection
-}
-
-ShowDebug() {
-  ShowObject(IsActiveWindowSizeboxed())
-}
-
-ShowObject(obj) {
-  msg := JSON.Dump(obj)
-  MsgBox, %msg%
-}
-
-LogDebug(msg) {
-  FormatTIme, now, , MM-dd HH:mm:ss
-  log := FileOpen("d:\win.ahk.log", "a")
-  log.WriteLine(Format("[{1}] {2}", now, msg))
-  log.Close()
-}
