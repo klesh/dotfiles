@@ -14,14 +14,14 @@ ToggleDebugging() {
     DEBUGGING := not DEBUGGING
 }
 
-LogDebug(msg) {
+LogDebug(params*) {
     global DEBUGGING
     if (not DEBUGGING) {
       return
     }
     FormatTIme, now, , MM-dd HH:mm:ss
     log := FileOpen("d:\win.ahk.log", "a")
-    log.WriteLine(Format("[{1}] {2}", now, msg))
+    log.WriteLine(Format("[{1}] {2}", now, Format(params*)))
     log.Close()
 }
 

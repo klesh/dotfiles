@@ -113,14 +113,14 @@ MoveActiveWinByDirection(direction) {
     wy := wy + PADDING
     wh := wh - PADDING * 2
     WinMove, A,, wx - l, wy - t, ww + l + r, wh + t + b
-    LogDebug(Format("move {1} to {2}", activeWinId, direction))
+    LogDebug("move {1} to {2}", activeWinId, direction)
     SaveActiveWindowDirection(direction)
 }
 
 SaveArrangement() {
-    LogDebug("SaveArrangement start")
     global ARRANGEMENT
     global ARRANGEMENT_PATH
+    LogDebug("SaveArrangement to {1} start", ARRANGEMENT_PATH)
     file := FileOpen(ARRANGEMENT_PATH, "w")
     file.Write(JSON.Dump(ARRANGEMENT,, 2))
     file.Close()
@@ -130,7 +130,7 @@ SaveArrangement() {
 LoadArrangement() {
     global ARRANGEMENT
     global ARRANGEMENT_PATH
-    LogDebug("LoadArrangement start " .ARRANGEMENT_PATH)
+    LogDebug("LoadArrangement start {1}", ARRANGEMENT_PATH)
     try {
       FileRead, temp, %ARRANGEMENT_PATH%
       ARRANGEMENT := JSON.Load(temp)
@@ -232,11 +232,12 @@ ActiveWinInfo() {
 }
 
 AdjustNewWindow() {
+    global ARRANGEMENT
     seen := IsActiveWindowSeen()
     arrangable := IsActiveWindowArrangable()
     wininfo := ActiveWinInfo()
     if not seen {
-      LogDebug(Format("win: {1}, seen: {2}, arrangable: {3}", wininfo, seen, arrangable))
+      LogDebug("win: {1}, seen: {2}, arrangable: {3}", wininfo, seen, arrangable)
     }
     if not seen and arrangable {
       windowPath := GetActiveWindowPath()
