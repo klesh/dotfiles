@@ -7,7 +7,7 @@ CoordMode, Mouse, Screen ; mouse coordinates relative to the screen
 ; =========================
 ; DEBUGGING
 ; =========================
-global DEBUGGING := false
+global DEBUGGING := true
 
 ToggleDebugging() {
     global DEBUGGING

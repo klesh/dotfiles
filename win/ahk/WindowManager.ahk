@@ -1,10 +1,4 @@
 ; WINDOWS MANAGER
-; global RATIO := 0.618
-global RATIO := 0.382
-global ID_SEEN := Object()
-global ARRANGEMENT := Object()
-global ARRANGEMENT_PATH := A_AppData . "\arrangement.json"
-global PADDING := 10
 
 ; =========================
 ; KEY BINDING
@@ -37,6 +31,13 @@ global PADDING := 10
 ; =========================
 
 InitWindowManager() {
+    LogDebug("InitWindowManager")
+    global RATIO := 0.618
+    global RATIO := 0.382
+    global ID_SEEN := Object()
+    global ARRANGEMENT := Object()
+    global ARRANGEMENT_PATH := A_AppData . "\arrangement.json"
+    global PADDING := 10
     LoadArrangement()
     SetTimer, AdjustNewWindow, 1000
 }
@@ -112,20 +113,24 @@ MoveActiveWinByDirection(direction) {
     wy := wy + PADDING
     wh := wh - PADDING * 2
     WinMove, A,, wx - l, wy - t, ww + l + r, wh + t + b
+    LogDebug(Format("move {1} to {2}", activeWinId, direction))
     SaveActiveWindowDirection(direction)
 }
 
 SaveArrangement() {
+    LogDebug("SaveArrangement start")
     global ARRANGEMENT
     global ARRANGEMENT_PATH
     file := FileOpen(ARRANGEMENT_PATH, "w")
     file.Write(JSON.Dump(ARRANGEMENT,, 2))
     file.Close()
+    LogDebug("SaveArrangement end")
 }
 
 LoadArrangement() {
     global ARRANGEMENT
     global ARRANGEMENT_PATH
+    LogDebug("LoadArrangement start " .ARRANGEMENT_PATH)
     try {
       FileRead, temp, %ARRANGEMENT_PATH%
       ARRANGEMENT := JSON.Load(temp)
@@ -144,6 +149,7 @@ LoadArrangement() {
     if not IsObject(ARRANGEMENT["whitelist"]) {
       ARRANGEMENT["whitelist"] := Object()
     }
+    LogDebug("LoadArrangement end")
 }
 
 GetActiveWindowPath() {
