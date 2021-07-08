@@ -7,7 +7,7 @@ CoordMode, Mouse, Screen ; mouse coordinates relative to the screen
 ; =========================
 ; DEBUGGING
 ; =========================
-global DEBUGGING := true
+global DEBUGGING := false
 
 ToggleDebugging() {
     global DEBUGGING
@@ -84,6 +84,7 @@ InitClipboardManager()
 
 ; CLIPBOARD MANAGER
 #c::AlternativeCopy()
+#+c::CopyClipboardToAlternative()
 #v::AlternativePaste()
 
 
