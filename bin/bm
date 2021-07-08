@@ -7,12 +7,6 @@ if set -q BOOKMARK_SEARCHER
 else
     set BOOKMARK_SEARCHER fzf --layout reverse
 end
-if string match -iq '*microsoft*' (uname -r)
-    function xdg-open
-        powershell.exe -noprofile "start-process '$argv'"
-    end
-    alias disown='echo done'  # no need to disown on WSL
-end
 
 function _help
     echo "Organize your bookmark with markdown"
@@ -107,7 +101,7 @@ function _open_urls
     set LINK_PATTERN  '\[(.*?)\]\((.*?)\)'
     while read LINE
         if set link (string match -r $LINK_PATTERN $LINE)
-             echo '' | xdg-open $link[3] &>/dev/null &
+             echo '' | x-open $link[3] &>/dev/null &
              disown
              sleep 0.1
         end
