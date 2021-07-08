@@ -1,12 +1,5 @@
 #!/bin/bash
 
-
-#if test -n "$TMUX"
-    #tmux rename-window $argv[-1]
-    #/bin/ssh $argv
-    #
-#end
-
 tmux_auto_rename() {
     tmux setw automatic-rename
 }
