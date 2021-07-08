@@ -51,13 +51,9 @@ if status is-interactive
     alias issh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
     alias iscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
     alias dt='date "+%Y%m%d-%H%M%S"'
-    if string match -iq '*microsoft*' (uname -r)
-        alias open='powershell.exe -noprofile start-process'
-        alias xdg-open='open'
-    end
 
     # === PATH and file sourcing
-    append_paths ~/go/bin ~/bin ~/.local/bin ~/.yarn/bin ~/dotfiles/bin ~/dotfiles/devops/bin
+    append_paths ~/go/bin ~/bin ~/.local/bin ~/.yarn/bin ~/dotfiles/bin ~/dotfiles/devops/bin ~/Nextcloud/bin
     source_files /usr/share/autojump/autojump.fish /usr/local/share/autojump/autojump.fish \
         ~/.jabba/jabba.fish \
         ~/.asdf/asdf.fish \
@@ -65,13 +61,5 @@ if status is-interactive
 
     # === auto cd into last activated directory
     test "$PWD" = "$HOME" && cd $last_pwd
-
-    #if test -n "$TMUX"
-        #function ssh
-            #tmux rename-window $argv[-1]
-            #command ssh $argv
-            #tmux setw automatic-rename
-        #end
-    #end
 end
 
