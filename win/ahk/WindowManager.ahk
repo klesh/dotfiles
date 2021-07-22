@@ -187,7 +187,7 @@ MoveActiveWinByDirection(direction) {
     LogDebug("left geometry: x: {1}, y: {2}, w: {3}, h: {4}", wx, wy, ww, wh)
     ; right
     if (direction = "right") {
-      wx := wx + ww
+      wx := wx + ww + floor(PADDING / 2)
       ww := w - ww
     LogDebug("right geometry: x: {1}, y: {2}, w: {3}, h: {4}", wx, wy, ww, wh)
     } else {
@@ -199,7 +199,6 @@ MoveActiveWinByDirection(direction) {
     ww := ww + l + r
     wh := wh + t + b
     ; padding
-    wx := wx + floor(PADDING / 2)
     ww := ww - floor(PADDING * 1.5)
     wy := wy + PADDING
     wh := wh - PADDING * 2

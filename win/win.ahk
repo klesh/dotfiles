@@ -32,7 +32,6 @@ LogDebug(params*) {
 InitWindowManager()
 InitClipboardManager()
 #Include, ahk\JSON.ahk
-#Include, ahk\WinGetPosEx.ahk
 #Include, ahk\WindowManager.ahk
 #Include, ahk\ClipboardManager.ahk
 
