@@ -70,11 +70,16 @@ GetCursorMonGeometry(ByRef x, ByRef y, ByRef w, ByRef h) {
     loop {
       SysGet, mon, MonitorWorkArea, %mi%
       if (monLeft < MouseX and monRight > MouseX) {
-        x := monLeft
-        y := monTop
-        w := monRight - monLeft
-        h := monBottom - monTop
-        return
+          x := monLeft
+          y := monTop
+          w := monRight - monLeft
+          h := monBottom - monTop
+          return
+      }
+      mi := mi + 1
+      if (mi >= mc) {
+          MsgBox, "unable to find monitor under the cursor"
+          return
       }
     }
 }
