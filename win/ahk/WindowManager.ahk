@@ -32,7 +32,7 @@
 
 InitWindowManager() {
     LogDebug("InitWindowManager")
-    global RATIO := 0.618
+    ; global RATIO := 0.618
     global RATIO := 0.382
     global ID_SEEN := Object()
     global ARRANGEMENT := Object()
@@ -64,12 +64,24 @@ FocusWinByPos(x, y) {
 
 GetCursorMonGeometry(ByRef x, ByRef y, ByRef w, ByRef h) {
     MouseGetPos, MouseX, MouseY
+    GetMonGeometryByPos(MouseX, MouseY, x, y, w, h)
+}
+
+GetActiveWindowMonGeometry(ByRef x, ByRef y, ByRef w, ByRef h) {
+    WinGetPos, wx, wy, ww, wh, A
+    GetMonGeometryByPos(wx + ww / 2, wy + wh / 2, x, y, w, h)
+}
+
+GetMonGeometryByPos(px, py, ByRef x, ByRef y, ByRef w, ByRef h) {
+    ; find monitor by position
     SysGet, mc, MonitorCount
-    ; find current monitor
     mi := 0
     loop {
+      if (mi > mc) {
+          break
+      }
       SysGet, mon, MonitorWorkArea, %mi%
-      if (monLeft < MouseX and monRight > MouseX) {
+      if (monLeft < px and monRight > px and monTop < py and monBottom > py) {
           x := monLeft
           y := monTop
           w := monRight - monLeft
@@ -77,11 +89,9 @@ GetCursorMonGeometry(ByRef x, ByRef y, ByRef w, ByRef h) {
           return
       }
       mi := mi + 1
-      if (mi >= mc) {
-          MsgBox, "unable to find monitor under the cursor"
-          return
-      }
     }
+    msg := Format("unable to find monitor for pos {1}, {2}", px, py)
+    MsgBox, %msg%
 }
 
 FocusWinByDirection(direction) {
@@ -94,6 +104,70 @@ FocusWinByDirection(direction) {
     FocusWinByPos(x + w * wf, y + h * hf)
 }
 
+GetActiveWindowMargins(hwnd, monX, monY, monW, monH, ByRef l, ByRef t, ByRef r, ByRef b) {
+    Static Dummy5693
+          ,RECTPlus
+          ,S_OK:=0x0
+          ,DWMWA_EXTENDED_FRAME_BOUNDS:=9
+
+    ;-- Workaround for AutoHotkey Basic
+    PtrType:=(A_PtrSize=8) ? "Ptr":"UInt"
+
+    ;-- Get the window's dimensions (excluding shadows)
+    ;   Note: Only the first 16 bytes of the RECTPlus structure are used by the
+    ;   DwmGetWindowAttribute and GetWindowRect functions.
+    VarSetCapacity(RECTPlus,32,0)
+    DWMRC:=DllCall("dwmapi\DwmGetWindowAttribute"
+        ,PtrType,hwnd                                   ;-- hwnd
+        ,"UInt",DWMWA_EXTENDED_FRAME_BOUNDS             ;-- dwAttribute
+        ,PtrType,&RECTPlus                              ;-- pvAttribute
+        ,"UInt",16)                                     ;-- cbAttribute
+
+    if (DWMRC<>S_OK)
+    {
+        if ErrorLevel in -3,-4  ;-- Dll or function not found (older than Vista)
+        {
+            ;-- Do nothing else (for now)
+        }
+        else
+        {
+            outputdebug,
+               (ltrim join`s
+                Function: %A_ThisFunc% -
+                Unknown error calling "dwmapi\DwmGetWindowAttribute".
+                RC=%DWMRC%,
+                ErrorLevel=%ErrorLevel%,
+                A_LastError=%A_LastError%.
+                "GetWindowRect" used instead.
+               )
+        }
+
+        ;-- Collect the position and size from "GetWindowRect"
+        DllCall("GetWindowRect",PtrType,hWindow,PtrType,&RECTPlus)
+    }
+
+    ;-- Populate the output variables
+    x1 := NumGet(RECTPlus,0,"Int")
+    y1 := NumGet(RECTPlus,4,"Int")
+    x2 := NumGet(RECTPlus,8,"Int")
+    y2 := NumGet(RECTPlus,12,"Int")
+
+    WinGetPos, winX, winY, winW, winH, A
+    ;-- Convert to scaled unit
+    scale := Round((x2 - x1) / winW*10)/10
+    x1 := (x1 - monX) / scale + monX
+    y1 := (y1 - monY) / scale + monY
+    x2 := (x2 - monX) / scale + monX
+    y2 := (y2 - monY) / scale + monY
+    w := (x2 - x1)
+    h := (y2 - y1)
+    l := x1 - winX
+    t := y1 - winY
+    r := winX+winW-x2
+    b := winY+winH-y2
+    LogDebug("active window margins: {1} {2} {3} {4}", l, t, r, b)
+}
+
 MoveActiveWinByDirection(direction) {
     WinGet, isMax, MinMax, A
     if (isMax) {
@@ -101,24 +175,36 @@ MoveActiveWinByDirection(direction) {
     }
     global RATIO
     global PADDING
-    GetCursorMonGeometry(x, y, w, h)
     activeWinId := WinExist("A")
-    WinGetPosEx(activeWinId, wx, wy, ww, wh, l, t, r, b)
+    GetActiveWindowMonGeometry(x, y, w, h)
+    GetActiveWindowMargins(activeWinId, x, y, w, h, l, t, r, b)
+    LogDebug("monitor geometry x: {1}, y: {2}, w: {3}, h: {4}", x, y, w, h)
+    ; left
     wx := x
     wy := y
     ww := floor(w * RATIO)
     wh := h
+    LogDebug("left geometry: x: {1}, y: {2}, w: {3}, h: {4}", wx, wy, ww, wh)
+    ; right
     if (direction = "right") {
-      wx := ww + floor(PADDING / 2)
+      wx := wx + ww
       ww := w - ww
+    LogDebug("right geometry: x: {1}, y: {2}, w: {3}, h: {4}", wx, wy, ww, wh)
     } else {
       wx := wx + PADDING
     }
+    ; adjust for aero margins
+    wx := wx - l
+    wy := wy - t
+    ww := ww + l + r
+    wh := wh + t + b
+    ; padding
+    wx := wx + floor(PADDING / 2)
     ww := ww - floor(PADDING * 1.5)
     wy := wy + PADDING
     wh := wh - PADDING * 2
-    WinMove, A,, wx - l, wy - t, ww + l + r, wh + t + b
-    LogDebug("move {1} to {2}", activeWinId, direction)
+    WinMove, A,, wx, wy, ww, wh
+    LogDebug("move win to x: {1}, y: {2}, w: {3}, h: {4}", wx, wy, ww, wh)
     SaveActiveWindowDirection(direction)
 }
 
