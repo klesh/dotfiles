@@ -273,12 +273,13 @@ MoveCursorToMonitor(direction) {
 }
 
 MoveWindowToMonitor(direction) {
+    WinRestore, A
     if (GetCursorNearestMonitor(direction, ml, mt, mr, mb)) {
-        WinGetPos wx, wy, ww, wh, A
         mw := mr - ml
         mh := mb - mt
-        ww := mw * 0.8
-        wh := mh * 0.8
+        LogDebug("move win to mon size: {1}, {2}, {3}, {4}, {5}, {6}", ml, mt, mr, mb, mw, mh)
+        ww := mw * 0.5
+        wh := mh * 0.5
         wx := ml + ww / 2
         wy := mt + wh / 2
         LogDebug("move win to mon: {1}, {2}, {3}, {4}", wx, wy, ww, wh)
