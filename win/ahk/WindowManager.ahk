@@ -73,25 +73,23 @@ GetActiveWindowMonGeometry(ByRef x, ByRef y, ByRef w, ByRef h) {
 }
 
 GetMonGeometryByPos(px, py, ByRef x, ByRef y, ByRef w, ByRef h) {
-    ; find monitor by position
     SysGet, mc, MonitorCount
-    mi := 0
+    mi := 1
     loop {
-      if (mi > mc) {
-          break
-      }
-      SysGet, mon, MonitorWorkArea, %mi%
-      if (monLeft < px and monRight > px and monTop < py and monBottom > py) {
-          x := monLeft
-          y := monTop
-          w := monRight - monLeft
-          h := monBottom - monTop
-          return
-      }
-      mi := mi + 1
+        if (mi > mc) {
+            break
+        }
+        SysGet, mon, MonitorWorkArea, %mi%
+        if (monLeft < px and monRight > px and monTop < py and monBottom > py) {
+            x := monLeft
+            y := monTop
+            w := monRight - monLeft
+            h := monBottom - monTop
+            return
+        }
+        mi := mi + 1
     }
-    msg := Format("unable to find monitor for pos {1}, {2}", px, py)
-    MsgBox, %msg%
+    LogDebug("unable to find monitor for pos {1}, {2}", px, py)
 }
 
 FocusWinByDirection(direction) {
@@ -168,6 +166,27 @@ GetActiveWindowMargins(hwnd, monX, monY, monW, monH, ByRef l, ByRef t, ByRef r, 
     LogDebug("active window margins: {1} {2} {3} {4}", l, t, r, b)
 }
 
+ToggleActiveWinMaximum() {
+    WinGet, isMax, MinMax, A
+    if (isMax) {
+      WinRestore, A
+    } else {
+      WinMaximize, A
+    }
+}
+
+ArrangeActiveWindow(method) {
+    if (method = "monocle") {
+        WinGet, isMax, MinMax, A
+        if (not isMax) {
+            WinMaximize, A
+        }
+    } else {
+        MoveActiveWinByDirection(method)
+    }
+    SaveActiveWindowDirection(method)
+}
+
 MoveActiveWinByDirection(direction) {
     WinGet, isMax, MinMax, A
     if (isMax) {
@@ -204,7 +223,69 @@ MoveActiveWinByDirection(direction) {
     wh := wh - PADDING * 2
     WinMove, A,, wx, wy, ww, wh
     LogDebug("move win to x: {1}, y: {2}, w: {3}, h: {4}", wx, wy, ww, wh)
-    SaveActiveWindowDirection(direction)
+}
+
+GetCursorNearestMonitor(direction, ByRef ml, ByRef mt, ByRef mr, ByRef mb) {
+    MouseGetPos x, y
+    if (direction = "right") {    ; start at right most, and search for nearest monitor
+        ml := 10000
+        mt := 10000
+        mr := 10000
+        mb := 10000
+    } else {
+        ml := -10000
+        mt := -10000
+        mr := -10000
+        mb := -10000
+    }
+    SysGet, mc, MonitorCount
+    mi := 1
+    loop {
+        if (mi > mc) {
+            break
+        }
+        SysGet, mon, MonitorWorkArea, %mi%
+        if (direction = "right") {
+            if (monLeft > x and monLeft < ml) {
+                ml := monLeft
+                mt := monTop
+                mr := monRight
+                mb := monBottom
+            }
+        } else {
+            if (monRight < x and monRight > mr) {
+                ml := monLeft
+                mt := monTop
+                mr := monRight
+                mb := monBottom
+            }
+        }
+        mi := mi + 1
+    }
+    return Abs(ml) != 10000
+}
+
+MoveCursorToMonitor(direction) {
+    if (GetCursorNearestMonitor(direction, ml, mt, mr, mb)) {
+        SetCursorPos((ml+mr)/2, (mt + mb)/2)
+        FocusWinUnderCursor()
+    }
+}
+
+MoveWindowToMonitor(direction) {
+    if (GetCursorNearestMonitor(direction, ml, mt, mr, mb)) {
+        WinGetPos wx, wy, ww, wh, A
+        mw := mr - ml
+        mh := mb - mt
+        ww := mw * 0.8
+        wh := mh * 0.8
+        wx := ml + ww / 2
+        wy := mt + wh / 2
+        LogDebug("move win to mon: {1}, {2}, {3}, {4}", wx, wy, ww, wh)
+        WinMove, A,, wx, wy, ww, wh
+        ArrangeActiveWindowFromStorage()
+        SetCursorToCenterOfActiveWin()
+    }
 }
 
 SaveArrangement() {
@@ -245,7 +326,8 @@ LoadArrangement() {
 GetActiveWindowPath() {
     WinGet processPath, ProcessPath, A
     WinGetClass windowClass, A
-    return processPath . ":" . windowClass
+    GetActiveWindowMonGeometry(x, y, w, h)
+    return Format("{1}_{2}\{3}\{4}", w, h, processPath, windowClass)
 }
 
 IsActiveWindowSeen() {
@@ -321,8 +403,15 @@ ActiveWinInfo() {
     return Format("{1}:{2}[{3}]{4}", processPath, klass, id, title)
 }
 
-AdjustNewWindow() {
+ArrangeActiveWindowFromStorage() {
     global ARRANGEMENT
+    windowPath := GetActiveWindowPath()
+    if ARRANGEMENT["windows"].HasKey(windowPath) {
+      ArrangeActiveWindow(ARRANGEMENT["windows"][windowPath])
+    }
+}
+
+AdjustNewWindow() {
     seen := IsActiveWindowSeen()
     arrangable := IsActiveWindowArrangable()
     wininfo := ActiveWinInfo()
@@ -330,18 +419,6 @@ AdjustNewWindow() {
       LogDebug("win: {1}, seen: {2}, arrangable: {3}", wininfo, seen, arrangable)
     }
     if not seen and arrangable {
-      windowPath := GetActiveWindowPath()
-      if ARRANGEMENT["windows"].HasKey(windowPath) {
-        MoveActiveWinByDirection(ARRANGEMENT["windows"][windowPath])
-      }
-    }
-}
-
-ToggleActiveWinMaximum() {
-    WinGet, isMax, MinMax, A
-    if (isMax) {
-      WinRestore, A
-    } else {
-      WinMaximize, A
+        ArrangeActiveWindowFromStorage()
     }
 }

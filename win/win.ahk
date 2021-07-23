@@ -7,7 +7,7 @@ CoordMode, Mouse, Screen ; mouse coordinates relative to the screen
 ; =========================
 ; DEBUGGING
 ; =========================
-global DEBUGGING := false
+global DEBUGGING := true
 
 ToggleDebugging() {
     global DEBUGGING
@@ -25,12 +25,25 @@ LogDebug(params*) {
     log.Close()
 }
 
+SetDisableLockWorkstationRegKeyValue(value) {
+    RegWrite, REG_DWORD, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Policies\System, DisableLockWorkstation, %value%
+}
+
+
+LockWorkStation() {
+    SetDisableLockWorkstationRegKeyValue( 0 )
+    ; Lock
+    DllCall( "User32\LockWorkStation" )
+    ; Disable locking again
+    SetDisableLockWorkstationRegKeyValue( 1 )
+}
 
 ; =========================
 ; LIBS
 ; =========================
 InitWindowManager()
 InitClipboardManager()
+SetDisableLockWorkstationRegKeyValue(1)  ; in order to remap win+l
 #Include, ahk\JSON.ahk
 #Include, ahk\WindowManager.ahk
 #Include, ahk\ClipboardManager.ahk
@@ -57,20 +70,20 @@ InitClipboardManager()
 ; Win + \                       => Toggle mute
 #\::Send {Volume_Mute}
 ; Win + backspace               => Lock
-#BS::#l
+#BS::LockWorkStation()
 
 ; WINDOW MANAGER
 
-; Win + f                       => Toggle window maximum
-#f:: ToggleActiveWinMaximum()
 ; Win + j                       => Focus right window
 #j:: FocusWinByDirection("right")
 ; Win + k                       => Focus left window
 #k:: FocusWinByDirection("left")
+; Win + f                       => Move active window as monocle
+#f::ArrangeActiveWindow("monocle")
 ; Win + Shift + j               => Move active window to right side
-#+j::MoveActiveWinByDirection("right")
+#+j::ArrangeActiveWindow("right")
 ; Win + Shift + k               => Move active window to left side
-#+k::MoveActiveWinByDirection("left")
+#+k::ArrangeActiveWindow("left")
 ; Win + Shift + b               => Blacklist active window so it won't be arranged when launched
 #+b::BlacklistArrangementForActiveWindow()
 ; Win + Shift + b               => Whitelist active window so it always be arranged when launched
@@ -79,6 +92,10 @@ InitClipboardManager()
 #+i::IgnoreArrangementForActiveWindow()
 ; Win + Shift + d               => Toggle debug logging
 #+d::ToggleDebugging()
+#h::MoveCursorToMonitor("left")
+#l::MoveCursorToMonitor("right")
+#+h::MoveWindowToMonitor("left")
+#+l::MoveWindowToMonitor("right")
 
 
 ; CLIPBOARD MANAGER
@@ -110,3 +127,9 @@ InitClipboardManager()
 ;   SetCapsLockState % !GetKeyState("CapsLock", "T")
 ; Return
 ; Capslock::return
+
+
+#t::
+    MouseGetPos, MouseX, MouseY
+    MsgBox, s: %MouseX%, sh: %MouseY%
+    return
