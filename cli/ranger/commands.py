@@ -226,3 +226,26 @@ class mediacut_open(Command):
             read=False,
         )
         self.fm.loader.add(obj)
+
+
+class md(Command):
+    """
+    :typeora
+
+    create a markdown file with typora
+    """
+    def execute(self):
+        import subprocess
+        import os.path
+        filename = self.arg(1)
+        if not filename.endswith(".md"):
+            filename += ".md"
+        if not os.path.exists(filename):
+            open(filename, 'a').close()
+        descr = "editing"
+        obj = CommandLoader(
+            args=['x-open', filename],
+            descr=descr,
+            read=True
+        )
+        self.fm.loader.add(obj)
