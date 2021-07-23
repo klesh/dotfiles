@@ -7,7 +7,7 @@ CoordMode, Mouse, Screen ; mouse coordinates relative to the screen
 ; =========================
 ; DEBUGGING
 ; =========================
-global DEBUGGING := true
+global DEBUGGING := False
 
 ToggleDebugging() {
     global DEBUGGING
@@ -89,13 +89,13 @@ SetDisableLockWorkstationRegKeyValue(1)  ; in order to remap win+l
 ; Win + Shift + b               => Whitelist active window so it always be arranged when launched
 #+w::WhitelistArrangementForActiveWindow()
 ; Win + Shift + i               => Remove active window from Blacklist/Whitelist
-#+i::IgnoreArrangementForActiveWindow()
+#+g::IgnoreArrangementForActiveWindow()
 ; Win + Shift + d               => Toggle debug logging
 #+d::ToggleDebugging()
-#h::MoveCursorToMonitor("left")
-#l::MoveCursorToMonitor("right")
-#+h::MoveWindowToMonitor("left")
-#+l::MoveWindowToMonitor("right")
+#u::MoveCursorToMonitor("left")
+#i::MoveCursorToMonitor("right")
+#+u::MoveWindowToMonitor("left")
+#+i::MoveWindowToMonitor("right")
 
 
 ; CLIPBOARD MANAGER
@@ -127,9 +127,3 @@ SetDisableLockWorkstationRegKeyValue(1)  ; in order to remap win+l
 ;   SetCapsLockState % !GetKeyState("CapsLock", "T")
 ; Return
 ; Capslock::return
-
-
-#t::
-    MouseGetPos, MouseX, MouseY
-    MsgBox, s: %MouseX%, sh: %MouseY%
-    return
