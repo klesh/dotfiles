@@ -29,13 +29,29 @@ PasteAsUnixPath() {
 
 PasteAs(convertFuncName) {
     %convertFuncName%()
-    Send ^v
+    Paste()
     Sleep 500
+}
+
+Copy() {
+    if WinActive("ahk_exe WindowsTerminal.exe") {
+        Send, ^+c
+    } else {
+        Send, ^c
+    }
+}
+
+Paste() {
+    if WinActive("ahk_exe WindowsTerminal.exe") {
+        Send, ^+v
+    } else {
+        Send, ^v
+    }
 }
 
 CopyAndFetch() {
     Clipboard =
-    Send, ^c ; simulate Ctrl+C (=selection in clipboard)
+    Copy()
     ClipWait, 0, 1 ; wait until clipboard contains data
     selection = %Clipboard% ; save the content of the clipboard
     return selection
@@ -57,4 +73,9 @@ AlternativePaste() {
 LoadAlternativeToClipboard() {
     global ALTERNATIVE_CLIPBOARD
     Clipboard = %ALTERNATIVE_CLIPBOARD%
+}
+
+CopyClipboardToAlternative() {
+    global ALTERNATIVE_CLIPBOARD
+    ALTERNATIVE_CLIPBOARD = %ClipBoardAll%
 }

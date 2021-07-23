@@ -7,32 +7,44 @@ CoordMode, Mouse, Screen ; mouse coordinates relative to the screen
 ; =========================
 ; DEBUGGING
 ; =========================
-global DEBUGGING := true
+global DEBUGGING := False
 
 ToggleDebugging() {
     global DEBUGGING
     DEBUGGING := not DEBUGGING
 }
 
-LogDebug(msg) {
+LogDebug(params*) {
     global DEBUGGING
     if (not DEBUGGING) {
       return
     }
     FormatTIme, now, , MM-dd HH:mm:ss
     log := FileOpen("d:\win.ahk.log", "a")
-    log.WriteLine(Format("[{1}] {2}", now, msg))
+    log.WriteLine(Format("[{1}] {2}", now, Format(params*)))
     log.Close()
 }
 
+SetDisableLockWorkstationRegKeyValue(value) {
+    RegWrite, REG_DWORD, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Policies\System, DisableLockWorkstation, %value%
+}
+
+
+LockWorkStation() {
+    SetDisableLockWorkstationRegKeyValue( 0 )
+    ; Lock
+    DllCall( "User32\LockWorkStation" )
+    ; Disable locking again
+    SetDisableLockWorkstationRegKeyValue( 1 )
+}
 
 ; =========================
 ; LIBS
 ; =========================
 InitWindowManager()
 InitClipboardManager()
+SetDisableLockWorkstationRegKeyValue(1)  ; in order to remap win+l
 #Include, ahk\JSON.ahk
-#Include, ahk\WinGetPosEx.ahk
 #Include, ahk\WindowManager.ahk
 #Include, ahk\ClipboardManager.ahk
 
@@ -58,32 +70,37 @@ InitClipboardManager()
 ; Win + \                       => Toggle mute
 #\::Send {Volume_Mute}
 ; Win + backspace               => Lock
-#BS::#l
+#BS::LockWorkStation()
 
 ; WINDOW MANAGER
 
-; Win + f                       => Toggle window maximum
-#f:: ToggleActiveWinMaximum()
 ; Win + j                       => Focus right window
 #j:: FocusWinByDirection("right")
 ; Win + k                       => Focus left window
 #k:: FocusWinByDirection("left")
+; Win + f                       => Move active window as monocle
+#f::ArrangeActiveWindow("monocle")
 ; Win + Shift + j               => Move active window to right side
-#+j::MoveActiveWinByDirection("right")
+#+j::ArrangeActiveWindow("right")
 ; Win + Shift + k               => Move active window to left side
-#+k::MoveActiveWinByDirection("left")
+#+k::ArrangeActiveWindow("left")
 ; Win + Shift + b               => Blacklist active window so it won't be arranged when launched
 #+b::BlacklistArrangementForActiveWindow()
 ; Win + Shift + b               => Whitelist active window so it always be arranged when launched
 #+w::WhitelistArrangementForActiveWindow()
 ; Win + Shift + i               => Remove active window from Blacklist/Whitelist
-#+i::IgnoreArrangementForActiveWindow()
+#+g::IgnoreArrangementForActiveWindow()
 ; Win + Shift + d               => Toggle debug logging
 #+d::ToggleDebugging()
+#u::MoveCursorToMonitor("left")
+#i::MoveCursorToMonitor("right")
+#+u::MoveWindowToMonitor("left")
+#+i::MoveWindowToMonitor("right")
 
 
 ; CLIPBOARD MANAGER
 #c::AlternativeCopy()
+#+c::CopyClipboardToAlternative()
 #v::AlternativePaste()
 
 
