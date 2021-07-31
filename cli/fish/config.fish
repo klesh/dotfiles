@@ -53,7 +53,7 @@ if status is-interactive
     alias dt='date "+%Y%m%d-%H%M%S"'
 
     # === PATH and file sourcing
-    append_paths ~/go/bin ~/bin ~/.local/bin ~/.yarn/bin ~/dotfiles/bin ~/dotfiles/devops/bin ~/Nextcloud/bin
+    append_paths ~/go/bin ~/bin ~/.local/bin ~/.yarn/bin ~/.config/yarn/global/node_modules/.bin ~/dotfiles/bin ~/dotfiles/devops/bin ~/Nextcloud/bin
     source_files /usr/share/autojump/autojump.fish /usr/local/share/autojump/autojump.fish \
         ~/.jabba/jabba.fish \
         ~/.asdf/asdf.fish \
