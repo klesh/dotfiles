@@ -43,7 +43,7 @@ LockWorkStation() {
 ; =========================
 InitWindowManager()
 InitClipboardManager()
-SetDisableLockWorkstationRegKeyValue(1)  ; in order to remap win+l
+; SetDisableLockWorkstationRegKeyValue(1)  ; in order to remap win+l
 #Include, ahk\JSON.ahk
 #Include, ahk\WindowManager.ahk
 #Include, ahk\ClipboardManager.ahk
@@ -88,7 +88,7 @@ SetDisableLockWorkstationRegKeyValue(1)  ; in order to remap win+l
 #+b::BlacklistArrangementForActiveWindow()
 ; Win + Shift + b               => Whitelist active window so it always be arranged when launched
 #+w::WhitelistArrangementForActiveWindow()
-; Win + Shift + i               => Remove active window from Blacklist/Whitelist
+; Win + Shift + g               => Remove active window from Blacklist/Whitelist
 #+g::IgnoreArrangementForActiveWindow()
 ; Win + Shift + d               => Toggle debug logging
 #+d::ToggleDebugging()
