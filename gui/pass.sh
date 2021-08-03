@@ -11,10 +11,18 @@ fi
 # install pass
 case "$PM" in
     apt)
-        sudo apt install -y pass pinentry-gtk2
+        sudo apt install -y pass
         GNUPG=$HOME/.gnupg
         GPG_AGENT_CONF=$GNUPG/gpg-agent.conf
-        PINENTRY=$(command -v pinentry-gtk-2)
+        if [ -n "$WSL" ]; then
+            PINENTRY=$PDIR/bin/pinentry-wsl-ps1.sh
+            BROWSERPASS_NATIVE= "$(wsl-win-path.sh %USERPROFILE%)/browser-wsl.bat"
+            echo "@echo off\r\nbash -c 'browserpass'" \
+                > "$BROWSERPASS_NATIVE"
+        else
+            sudo apt install -y pinentry-gtk2
+            PINENTRY=$(command -v pinentry-gtk-2)
+        fi
         SETTING="pinentry-program $PINENTRY"
         mkdir -p "$GNUPG"
         if ! grep -Fq "$SETTING" "$GPG_AGENT_CONF"; then
@@ -49,3 +57,8 @@ cd -
 # [PasswordStore - sync / ui](https://f-droid.org/packages/dev.msfjarvis.aps/)
 
 # configuration
+
+if [ -n "$WSL" ]; then
+    echo "Please update path in *-host.json file located at C:\Program Files\Browserpass to"
+    echo $BROWSERPASS_NATIVE
+fi
