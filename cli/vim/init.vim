@@ -335,3 +335,6 @@ autocmd FileType yaml :set cursorcolumn
 highlight clear SpellBad
 highlight SpellBad cterm=underline
 highlight SpellBad gui=undercurl
+
+" commitmsg
+autocmd BufEnter,BufRead commitmsg.md :set colorcolumn=100
