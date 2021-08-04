@@ -360,6 +360,8 @@ IgnoreArrangementForActiveWindow() {
     windowPath := GetActiveWindowPath()
     ARRANGEMENT["whitelist"].Delete(windowPath)
     ARRANGEMENT["blacklist"].Delete(windowPath)
+    ARRANGEMENT["windows"].Delete(windowPath)
+    SaveArrangement()
 }
 
 IsActiveWindowBorderless() {
