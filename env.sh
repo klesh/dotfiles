@@ -8,6 +8,7 @@ XDG_CONFIG_HOME=${XDG_CONFIG_HOME-"$HOME/.config"}
 PREFIX=/usr/local
 PDIR=$(dirname "${DIR-$0}")
 GITHUB_PROXY=${GITHUB_PROXY-$HTTPS_PROXY}
+WSL=$(grep -i Microsoft /proc/sys/kernel/osrelease)
 
 in_china() {
     ! [ -f /tmp/myip_full ] && curl -s myip.ipip.net > /tmp/myip_full
@@ -92,6 +93,10 @@ pm_update() {
             ;;
     esac
     echo "$CHECKSUM" > "$TSFILE"
+}
+
+win_env_path() {
+    cmd.exe /c 'echo '$1 2>/dev/null | awk '{sub("C:", "/mnt/c"); gsub("\\\\","/"); print}'
 }
 
 
