@@ -47,6 +47,7 @@ InitClipboardManager()
 #Include, ahk\JSON.ahk
 #Include, ahk\WindowManager.ahk
 #Include, ahk\ClipboardManager.ahk
+#Include, ahk\Spotlight.ahk
 
 
 ; =========================
@@ -97,6 +98,9 @@ InitClipboardManager()
 #+u::MoveWindowToMonitor("left")
 #+i::MoveWindowToMonitor("right")
 
+
+; SPOTLIGHT
+#p::Spotlight()
 
 ; CLIPBOARD MANAGER
 #c::AlternativeCopy()
