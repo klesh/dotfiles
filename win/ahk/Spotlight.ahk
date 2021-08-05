@@ -159,18 +159,13 @@ SpotlightSwitchWindow(keyword, stage) {
 }
 
 cmd_wt() {
-    TIMEZONES := { "Atlantic": -3 }
+    TIMEZONES := { "North American": -3, "Hezheng Yin": -7, "Camille": +2 }
 
-
-        ; dt := A_NowUTC
-        ; dt += -3, Hours
-        ; FormatTime, timeText, %A_Now%, dd HH:mm
-        ; LogDebug("SPOTLIGHT >>> now {1}", timeText)
     items := Array()
     for zone, offset in TIMEZONES {
         dt = %A_NowUTC%
         dt += offset, Hours
-        FormatTime, timeText, %dt%, dd HH:mm
+        FormatTime, timeText, %dt%, dd ddd HH:mm
         items.Push(Array(Format("{1:-20} {2}", zone, timeText)))
     }
     SpotlightUpdateItems(items)
