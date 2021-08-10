@@ -10,8 +10,9 @@ NODE_URL=https://nodejs.org/dist
 NODE_VERSION=v14.15.4
 NPM_BIN=npm
 if in_china; then
-    NODE_URL=https://npm.taobao.org/mirrors/node
-    NPM_BIN=cnpm
+    NPM_REGISTRY_URL=https://npmreg.mirrors.ustc.edu.cn
+    NODE_URL=$NPM_REGISTRY
+    NPM_BIN=npm
 fi
 export NPM_BIN
 
@@ -62,7 +63,7 @@ install() {
     rm "/tmp/$NAME"
     sudo npm install -g yarn
     if in_china; then
-        #sudo npm install -g cnpm --registry=https://registry.npm.taobao.org
+        echo "registry=$NPM_REGISTRY_URL" > ~/.npmrc
         yarnpkg config set registry https://registry.npm.taobao.org --global
         yarnpkg config set disturl https://npm.taobao.org/dist --global
         yarnpkg config set sass_binary_site https://npm.taobao.org/mirrors/node-sass --global
