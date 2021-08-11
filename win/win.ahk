@@ -3,6 +3,7 @@
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 CoordMode, Mouse, Screen ; mouse coordinates relative to the screen
+CoordMode, Pixel, Screen ; mouse coordinates relative to the screen
 
 ; =========================
 ; DEBUGGING
@@ -131,3 +132,34 @@ InitClipboardManager()
 ;   SetCapsLockState % !GetKeyState("CapsLock", "T")
 ; Return
 ; Capslock::return
+
+
+; HELPER
+
+; toggle mute for feishu meeting
+#m::
+    WinGet, prevWinId, ID, A
+    MouseGetPos, ox, oy
+    WinGet, meetingWinId, ID, 视频会议 ahk_exe Feishu.exe, , 视频会议 | 迷你视图
+    if (meetingWinId) {
+        WinGetPos, x, y , w, h, ahk_id %meetingWinId%
+        WinActivate, ahk_id %meetingWinId%
+        mx := x + 20
+        my := y + h - 20
+        SetCursorPos(mx, my)
+        SetCursorPos(mx, my)
+        MouseClick
+        Sleep, 100
+        ; mx := x + 38
+        ; my := y + h - 36
+        ; PixelGetColor, color, %mx%, %my%
+        ; MsgBox, %mx% %my% %color%
+        WinActivate, ahk_id %prevWinId%
+        SetCursorPos(ox, oy)
+        ; if (color = 0x5d5651) {
+        ;     TrayTip, note, feishu meeting unmuted
+        ;     Sleep 3000
+        ;     HideTrayTip()
+        ; }
+    }
+Return
