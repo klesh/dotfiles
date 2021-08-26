@@ -30,7 +30,7 @@ lnsf() {
 }
 
 has_bluetooth() {
-    dmesg | grep -i bluetooth
+    sudo dmesg | grep -i bluetooth
 }
 
 eqv() {
