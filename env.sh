@@ -8,7 +8,7 @@ XDG_CONFIG_HOME=${XDG_CONFIG_HOME-"$HOME/.config"}
 PREFIX=/usr/local
 PDIR=$(dirname "${DIR-$0}")
 GITHUB_PROXY=${GITHUB_PROXY-$HTTPS_PROXY}
-WSL=$(grep -i Microsoft /proc/sys/kernel/osrelease)
+WSL=$(grep -i Microsoft /proc/sys/kernel/osrelease || true)
 
 in_china() {
     ! [ -f /tmp/myip_full ] && curl -s myip.ipip.net > /tmp/myip_full

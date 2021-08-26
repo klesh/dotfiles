@@ -14,7 +14,8 @@ case "$PM" in
         ;;
     pacman)
         sudo pacman -S --noconfirm --needed \
-            trayer
+            trayer \
+            xorg-xsetroot
         ;;
 esac
 

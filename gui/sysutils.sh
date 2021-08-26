@@ -62,6 +62,8 @@ esac
 # start network
 sudo systemctl enable NetworkManager
 sudo systemctl start NetworkManager
+sudo systemctl enable autorandr
+sudo systemctl start autorandr
 
 lnsf "$DIR/dunst/dunstrc" "$XDG_CONFIG_HOME/dunst/dunstrc"
 lnsf "$DIR/thunar/uca.xml" "$XDG_CONFIG_HOME/Thunar/uca.xml"

@@ -32,9 +32,16 @@ case "$PM" in
     pacman)
         # TODO
         sudo pacman -S --noconfirm --needed \
-            go
+            go \
+            browserpass
         ;;
 esac
+
+# longer password caching time
+echo <<EOF >  ~/.gnupg/gpg-agent.conf
+default-cache-ttl 28800
+max-cache-ttl 28800
+EOF
 
 # install browserpass-native
 intorepo https://github.com/browserpass/browserpass-native.git "$DIR/repos/browserpass-native"
