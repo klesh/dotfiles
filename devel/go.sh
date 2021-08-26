@@ -18,7 +18,7 @@ esac
 
 if in_china; then
     go env -w GO111MODULE=on
-    go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/
+    go env -w GOPROXY=https://goproxy.io,direct
 fi
 
 # coc.nvim
