@@ -4,7 +4,7 @@ set -e
 DIR=$(dirname "$(readlink -f "$0")")
 . "$DIR/../env.sh"
 
-log 'Settingup office tools: libreoffice keepassxc nextcloud chrome zathura gimp sxiv'
+log 'Settingup office tools: libreoffice keepassxc nextcloud chrome zathura gimp sxiv typora'
 
 case "$PM" in
     apt)
@@ -29,6 +29,7 @@ case "$PM" in
             libreoffice-fresh \
             keepassxc \
             nextcloud-client
+        yay -S typora
         ;;
 esac
 

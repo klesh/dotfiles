@@ -72,7 +72,7 @@ function! WSLCopy()
     endif
     let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
     let lines[0] = lines[0][column_start - 1:]
-    call system('clip.exe', join(lines, "\n"))
+    call system('xsel -b', join(lines, "\n"))
 endfunction
 
 xnoremap <leader>y <esc>:call WSLCopy()<CR>

@@ -38,10 +38,13 @@ case "$PM" in
 esac
 
 # longer password caching time
-echo <<EOF >  ~/.gnupg/gpg-agent.conf
+cat <<EOF >  ~/.gnupg/gpg-agent.conf
 default-cache-ttl 28800
 max-cache-ttl 28800
 EOF
+
+# enable browser-native for google-chrome
+make -C /usr/lib/browserpass hosts-chrome-user
 
 # install browserpass-native
 intorepo https://github.com/browserpass/browserpass-native.git "$DIR/repos/browserpass-native"
