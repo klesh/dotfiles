@@ -69,5 +69,21 @@ if status is-interactive
 
     # === auto cd into last activated directory
     test "$PWD" = "$HOME" && cd $last_pwd
+
+    function readenv --on-variable PWD
+        if test -r .env
+            while read -l line
+                set -l line (string trim $line)
+                if [ -z "$line" ]
+                    continue
+                end
+                if string match -q '#*' $line
+                    continue
+                end
+                set -l kv (string split -m 1 = -- $line)
+                set -gx $kv
+            end < .env
+       end
+    end
 end
 
