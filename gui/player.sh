@@ -33,3 +33,5 @@ mkdir -p "$HOME/.mpd/playlists"
 # enable for current user
 systemctl --user enable mpd
 systemctl --user start mpd
+
+# command to update your database: mpc update
