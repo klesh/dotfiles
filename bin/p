@@ -1,6 +1,0 @@
-#!/bin/sh
-
-PPWD=$(pwd)
-trap "cd '$PPWD'" EXIT
-cd ~/.password-store
-find . -iname '*.gpg' | cut -c3- | sed 's/\.gpg$//g' | fzf | xargs pass -c

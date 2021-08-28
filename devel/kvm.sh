@@ -44,7 +44,7 @@ case "$PM" in
     pacman)
         # TODO
         sudo pacman -S --noconfirm --needed \
-            qemu libvirt virt-manager
+            ebtables dnsmasq qemu libvirt virt-manager
         ;;
 esac
 

@@ -1,5 +1,14 @@
 #!/bin/fish
 
+# fuzzy bookmark opener, read links from `~/.config/bookmarks.md` to fzf/dmenu and then open selected links with
+# default browser
+# `~/.config/bookmarks.md` sample:
+# ```markdown
+# # email
+# - [hotmail](https://hotmail.com)
+# - [gmail](https://gmail.com)
+# ```
+
 set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
 set -q BOOKMARK_PATH; or set BOOKMARK_PATH $XDG_CONFIG_HOME/bookmarks.md
 if set -q BOOKMARK_SEARCHER

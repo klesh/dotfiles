@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# batch replace: echo file1\nfile2 | br <REGEX> <NEWSTR>
 # rule 1: use single quote '
 # rule 2: //// for literal /
 
