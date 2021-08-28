@@ -30,7 +30,6 @@ case "$PM" in
         fi
         ;;
     pacman)
-        # TODO
         sudo pacman -S --noconfirm --needed \
             go \
             browserpass

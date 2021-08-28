@@ -43,8 +43,12 @@ case "$PM" in
         ;;
     pacman)
         # TODO
+        sudo pacman -S --noconfirm --needed \
+            qemu libvirt virt-manager
         ;;
 esac
 
 # configuration
 sudo usermod -aG libvirt "$USER"
+
+echo install [spice-guest-tools] on guest os for auto resolution adjustment

@@ -25,3 +25,9 @@ fi
 if enhance_vim; then
     v -c "CocInstall -sync coc-go|qall"
 fi
+
+# air for autoreload webapp
+echo Download air for autoreload webapp
+echo https://github.com/cosmtrek/air/releases/latest
+echo and store to ~/go/bin
+
