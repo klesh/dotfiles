@@ -1,6 +1,6 @@
 # Office365
 
-## MFA
+## Outlook MFA
 
 - Change authentication method to __OAuth2__ and you are good to go
 
