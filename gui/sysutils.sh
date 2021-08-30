@@ -36,7 +36,7 @@ case "$PM" in
         sudo pacman -S --noconfirm --needed \
             xorg-server xorg-xinit xorg-xrandr xorg-xev xorg-xprop \
             arandr autorandr \
-            alsa-firmware alsa-utils alsa-plugins pulseaudio-alsa pulseaudio pavucontrol  \
+            alsa-firmware alsa-utils alsa-plugins pulseaudio-alsa pipewire-pulse pavucontrol  \
             ibus ibus-table ibus-table-chinese \
             gnome-keyring \
             xss-lock \
@@ -52,7 +52,7 @@ case "$PM" in
         # bluetooth
         if has_bluetooth; then
             sudo pacman -S --noconfirm --needed \
-                bluez bluez-utils blueman pulseaudio-bluetooth acpilight
+                bluez bluez-utils blueman acpilight
             sudo systemctl enable bluetooth
             sudo systemctl start bluetooth
         fi
