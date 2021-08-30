@@ -52,7 +52,7 @@ case "$PM" in
         # bluetooth
         if has_bluetooth; then
             sudo pacman -S --noconfirm --needed \
-                bluez bluez-utils blueman pulseaudio-bluetooth xorg-xbacklight
+                bluez bluez-utils blueman pulseaudio-bluetooth acpilight
             sudo systemctl enable bluetooth
             sudo systemctl start bluetooth
         fi
