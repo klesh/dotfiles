@@ -30,6 +30,11 @@ case "$PM" in
             sudo systemctl enable bluetooth
             sudo systemctl start bluetooth
         fi
+        # laptop utitlies
+        if is_laptop; then
+            sudo apt install \
+                acpilght tlp
+        fi
         ;;
     pacman)
         # for setting up default programs: exo-preferred-applications
@@ -52,9 +57,13 @@ case "$PM" in
         # bluetooth
         if has_bluetooth; then
             sudo pacman -S --noconfirm --needed \
-                bluez bluez-utils blueman acpilight
+                bluez bluez-utils blueman
             sudo systemctl enable bluetooth
             sudo systemctl start bluetooth
+        fi
+        if is_laptop; then
+            sudo pacman -S --noconfirm --needed \
+                acpilght tlp
         fi
         ;;
 esac

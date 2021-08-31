@@ -74,6 +74,10 @@ has_fish() {
     has_cmd "$1"
 }
 
+is_laptop() {
+    [ -f /sys/class/power_supply/BAT0/capacity ]
+}
+
 enhance_vim() {
     [ "$VIM_MODE" = "enhanced" ] && has_cmd nvim
 }
