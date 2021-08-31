@@ -10,7 +10,7 @@ statusbar
 xset s off
 xset dpms 300 300 300
 killall xss-lock
-xss-lock "$(command -v slock)" &
+xss-lock "$(command -v lock.sh)" &
 
 launchapp () {
     ! command -v "$1" >/dev/null && return  # command doesn't exist

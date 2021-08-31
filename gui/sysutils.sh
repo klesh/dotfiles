@@ -60,6 +60,10 @@ case "$PM" in
                 bluez bluez-utils blueman
             sudo systemctl enable bluetooth
             sudo systemctl start bluetooth
+            # bluetoothctl devices
+            # bluetoothctl pair <ADDR>
+            # bluetoothctl trust <ADDR>
+            # bluetoothctl connect <ADDR>
         fi
         if is_laptop; then
             sudo pacman -S --noconfirm --needed \
