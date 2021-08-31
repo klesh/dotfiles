@@ -71,5 +71,4 @@ sudo ln -sf /etc/fonts/conf.avail/70-no-bitmaps.conf /etc/fonts/conf.d
 sudo ln -sf /etc/fonts/conf.avail/10-sub-pixel-rgb.conf /etc/fonts/conf.d
 sudo ln -sf /etc/fonts/conf.avail/11-lcdfilter-default.conf /etc/fonts/conf.d
 sudo cp "$DIR/font/freetype2.sh" "/etc/profile.d/freetype2.sh"
-sudo cp "$DIR/font/local.conf" "/etc/fonts/local.conf"
 lnsf "$DIR/font/fonts.conf" "$XDG_CONFIG_HOME/fonts/fonts.conf"
