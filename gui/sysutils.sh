@@ -80,3 +80,14 @@ sudo systemctl start autorandr
 
 lnsf "$DIR/dunst/dunstrc" "$XDG_CONFIG_HOME/dunst/dunstrc"
 lnsf "$DIR/thunar/uca.xml" "$XDG_CONFIG_HOME/Thunar/uca.xml"
+
+echo for non-root user to change backlight, add following rule to /etc/udev/rules.d/backlight.rules
+echo ```
+echo ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="acpi_video0", GROUP="video", MODE="0664"
+echo ```
+echo for intel_backlight:
+echo ```
+echo RUN+="/bin/chgrp video /sys/class/backlight/intel_backlight/brightness"
+echo RUN+="/bin/chmod g+w /sys/class/backlight/intel_backlight/brightness"
+echo ```
+
