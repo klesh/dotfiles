@@ -142,6 +142,7 @@ Plug 'alvan/vim-closetag', { 'for': ['vue', 'html', 'xml'] }
 "Plug 'francoiscabrol/ranger.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'preservim/nerdtree'
 
 if $VIM_MODE == 'enhanced'
     if !executable("node") || !executable("yarnpkg")
@@ -338,3 +339,6 @@ highlight SpellBad gui=undercurl
 
 " commitmsg
 autocmd BufEnter,BufRead commitmsg.md :set colorcolumn=100
+
+" nerdtree
+nnoremap <leader>t :NERDTreeToggle<CR>
