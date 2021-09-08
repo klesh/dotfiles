@@ -347,3 +347,7 @@ autocmd BufEnter,BufRead commitmsg.md :set colorcolumn=100
 
 " nerdtree
 nnoremap <leader>t :NERDTreeToggle<CR>
+
+" go organize import on save
+command! -nargs=0 OR :call CocAction('runCommand', 'editor.action.organizeImport')
+autocmd BufWritePre *.go :OR
