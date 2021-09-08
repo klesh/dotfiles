@@ -75,7 +75,13 @@ function! WSLCopy()
     call system('xsel -b', join(lines, "\n"))
 endfunction
 
+function! YankFileLineNo()
+    let @+=expand("%") . ':' . line(".")
+    echo @+
+endfunction
+
 xnoremap <leader>y <esc>:call WSLCopy()<CR>
+nnoremap <leader>yl <esc>:call YankFileLineNo()<Cr>
 
 nmap <leader>"" ysiW"
 nmap <leader>'' ysiW'
@@ -99,10 +105,12 @@ au ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
 au Syntax * match ExtraWhitespace /\s\+$/
 nnoremap <leader>es :%s/\s\+$//g<CR>
 
-
 " location jumping
 nnoremap <leader>n :cnext<CR>
 nnoremap <leader>p :cprev<CR>
+
+" cusorline
+nnoremap <leader>cc :set cursorcolumn!<CR>
 
 " auto install vim-plug
 if has('nvim')
@@ -328,9 +336,6 @@ fu! ToggleGroffMomAutoCompilation()
 endfu
 nnoremap <leader>ac :call ToggleGroffMomAutoCompilation()<CR>
 autocmd BufEnter,BufRead *.mom :set ft=mom
-
-" for yaml need cursorcolumn
-autocmd FileType yaml :set cursorcolumn
 
 " spell highlight
 highlight clear SpellBad

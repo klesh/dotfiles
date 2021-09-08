@@ -5,5 +5,10 @@
     "python.linting.pylintEnabled": false,
     "diagnostic-languageserver.filetypes": {
         "sh": "shellcheck"
-    }
+    },
+    "coc.preferences.formatOnSaveFiletypes": [
+        "rust",
+        "json",
+        "go"
+    ]
 }
