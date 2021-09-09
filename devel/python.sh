@@ -10,7 +10,8 @@ if in_china; then
     # config pip mirror for CHINA
     echo "
     [global]
-    index-url = https://mirrors.aliyun.com/pypi/simple
+    #index-url = https://mirrors.aliyun.com/pypi/simple
+    index-url = https://pypi.tuna.tsinghua.edu.cn/simple
     " | sed -r 's/^ *//' | sudo tee "/etc/pip.conf"
 fi
 
