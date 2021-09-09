@@ -141,7 +141,7 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'posva/vim-vue', { 'for': 'vue' }
 Plug 'tpope/vim-repeat'
 Plug 'liuchengxu/eleline.vim'
-Plug 'klesh/vim-fugitive'                                         " git 功能
+Plug 'tpope/vim-fugitive'                                         " git 功能
 Plug 'scrooloose/nerdcommenter'
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 Plug 'morhetz/gruvbox'
@@ -243,7 +243,7 @@ autocmd BufEnter,BufRead nnoremap <leader>cg :<C-u>call OpenRangerIn(system("git
 
 
 " ==== fugitive configuration ====
-nnoremap <leader>gs :Gstatus<CR>
+nnoremap <leader>gs :Git<CR>
 nnoremap <leader>gc :Gcommit<CR>
 nnoremap <leader>gp :Gpush<CR>
 nnoremap <leader>gg :Gpull<CR>
