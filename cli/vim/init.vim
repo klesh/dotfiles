@@ -110,7 +110,7 @@ nnoremap <leader>n :cnext<CR>
 nnoremap <leader>p :cprev<CR>
 
 " cusorline
-nnoremap <leader>cc :set cursorcolumn!<CR>
+nnoremap <leader>c :set cursorcolumn!<CR>
 
 " auto install vim-plug
 if has('nvim')
