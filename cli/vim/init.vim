@@ -244,12 +244,12 @@ autocmd BufEnter,BufRead nnoremap <leader>cg :<C-u>call OpenRangerIn(system("git
 
 " ==== fugitive configuration ====
 nnoremap <leader>gs :Git<CR>
-nnoremap <leader>gc :Gcommit<CR>
-nnoremap <leader>gp :Gpush<CR>
-nnoremap <leader>gg :Gpull<CR>
-nnoremap <leader>gd :Gdiff<CR>
-nnoremap <leader>gb :Gblame<CR>
-nnoremap <leader>gl :Glog<CR>
+nnoremap <leader>gc :Git commit<CR>
+nnoremap <leader>gp :Git push<CR>
+nnoremap <leader>gg :Git pull<CR>
+nnoremap <leader>gd :Git diff<CR>
+nnoremap <leader>gb :Git blame<CR>
+nnoremap <leader>gl :Git log<CR>
 nnoremap <leader>gms :Gvdiffsplit!<CR>
 nnoremap <leader>gmh :diffget //2<CR>
 nnoremap <leader>gml :diffget //3<CR>
