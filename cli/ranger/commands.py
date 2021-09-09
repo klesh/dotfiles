@@ -74,6 +74,28 @@ class extracthere(Command):
         au_flags += self.line.split()[1:]
         au_flags += ['-e']
 
+        force = '-f' in au_flags
+        to_delete = set()
+        # delete target files since atool doesn't support non-interactive overwriting
+        import subprocess
+        import re
+        import os
+        import shutil
+
+        for copied_file in copied_files:
+            subproc = subprocess.Popen("atool -l '"+copied_file.path+"'", shell=True, stdout=subprocess.PIPE)
+            stdout, stdin = subproc.communicate()
+            if subproc.returncode == 0:
+                lines = stdout.decode('utf-8').split("\n")[3:-3]
+                for line in lines:
+                    m = re.search(r'^\s+\d+\s+\d{2,4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}\s+(.+)$', line)
+                    comp_file_path = os.path.join(cwd.path, m.group(1))
+                    comp_dir_path = os.path.dirname(comp_file_path)
+                    if os.path.basename(comp_dir_path) == '__MACOSX':
+                        to_delete.add(comp_dir_path)
+                    if force and os.path.isfile(comp_file_path):
+                        os.remove(comp_file_path)
+
         self.fm.copy_buffer.clear()
         self.fm.cut_buffer = False
         if len(copied_files) == 1:
@@ -82,6 +104,10 @@ class extracthere(Command):
             descr = "extracting files from: " + os.path.basename(one_file.dirname)
         obj = CommandLoader(args=['aunpack'] + au_flags \
                 + [f.path for f in copied_files], descr=descr)
+
+        # delete "__MACOSX"
+        for file_to_delete in to_delete:
+            shutil.rmtree(file_to_delete)
 
         obj.signal_bind('after', refresh)
         self.fm.loader.add(obj)
