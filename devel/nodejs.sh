@@ -62,22 +62,26 @@ install() {
     # remove download path
     rm "/tmp/$NAME"
     sudo npm install -g yarn
+    configure_nodejs
+}
+
+configure_nodejs() {
     if in_china; then
         echo "registry=$NPM_REGISTRY_URL" > ~/.npmrc
-        yarnpkg config set registry https://registry.npm.taobao.org --global
-        yarnpkg config set disturl https://npm.taobao.org/dist --global
-        yarnpkg config set sass_binary_site https://npm.taobao.org/mirrors/node-sass --global
-        yarnpkg config set electron_mirror https://npm.taobao.org/mirrors/electron/ --global
-        yarnpkg config set puppeteer_download_host https://npm.taobao.org/mirrors --global
-        yarnpkg config set chromedriver_cdnurl https://npm.taobao.org/mirrors/chromedriver --global
-        yarnpkg config set operadriver_cdnurl https://npm.taobao.org/mirrors/operadriver --global
-        yarnpkg config set phantomjs_cdnurl https://npm.taobao.org/mirrors/phantomjs --global
-        yarnpkg config set selenium_cdnurl https://npm.taobao.org/mirrors/selenium --global
-        yarnpkg config set sqlite3_binary_host_mirror https://foxgis.oss-cn-shanghai.aliyuncs.com/ --global
-        yarnpkg config set profiler_binary_host_mirror https://npm.taobao.org/mirrors/node-inspector/ --global
-        yarnpkg config set chromedriver_cdnurl https://cdn.npm.taobao.org/dist/chromedriver --global
-        yarnpkg config set node_inspector_cdnurl https://npm.taobao.org/mirrors/node-inspector --global
-        yarnpkg config set sentrycli_cdnurl https://npm.taobao.org/mirrors/sentry-cli
+        yarnpkg config set registry $NPM_REGISTRY_URL --global
+        #yarnpkg config set disturl https://npm.taobao.org/dist --global
+        #yarnpkg config set sass_binary_site https://npm.taobao.org/mirrors/node-sass --global
+        #yarnpkg config set electron_mirror https://npm.taobao.org/mirrors/electron/ --global
+        #yarnpkg config set puppeteer_download_host https://npm.taobao.org/mirrors --global
+        #yarnpkg config set chromedriver_cdnurl https://npm.taobao.org/mirrors/chromedriver --global
+        #yarnpkg config set operadriver_cdnurl https://npm.taobao.org/mirrors/operadriver --global
+        #yarnpkg config set phantomjs_cdnurl https://npm.taobao.org/mirrors/phantomjs --global
+        #yarnpkg config set selenium_cdnurl https://npm.taobao.org/mirrors/selenium --global
+        #yarnpkg config set sqlite3_binary_host_mirror https://foxgis.oss-cn-shanghai.aliyuncs.com/ --global
+        #yarnpkg config set profiler_binary_host_mirror https://npm.taobao.org/mirrors/node-inspector/ --global
+        #yarnpkg config set chromedriver_cdnurl https://cdn.npm.taobao.org/dist/chromedriver --global
+        #yarnpkg config set node_inspector_cdnurl https://npm.taobao.org/mirrors/node-inspector --global
+        #yarnpkg config set sentrycli_cdnurl https://npm.taobao.org/mirrors/sentry-cli
     fi
     if enhance_vim; then
         v -c "CocInstall -sync coc-json coc-vetur coc-tsserver coc-eslint|qall"
@@ -88,6 +92,9 @@ install() {
 case "$1" in
     ls|list)
         lspkgs | less
+        ;;
+    config)
+        configure_nodejs
         ;;
     uninstall)
         uninstall
