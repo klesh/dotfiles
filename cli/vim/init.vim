@@ -146,7 +146,7 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 Plug 'morhetz/gruvbox'
 Plug 'klesh/vim-fish', { 'for': 'fish' }
-Plug 'alvan/vim-closetag', { 'for': ['vue', 'html', 'xml'] }
+Plug 'alvan/vim-closetag'
 "Plug 'francoiscabrol/ranger.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -175,7 +175,7 @@ let g:vim_markdown_folding_disabled = 1
 
 
 " ==== vim-closetag configuration ====
-let g:closetag_filetypes = 'html,xhtml,phtml,vue'
+let g:closetag_filetypes = 'html,xhtml,phtml,vue,jsx'
 
 
 if $VIM_MODE == 'enhanced'
@@ -214,6 +214,9 @@ endif
 " ==== auto-pairs configuration ====
 nmap <silent> <leader>ap :call AutoPairsToggle()<CR>
 let g:AutoPairsShortcutToggle = ''
+
+" ==== closetag configuration ====
+nmap <silent> <leader>ct :CloseTagToggleBuffer<CR>
 
 
 " ==== grepper configuration ====
