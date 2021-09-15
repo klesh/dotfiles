@@ -67,7 +67,7 @@ export DMENU_DEFAULT_OPTS='-i -c -fn monospace:13 -nb #222222 -nf #bbbbbb -sb #5
 
 # auto startx
 [ -z "$DISPLAY" ] && [ -n "$XDG_VTNR" ] && [ "$XDG_VTNR" -eq "1" ] \
-    && startx
+    && startx -- -keeptty >~/.xorg.log 2>&1
 EOT
 
 

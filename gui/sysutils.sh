@@ -91,3 +91,6 @@ echo RUN+="/bin/chgrp video /sys/class/backlight/intel_backlight/brightness"
 echo RUN+="/bin/chmod g+w /sys/class/backlight/intel_backlight/brightness"
 echo ```
 
+echo for amd ryzen laptop add "acpi_backlight=vendor" to /etc/default/grub and then run
+echo sudo grub-mkconfig -o /boot/grub/grub.cfg
+
