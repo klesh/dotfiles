@@ -5,40 +5,42 @@ DIR=$(dirname "$(readlink -f "$0")")
 . "$DIR/../env.sh"
 
 log 'Setting up shell'
-case "$PM" in
-    apt)
-        sudo add-apt-repository ppa:fish-shell/release-3 -y -n
-        pm_update
-        sudo apt install fish silversearcher-ag -y
-        echo DISTRIB_RELEASE_MAJOR: $DISTRIB_RELEASE_MAJOR
-        echo DISTRIB_RELEASE: $DISTRIB_RELEASE
-        if [ "$DISTRIB_RELEASE_MAJOR" -gt 19 ] || [ "$DISTRIB_RELEASE" = "19.10" ]; then
-            sudo apt install dash bat  -y
-        fi
-        sudo ln -sf /usr/bin/batcat /usr/bin/bat
-        intorepo https://github.com/junegunn/fzf.git "$HOME/.fzf"
-        ./install --all
-        exitrepo
-        ;;
-    pacman)
-        sudo pacman -S --noconfirm --needed fish the_silver_searcher dash bat fzf
-        # prevent bash upgradation relink /bin/sh
-        sudo mkdir -p /etc/pacman.d/hooks
-        echo "
-        [Trigger]
-        Type = Package
-        Operation = Install
-        Operation = Upgrade
-        Target = bash
+if ! has_cmd fish; then
+    case "$PM" in
+        apt)
+            sudo add-apt-repository ppa:fish-shell/release-3 -y -n
+            pm_update
+            sudo apt install fish silversearcher-ag -y
+            echo DISTRIB_RELEASE_MAJOR: $DISTRIB_RELEASE_MAJOR
+            echo DISTRIB_RELEASE: $DISTRIB_RELEASE
+            if [ "$DISTRIB_RELEASE_MAJOR" -gt 19 ] || [ "$DISTRIB_RELEASE" = "19.10" ]; then
+                sudo apt install dash bat  -y
+            fi
+            sudo ln -sf /usr/bin/batcat /usr/bin/bat
+            intorepo https://github.com/junegunn/fzf.git "$HOME/.fzf"
+            ./install --all
+            exitrepo
+            ;;
+        pacman)
+            sudo pacman -S --noconfirm --needed fish the_silver_searcher dash bat fzf
+            # prevent bash upgradation relink /bin/sh
+            sudo mkdir -p /etc/pacman.d/hooks
+            echo "
+            [Trigger]
+            Type = Package
+            Operation = Install
+            Operation = Upgrade
+            Target = bash
 
-        [Action]
-        Description = Re-pointing /bin/sh symlink to dash...
-        When = PostTransaction
-        Exec = /usr/bin/ln -sfT dash /usr/bin/sh
-        Depends = dash
-        " | sed 's/^ *//' | sudo tee /etc/pacman.d/sh-is-dash.hook >/dev/null
-        ;;
-esac
+            [Action]
+            Description = Re-pointing /bin/sh symlink to dash...
+            When = PostTransaction
+            Exec = /usr/bin/ln -sfT dash /usr/bin/sh
+            Depends = dash
+            " | sed 's/^ *//' | sudo tee /etc/pacman.d/sh-is-dash.hook >/dev/null
+            ;;
+    esac
+fi
 
 
 # only for local machine with gui

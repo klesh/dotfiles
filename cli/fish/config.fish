@@ -2,7 +2,7 @@
 
 if status is-interactive
     # === default programs
-    set -gx EDITOR v
+    set -gx EDITOR vim
 
     # === fzf configuration
     set -gx FZF_DEFAULT_COMMAND 'ag -g ""'

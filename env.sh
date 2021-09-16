@@ -30,7 +30,7 @@ lnsf() {
 }
 
 has_bluetooth() {
-    sudo dmesg | grep -i bluetooth
+    has_cmd sudo && sudo dmesg | grep -i bluetooth
 }
 
 eqv() {
@@ -104,7 +104,7 @@ win_env_path() {
 }
 
 
-sudo mkdir -p $PREFIX
+has_cmd sudo && sudo mkdir -p $PREFIX
 
 if has_cmd pacman; then
     PM=pacman
