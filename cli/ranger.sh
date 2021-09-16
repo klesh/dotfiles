@@ -16,6 +16,10 @@ fi
 
 # install ranger
 case "$PM" in
+    pkg)
+        pkg install p7zip unrar
+        pip install ranger-fm
+        ;;
     apt)
         # atool/p7zip-full for archive previewing/extracting etc
         sudo apt install -y atool p7zip-full unrar libx11-dev libxext-dev

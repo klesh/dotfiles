@@ -153,8 +153,8 @@ Plug 'junegunn/fzf.vim'
 Plug 'preservim/nerdtree'
 
 if $VIM_MODE == 'enhanced'
-    if !executable("node") || !executable("yarnpkg")
-        echo "nodejs/yarnpkg must be installed in order to use coc.nvim"
+    if !executable("node") || !executable("npm")
+        echo "nodejs/npm must be installed in order to use coc.nvim"
     else
         Plug 'neoclide/coc.nvim', {'branch': 'release'}
     end

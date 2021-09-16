@@ -5,7 +5,11 @@ DIR=$(dirname "$(readlink -f "$0")")
 
 log "Setting up go"
 # install go
+
 case "$PM" in
+    pkg)
+        pkg install golang -y
+        ;;
     apt)
         sudo apt install -y \
             golang

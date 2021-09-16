@@ -9,10 +9,11 @@ PREFIX=/usr/local
 PDIR=$(dirname "${DIR-$0}")
 GITHUB_PROXY=${GITHUB_PROXY-$HTTPS_PROXY}
 WSL=$(grep -i Microsoft /proc/sys/kernel/osrelease || true)
+TMPDIR=${TMPDIR-"/tmp"}
 
 in_china() {
-    ! [ -f /tmp/myip_full ] && curl -s myip.ipip.net > /tmp/myip_full
-    grep -qF '中国' /tmp/myip_full
+    ! [ -f $TMPDIR/myip_full ] && curl -s myip.ipip.net > $TMPDIR/myip_full
+    grep -qF '中国' $TMPDIR/myip_full
 }
 
 lnsf() {
@@ -108,6 +109,11 @@ has_cmd sudo && sudo mkdir -p $PREFIX
 
 if has_cmd pacman; then
     PM=pacman
+elif has_cmd pkg; then
+    PM=pkg
+    sudo () {
+        "$@"
+    }
 elif has_cmd apt; then
     PM=apt
 fi
