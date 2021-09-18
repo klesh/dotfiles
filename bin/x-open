@@ -2,5 +2,11 @@
 
 case $(uname -r) in
     *microsoft*) powershell.exe -noprofile start-process "'$@'";;
-    *) exo-open "$@" 1>/dev/null 2>&1;;
+    *)
+        if command -v exo-open >/dev/null 2>&1; then
+            exo-open "$@" 1>/dev/null 2>&1
+        else
+            xdg-open "$@"
+        fi
+        ;;
 esac
