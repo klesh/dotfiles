@@ -66,7 +66,7 @@ nnoremap <leader>h <C-w>h
 nnoremap <leader>j <C-w>j
 nnoremap <leader>k <C-w>k
 nnoremap <leader>l <C-w>l
-nnoremap <leader>o <C-w>o
+nnoremap <leader>oo <C-w>o
 nnoremap <leader>q <C-w>q
 
 function! XCopy()
