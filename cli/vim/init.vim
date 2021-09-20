@@ -62,7 +62,14 @@ nnoremap <leader>5 :b5<CR>
 nnoremap <leader>w :w<CR>
 nnoremap <leader><Esc> :noh<return><esc>
 
-function! WSLCopy()
+nnoremap <leader>h <C-w>h
+nnoremap <leader>j <C-w>j
+nnoremap <leader>k <C-w>k
+nnoremap <leader>l <C-w>l
+nnoremap <leader>o <C-w>o
+nnoremap <leader>q <C-w>q
+
+function! XCopy()
     " Why is this not a built-in Vim script function?!
     let [line_start, column_start] = getpos("'<")[1:2]
     let [line_end, column_end] = getpos("'>")[1:2]
@@ -76,11 +83,12 @@ function! WSLCopy()
 endfunction
 
 function! YankFileLineNo()
-    let @+=expand("%") . ':' . line(".")
-    echo @+
+    let yl=expand("%") . ':' . line(".")
+    call system('tmux set-buffer "'.yl.'"')
+    "let @+=yl
 endfunction
 
-xnoremap <leader>y <esc>:call WSLCopy()<CR>
+xnoremap <leader>y <esc>:call XCopy()<CR>
 nnoremap <leader>yl <esc>:call YankFileLineNo()<Cr>
 
 nmap <leader>"" ysiW"
@@ -226,8 +234,8 @@ nnoremap <leader>sc :Grepper -tool grep<CR>
 nnoremap <leader>sa :Grepper -tool ag<CR>
 
 " ==== quickfix configuration ====
-nnoremap <leader>j :cn<CR>
-nnoremap <leader>k :cp<CR>
+nnoremap <leader>cj :cn<CR>
+nnoremap <leader>ck :cp<CR>
 
 
 "" ==== NERDTree configuration ====
