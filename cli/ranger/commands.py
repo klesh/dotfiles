@@ -170,3 +170,82 @@ class fzf_edit(Command):
         if fzf.returncode == 0:
             fzf_file = os.path.abspath(stdout.rstrip('\n'))
             self.fm.edit_file(fzf_file)
+
+
+class mediacut_join(Command):
+    def execute(self):
+        """ Concatenate video inside cursor folder """
+        thisfile = self.fm.thisfile
+        if not thisfile.filetype.startswith('inode/directory'):
+            return
+
+        marked_files = [file.path for file in thisfile.files if file.filetype.startswith('video')]
+
+        if not marked_files:
+            return
+
+        def refresh(_):
+            cwd = self.fm.get_directory(original_path)
+            cwd.load_content()
+
+        tmppath = '/tmp/concate-recording'
+        with open(tmppath, 'w') as f:
+            f.writelines("file {}".format(v) + '\n' for v in marked_files)
+
+        original_path = self.fm.thisdir
+
+        descr = "concatenating"
+        obj = CommandLoader(
+            args=['ffmpeg', '-f', 'concat', '-safe', '0', '-i', tmppath, '-c', 'copy', self.args[1]],
+            descr=descr,
+            read=True
+        )
+
+        obj.signal_bind('after', refresh)
+        self.fm.loader.add(obj)
+
+
+class mediacut_open(Command):
+    def execute(self):
+        """ play all files in current dir """
+        thisfile = self.fm.thisfile
+        if thisfile.filetype.startswith('inode/directory'):
+            files = [file.path for file in thisfile.files if file.filetype.startswith('video')]
+        else:
+            files = [thisfile.path]
+        descr = "mediacut open"
+        obj = CommandLoader(
+            args=[
+                'mpv',
+                '--no-resume-playback',
+                '--start=0',
+                '--osd-fractions',
+                '--osd-level=3'
+            ] + files,
+            descr=descr,
+            read=False,
+        )
+        self.fm.loader.add(obj)
+
+
+class md(Command):
+    """
+    :typeora
+
+    create a markdown file with typora
+    """
+    def execute(self):
+        import subprocess
+        import os.path
+        filename = self.arg(1)
+        if not filename.endswith(".md"):
+            filename += ".md"
+        if not os.path.exists(filename):
+            open(filename, 'a').close()
+        descr = "editing"
+        obj = CommandLoader(
+            args=['x-open', filename],
+            descr=descr,
+            read=True
+        )
+        self.fm.loader.add(obj)

@@ -9,10 +9,9 @@ case "$PM" in
     apt)
         # snap docker will intefere native docker.io, must be dealt with
         sudo snap remove --purge docker
-        sudo apt install -y docker.io
-        if ! has_cmd python; then
-            "$PDIR/python/install.sh"
-        fi
+        pm_update
+        sudo apt install -y docker.io jq
+        "$PDIR/devel/python.sh"
         sudo pip3 install docker-compose
         ;;
     pacman)
@@ -20,8 +19,6 @@ case "$PM" in
         ;;
 esac
 
-sudo systemctl enable docker
-sudo systemctl start docker
 
 # configuration
 sudo usermod -aG docker "$USER"
@@ -44,3 +41,6 @@ if in_china; then
         sudo tee /etc/docker/daemon.json
     sudo systemctl restart docker
 fi
+
+sudo systemctl enable docker
+sudo systemctl start docker

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+tmux_auto_rename() {
+    tmux setw automatic-rename
+}
+
+[ -n "$TMUX" ] && trap tmux_auto_rename INT
+[ -n "$TMUX" ] && tmux rename-window "${@:-1}"
+/bin/ssh "$@"
+[ -n "$TMUX" ] && tmux_auto_rename

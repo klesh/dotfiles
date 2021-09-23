@@ -9,6 +9,8 @@ DIR=$(dirname "$(readlink -f "$0")")
 # install deep learning tools
 case "$PM" in
     apt)
+        # auto install nvidia driver
+        sudo ubuntu-drivers autoinstall
         # cuda
         . /etc/lsb-release
         if [ "$DISTRIB_RELEASE" = "18.04" ] && [ "$(uname -m)" = 'x86_64' ]; then
@@ -17,9 +19,9 @@ case "$PM" in
             sudo mv cuda-ubuntu1804.pin /etc/apt/preferences.d/cuda-repository-pin-600
             sudo apt-key adv --fetch-keys \
                 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
-            sudo add-apt-repository "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/ /"
-            sudo apt-get update
-            sudo apt-get -y install cuda
+            sudo add-apt-repository "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/ /" -y -n
+            pm_update
+            sudo apt -y install cuda
         elif [ "$DISTRIB_RELEASE" = "20.04" ]; then
             sudo apt install nvidia-cuda-toolkit
         else

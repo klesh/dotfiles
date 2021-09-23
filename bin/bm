@@ -1,0 +1,127 @@
+#!/bin/fish
+
+set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
+set -q BOOKMARK_PATH; or set BOOKMARK_PATH $XDG_CONFIG_HOME/bookmarks.md
+if set -q BOOKMARK_SEARCHER
+    set BOOKMARK_SEARCHER (string split ' ' $BOOKMARK_SEARCHER)
+else
+    set BOOKMARK_SEARCHER fzf --layout reverse
+end
+
+function _help
+    echo "Organize your bookmark with markdown"
+    echo
+    echo "Usage bm [command ...args]"
+    echo
+    echo "commands:"
+    echo '  list [query]'
+    echo '  open <query>'
+    echo
+    echo 'examples:'
+    echo '  bm list "# daily" "# emails"            list all links under daily/emails folder'
+    echo '  bm list "reddit" "github"               list all links contains specified keywords'
+    echo '  bm open "# daily" "# emails"            open all links under daily/emails folder'
+    echo '  bm open "reddit" "github"               open all links contains specified keywords'
+    echo '  bm                                      search with $BOOKMARK_SEARCHER and then open selected'
+end
+
+function list
+    set -e categories
+    set -e names
+    for arg in $argv
+        if string match -q '#*' $arg
+            set --append categories $arg
+        else
+            set --append names $arg
+        end
+    end
+    _filter_category $categories < $BOOKMARK_PATH | _filter_name $names
+end
+
+function open
+    if not count $argv &>/dev/null
+        _search
+    else
+        list $argv | _open_urls
+    end
+end
+
+function update
+    set url (xsel -ob)
+    if ! string match 'http*' $url
+        echo "no url found on clipboard"
+        exit 1
+    end
+    set query (sed -r '/^(#.*|\s*)$/d' $BOOKMARK_PATH | $BOOKMARK_SEARCHER)
+    echo url: $url
+    echo query: $query
+    mv $BOOKMARK_PATH $BOOKMARK_PATH.bak
+    awk '$0 == "'$query'" {
+        sub(/\(http.*\)/, "('$url')")
+    } { print }' $BOOKMARK_PATH.bak > $BOOKMARK_PATH
+end
+
+function _filter_category
+    if not count $argv >/dev/null
+        cat -
+        return
+    end
+    set categories $argv
+    set -e output_indent
+    while read LINE
+        if set heading (string match -r '^(#+) (.*)$' $LINE)
+            set heading_indent (string length $heading[2])
+            if test -z "$output_indent"
+                contains $LINE $categories && set output_indent $heading_indent
+            else
+                test "$heading_indent" -le "$output_indent" && set -e output_indent
+            end
+        end
+        if test -n "$output_indent"
+            echo $LINE
+        end
+    end
+end
+
+function _filter_name
+    if not count $argv >/dev/null
+        cat -
+        return
+    end
+    set NAMES_PATTERN (string join '|' $argv)
+    while read LINE
+        if not string match -q -r $NAMES_PATTERN $LINE
+            continue
+        end
+        echo $LINE
+    end
+end
+
+function _open_urls
+    set LINK_PATTERN  '\[(.*?)\]\((.*?)\)'
+    while read LINE
+        if set link (string match -r $LINK_PATTERN $LINE)
+             echo '' | x-open $link[3] &>/dev/null &
+             disown
+             sleep 0.1
+        end
+    end
+end
+
+function _search
+    set query (sed -r '/^\s*$/d' $BOOKMARK_PATH | $BOOKMARK_SEARCHER)
+    test -z "$query" && return
+    if string match '#*' $query
+        open $query
+    else
+        echo $query | _open_urls
+    end
+end
+
+switch $argv[1]
+    case list open help update
+        $argv[1..-1]
+    case '*'
+        _search
+end
+

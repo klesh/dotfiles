@@ -1,0 +1,2 @@
+schtasks /create /tn WSLClockSync /tr "wsl.exe sudo hwclock -s" /sc onevent /ec system /mo "*[System[Provider[@Name='Microsoft-Windows-Kernel-General'] and (EventID=1)]]"
+Set-ScheduledTask WSLClockSync -Settings (New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries)

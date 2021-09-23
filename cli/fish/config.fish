@@ -2,14 +2,14 @@
 
 if status is-interactive
     # === default programs
-    set -gx EDITOR nvim
+    set -gx EDITOR v
 
     # === fzf configuration
-    set -U FZF_DEFAULT_COMMAND 'ag -g ""'
-    set -U FZF_COMPLETE 0
-    set -U FZF_FIND_FILE_COMMAND 'ag -g ""'
-    set -U FZF_OPEN_COMMAND 'ag -g ""'
-    set -U FZF_DEFAULT_OPTS '--height 40% --preview "bat --style=numbers --color=always --line-range :500 {}"'
+    set -gx FZF_DEFAULT_COMMAND 'ag -g ""'
+    set -gx FZF_COMPLETE 0
+    set -gx FZF_FIND_FILE_COMMAND 'ag -g ""'
+    set -gx FZF_OPEN_COMMAND 'ag -g ""'
+    set -gx FZF_DEFAULT_OPTS '--height 40% --preview "bat --style=numbers --color=always --line-range :500 {}"'
 
     # === less configuration
     # no line-wrapping, good for `docker ps`
@@ -23,7 +23,7 @@ if status is-interactive
     set -gx LS_COLORS 'ow=34;42;40'
 
     # === bat configuration
-    set -gx BAT_THEME 'gruvbox'
+    set -gx BAT_THEME 'OneHalfDark'
     set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
 
     # === dict.sh configuration
@@ -53,11 +53,13 @@ if status is-interactive
     alias dt='date "+%Y%m%d-%H%M%S"'
 
     # === PATH and file sourcing
-    append_paths ~/.yarn/bin
+    append_paths ~/go/bin ~/bin ~/.local/bin ~/.yarn/bin ~/.config/yarn/global/node_modules/.bin ~/dotfiles/bin ~/dotfiles/devops/bin ~/Nextcloud/bin
     source_files /usr/share/autojump/autojump.fish /usr/local/share/autojump/autojump.fish \
+        ~/.jabba/jabba.fish \
+        ~/.asdf/asdf.fish \
         ~/.profile.fish
 
     # === auto cd into last activated directory
-    cd $last_pwd
+    test "$PWD" = "$HOME" && cd $last_pwd
 end
 

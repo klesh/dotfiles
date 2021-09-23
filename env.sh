@@ -8,17 +8,11 @@ XDG_CONFIG_HOME=${XDG_CONFIG_HOME-"$HOME/.config"}
 PREFIX=/usr/local
 PDIR=$(dirname "${DIR-$0}")
 GITHUB_PROXY=${GITHUB_PROXY-$HTTPS_PROXY}
+WSL=$(grep -i Microsoft /proc/sys/kernel/osrelease)
 
 in_china() {
-    if [ -z "$IS_CHINA" ]; then
-        IS_CHINA=no
-        if curl -s myip.ipip.net | grep -qF '中国' > /dev/null; then
-            IS_CHINA=yes
-        fi
-    fi
-    [ "$IS_CHINA" = "no" ] && echo "in_china: no" && return 1
-    echo "in_china: yes"
-    return 0
+    ! [ -f /tmp/myip_full ] && curl -s myip.ipip.net > /tmp/myip_full
+    grep -qF '中国' /tmp/myip_full
 }
 
 lnsf() {
@@ -51,9 +45,9 @@ git_clone() {
     mkdir -p "$(dirname "$2")"
     [ -d "$2" ] && return
     if echo "$1" | grep -qF 'github.com'; then
-        HTTPS_PROXY=$GITHUB_PROXY git clone --depth 1 "$1" "$2"
+        HTTPS_PROXY=$GITHUB_PROXY git clone --depth 1 "$@"
     else
-        git clone --depth 1 "$1" "$2"
+        git clone --depth 1 "$@"
     fi
 }
 
@@ -84,6 +78,27 @@ enhance_vim() {
     [ "$VIM_MODE" = "enhanced" ] && has_cmd nvim
 }
 
+pm_update() {
+    # skip updation on daily basis
+    TSFILE=/tmp/apt_updated_at_$(date +%Y%m%d)
+    CHECKSUM=$(md5sum /etc/apt/sources.list /etc/apt/sources.list.d/*.list | sort | md5sum)
+    grep -qF "$CHECKSUM" "$TSFILE" && return
+    case "$PM" in
+        apt)
+            sudo apt update
+            ;;
+        *)
+            echo "unsupported os"
+            exit 1
+            ;;
+    esac
+    echo "$CHECKSUM" > "$TSFILE"
+}
+
+win_env_path() {
+    cmd.exe /c 'echo '$1 2>/dev/null | awk '{sub("C:", "/mnt/c"); gsub("\\\\","/"); print}'
+}
+
 
 sudo mkdir -p $PREFIX
 
@@ -97,33 +112,13 @@ if [ "$PM" = "n/a" ]; then
     echo "Unsupported Package Manager"
     exit 1
 fi
-
-log "Installing basic utilities"
-case "$PM" in
-    apt)
-        sudo apt install \
-            build-essential \
-            unzip p7zip \
-            openssh-client \
-            curl wget \
-            man sudo
-        ;;
-    pacman)
-        sudo pacman -S --noconfirm --needed \
-            base-devel \
-            unzip p7zip \
-            openssh \
-            curl wget \
-            man sudo
-        # install yay
-        if ! command -v yay >/dev/null; then
-            intorepo https://aur.archlinux.org/yay.git /tmp/yay
-            makepkg -si
-            exitrepo
-        fi
-        ;;
-esac
-
+if [ -f /etc/lsb-release ]; then
+    set -a
+    . /etc/lsb-release
+    set +a
+    export DISTRIB_RELEASE_MAJOR=${DISTRIB_RELEASE%.*}
+    export DISTRIB_RELEASE_MINOR=${DISTRIB_RELEASE#.*}
+fi
 
 log "Environments"
 echo " PM           : $PM"

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+curl -i -N -vv \
+    -H "Connection: Upgrade" \
+    -H "Upgrade: websocket" \
+    -H "Host: $(basename "$(dirname "$1")")" \
+    -H "Origin: $1" "$1"

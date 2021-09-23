@@ -9,11 +9,16 @@ if ! has_cmd python; then
 fi
 log 'Setting up ranger'
 
+if [ "$LANG" != "en_US.UTF-8" ] ; then
+    echo "please set LANG to en_US.UTF-8 for ranger to work properly"
+    exit 1
+fi
+
 # install ranger
 case "$PM" in
     apt)
         # atool/p7zip-full for archive previewing/extracting etc
-        sudo apt install -y atool p7zip-full unrar
+        sudo apt install -y atool p7zip-full unrar libx11-dev libxext-dev
         sudo pip3 install ranger-fm ueberzug
         ;;
     pacman)

@@ -8,7 +8,6 @@ log "Setting up python3"
 if in_china; then
 
     # config pip mirror for CHINA
-    mkdir -p "$HOME/.pip"
     echo "
     [global]
     index-url = https://mirrors.aliyun.com/pypi/simple

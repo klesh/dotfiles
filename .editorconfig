@@ -3,3 +3,6 @@ indent_size=4
 
 [dwmbar]
 indent_size=4
+
+[*.ahk]
+indent_size=4

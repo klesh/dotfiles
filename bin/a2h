@@ -1,0 +1,6 @@
+#!/bin/fish
+
+# embed image as base64 data-uri:  -a data-uri
+# disable google font: -a webfonts!
+# output direactory: -D <output_dir>
+asciidoctor -a data-uri -a webfonts! -D $output_dir $input_file

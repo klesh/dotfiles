@@ -20,24 +20,37 @@ fi
 if ! has_cmd "$VIM"; then
     case "$PM" in
         apt)
-            sudo add-apt-repository ppa:neovim-ppa/stable -y
-            sudo apt update
-            sudo apt install -y neovim
+            # nvim not very compatible with CJK characters and ranger
+            #sudo add-apt-repository ppa:neovim-ppa/stable -y
+            #sudo apt update
+            #sudo apt install -y neovim
+            #if enhance_vim; then
+                #sudo pip3 install pyvim neovim
+            #fi
+
+            # gui-common is required for clipboard integration
+            sudo add-apt-repository ppa:jonathonf/vim -y -n
+            pm_update
+            sudo apt install -y vim vim-gui-common
             if enhance_vim; then
-                sudo pip3 install pyvim neovim
+                sudo pip3 install pyvim
             fi
             ;;
         pacman)
-            sudo pacman -S --noconfirm --needed neovim
+            #sudo pacman -S --noconfirm --needed neovim
+            #if enhance_vim; then
+                #sudo pip install pyvim neovim
+            #fi
+            sudo pacman -S --noconfirm --needed vim
             if enhance_vim; then
-                sudo pip install pyvim neovim
+                sudo pip install pyvim
             fi
             ;;
     esac
 fi
 
 # symlink configuration
-sudo ln -sf "$(command -v nvim)" /usr/bin/v
+sudo ln -sf "$(command -v vim)" /usr/bin/v
 lnsf "$DIR/vim/init.vim" "$XDG_CONFIG_HOME/nvim/init.vim"
 lnsf "$DIR/vim/coc-settings.json" "$XDG_CONFIG_HOME/nvim/coc-settings.json"
 lnsf "$DIR/vim/coc-settings.json" "$HOME/.vim/coc-settings.json"

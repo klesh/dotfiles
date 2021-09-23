@@ -2,17 +2,34 @@
 # Set-ExecutionPolicy RemoteSigned
 # new-item -ItemType SymbolicLink -Target "D:\Nextcloud\klesh\config\win\profile.ps1" -Path $profile
 
+#$env:POSH_GIT_ENABLED = $true
 
 Set-PSReadLineOption -EditMode Emacs
 Set-PSReadLineOption -PredictionSource History
+Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
 
-$Env:Path += ";$PSScriptRoot\bin"
+Import-Module posh-git
+Import-Module oh-my-posh
+
+
+$Dir = (Get-Item (Get-Item $PSCommandPath).Target).Directory.FullName
+$Env:Path += ";$Dir\bin"
+$Env:PSModulePath += ";$Dir\Modules"
 $Env:KUBE_EDITOR = 'nvim'
 $Env:EDITOR = 'nvim'
+$Env:VIM_MODE = 'enhanced'
+$Env:hosts = 'C:\Windows\System32\drivers\etc\hosts'
 Set-Alias -Name k kubectl
+Set-Alias -Name bm Open-Bookmark
+Set-Alias -Name v nvim
 $isPs7 = $host.Version.Major -ge 7
 if ( $isPs7 ) {
-    Set-Prompt
+    $GitPromptSettings.EnableFileStatus = $false
+    if ((Get-Module oh-my-posh).Version.Major -eq 3) {
+        Set-PoshPrompt -Theme fish
+    } else {
+        Set-Prompt -Theme fish
+    }
 }
 
 function kcc { k config get-contexts $args }
@@ -79,4 +96,14 @@ function ssh-copy-id {
   )
 
   Get-Content $IdentityFile | ssh $UserHost "umask 077; mkdir -p .ssh ; cat >> .ssh/authorized_keys"
+}
+
+function f {
+    [Cmdletbinding()]
+
+    $tmpfile = New-TemporaryFile
+    lf -last-dir-path $tmpfile
+    $lastdir = Get-Content $tmpfile
+    Remove-Item $tmpfile
+    cd $lastdir
 }

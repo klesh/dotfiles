@@ -34,10 +34,13 @@ if [ ! -f "$HOME/.cargo/bin/rustup" ]; then
     curl -sSf https://cdn.jsdelivr.net/gh/rust-lang-nursery/rustup.rs/rustup-init.sh | sh
 fi
 
-if has_cmd fish; then
-    echo "
-        source $HOME/.cargo/env
-    " | sed 's/^ *//' > "$XDG_CONFIG_HOME/fish/conf.d/cargo.fish"
+echo "Please add follow line to your .profile"
+echo 'export PATH=$HOME/.cargo/env:$PATH'
+
+if has_cmd code; then
+    echo "install following extension for VSCode debugging:"
+    echo "  rust"
+    echo "  codelldb"
 fi
 
 # coc.nvim

@@ -1,0 +1,25 @@
+set drawbox
+set icons
+
+cmd mkdir %mkdir "$@"
+cmd copyfilepath %echo "$f" | xsel -b
+cmd copyfilename %basename "$f" | xsel -b
+cmd pasteoverwrite %{{
+    load=$(lf -remote 'load')
+    mode=$(echo "$load" | sed -n '1p')
+    list=$(echo "$load" | sed '1d')
+    if [ $mode = 'copy' ]; then
+        cp -R $list .
+    elif [ $mode = 'move' ]; then
+        mv $list .
+    fi
+    lf -remote 'send load'
+    lf -remote 'send clear'
+}}
+cmd e $$EDITOR "$@"
+cmd setexecutable %chmod +x "$f"
+
+map Yp copyfilepath
+map Yn copyfilename
+map P pasteoverwrite
+map X setexecutable

@@ -23,6 +23,7 @@ set laststatus=2
 set fillchars=vert:\ ,fold:-
 set clipboard=unnamedplus  " system clipboard as default register. for vim to work need installing gvim package
 set mouse=a
+set spell
 filetype plugin indent on
 syntax on
 au! BufWritePost $MYVIMRC source %
@@ -50,6 +51,8 @@ noremap <C-b> <Left>
 
 vnoremap <leader>p pgvy
 nnoremap <leader>q :qall<CR>
+nnoremap <Leader>v <c-v>
+nnoremap <Leader>s :b#<CR>
 
 nnoremap <leader>1 :b1<CR>
 nnoremap <leader>2 :b2<CR>
@@ -58,6 +61,21 @@ nnoremap <leader>4 :b4<CR>
 nnoremap <leader>5 :b5<CR>
 nnoremap <leader>w :w<CR>
 nnoremap <leader><Esc> :noh<return><esc>
+
+function! WSLCopy()
+    " Why is this not a built-in Vim script function?!
+    let [line_start, column_start] = getpos("'<")[1:2]
+    let [line_end, column_end] = getpos("'>")[1:2]
+    let lines = getline(line_start, line_end)
+    if len(lines) == 0
+        return ''
+    endif
+    let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
+    let lines[0] = lines[0][column_start - 1:]
+    call system('clip.exe', join(lines, "\n"))
+endfunction
+
+xnoremap <leader>y <esc>:call WSLCopy()<CR>
 
 nmap <leader>"" ysiW"
 nmap <leader>'' ysiW'
@@ -81,6 +99,11 @@ au ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
 au Syntax * match ExtraWhitespace /\s\+$/
 nnoremap <leader>es :%s/\s\+$//g<CR>
 
+
+" location jumping
+nnoremap <leader>n :cnext<CR>
+nnoremap <leader>p :cprev<CR>
+
 " auto install vim-plug
 if has('nvim')
     if has('win32')
@@ -89,13 +112,16 @@ if has('nvim')
         let vim_plug_path = expand("~/.config/nvim/autoload/plug.vim")
     endif
 else
+    set ttymouse=sgr
+    "map <ScrollWheelUp> <C-Y>
+    "map <ScrollWheelDown> <C-E>
     let vim_plug_path = expand("~/.vim/autoload/plug.vim")
     set listchars=eol:\ ,tab:>\ ,trail:~,extends:>,precedes:<
 endif
 let vim_plug_just_installed = 0
 if !filereadable(vim_plug_path)
     echo "Installing vim-plug..."
-    :exe "!curl -fLo " . vim_plug_path . " --create-dirs https://gitee.com/klesh/vim-plug/raw/master/plug.vim"
+    :exe "!curl -fLo \"" . vim_plug_path . "\" --create-dirs https://gitee.com/klesh/vim-plug/raw/master/plug.vim"
     let vim_plug_just_installed = 1
     echo "vim-plug installed"
 endif
@@ -113,23 +139,25 @@ Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 Plug 'morhetz/gruvbox'
 Plug 'klesh/vim-fish', { 'for': 'fish' }
 Plug 'alvan/vim-closetag', { 'for': ['vue', 'html', 'xml'] }
-Plug 'francoiscabrol/ranger.vim'
+"Plug 'francoiscabrol/ranger.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 if $VIM_MODE == 'enhanced'
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    if !executable("node") || !executable("yarnpkg")
+        echo "nodejs/yarnpkg must be installed in order to use coc.nvim"
+    else
+        Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    end
     Plug 'chrisbra/Colorizer'
-    Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
+    Plug 'tpope/vim-markdown', { 'for': 'markdown' }
     Plug 'cespare/vim-toml', { 'for': 'toml' }
-    " vimspector
-    if has('nvim')
-        Plug 'rbgrouleff/bclose.vim'
-    endif
-    Plug 'puremourning/vimspector'
     Plug 'vim-scripts/mom.vim'
 else
     Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
+endif
+if has('win32')
+    Plug 'zigford/vim-powershell'
 endif
 call plug#end()
 
@@ -161,7 +189,7 @@ if $VIM_MODE == 'enhanced'
     nmap <silent> <leader>ne <Plug>(coc-diagnostic-next-error)
     nmap <silent> <leader>pe <Plug>(coc-diagnostic-prev-error)
     nmap <silent> <leader>oi :CocInfo<CR>
-    nmap <silent> <leader>ol :<C-u>CocList<CR>
+    "nmap <silent> <leader>ol :<C-u>CocList<CR>
     nmap <silent> <leader>olr :<C-u>CocListResume<CR>
     nmap <silent> <leader>od :call CocAction('doHover')<CR>
     nmap <silent> <leader>ol <Plug>(coc-openlink)
@@ -196,7 +224,11 @@ nnoremap <leader>k :cp<CR>
 
 " ==== Ranger configuration ====
 let g:ranger_map_keys = 0
-nnoremap <C-t> :Ranger<CR>
+"nnoremap <C-t> :Ranger<CR>
+
+
+" ==== netrw configuration ====
+nnoremap <C-t> :Explore<CR>
 
 autocmd BufEnter,BufRead nnoremap <leader>cg :<C-u>call OpenRangerIn(system("git rev-parse --show-toplevel >/dev/null || pwd"), 'edit ')<CR>
 
@@ -214,16 +246,36 @@ nnoremap <leader>gmh :diffget //2<CR>
 nnoremap <leader>gml :diffget //3<CR>
 nnoremap <leader>gsc :exec "!git switch -c " . input("Enter new branch name:")<CR>
 
+" ==== functions ======
+fu! SilentOK(cmd)
+    let l:output = system(substitute(a:cmd, "%", expand("%"), "g"))
+    if v:shell_error != 0
+        echo l:output
+    endif
+endfu
+
+fu! SystemOr(cmd, default)
+    let l:output = system(substitute(a:cmd, "%", expand("%"), "g"))
+    if v:shell_error != 0
+        return a:default
+    endif
+    return trim(l:output)
+endfu
+
+
+
 " ==== ctrlp configuration ====
 "let g:ctrlp_user_command = ['.git', 'git ls-files -co --exclude-standard']
 
 " ==== fzf configuration ====
 " enable <C-p> for fzf
 let g:fugitive_no_maps=1
+let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g ""'
 
-nnoremap <C-p> :call fzf#vim#files(trim(system("git rev-parse --show-toplevel 2>/dev/null \|\| pwd")))<Cr>
+nnoremap <C-p> :call fzf#vim#files(SystemOr("git rev-parse --show-toplevel", "."))<Cr>
 nnoremap <leader>gco :call fzf#run({'source': 'git branch \| cut -c 3-; git tag -l', 'sink': '!git checkout'})<CR>
 nnoremap <leader>gm :call fzf#run({'source': 'git branch \| cut -c 3-', 'sink': '!git merge'})<CR>
+nnoremap <leader>b :Buffers<CR>
 
 
 " ==== gruvbox configuration ====
@@ -256,12 +308,6 @@ fu! NERDCommenter_after()
 endfu
 
 " ==== groff ====
-fu! SilentOK(cmd)
-    let l:ouput = system(substitute(a:cmd, "%", expand("%"), "g"))
-    if v:shell_error != 0
-        echo ouput
-    endif
-endfu
 
 fu! ToggleGroffMomAutoCompilation()
     let g:GroffMomAutoCompilation = !get(g:, "GroffMomAutoCompilation", 0)
@@ -282,3 +328,13 @@ endfu
 nnoremap <leader>ac :call ToggleGroffMomAutoCompilation()<CR>
 autocmd BufEnter,BufRead *.mom :set ft=mom
 
+" for yaml need cursorcolumn
+autocmd FileType yaml :set cursorcolumn
+
+" spell highlight
+highlight clear SpellBad
+highlight SpellBad cterm=underline
+highlight SpellBad gui=undercurl
+
+" commitmsg
+autocmd BufEnter,BufRead commitmsg.md :set colorcolumn=100

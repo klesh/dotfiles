@@ -5,19 +5,23 @@ DIR=$(dirname "$(readlink -f "$0")")
 . "$DIR/../env.sh"
 
 log 'Setting up shell'
-
 case "$PM" in
     apt)
-        sudo add-apt-repository ppa:fish-shell/release-3 -y
-        sudo apt update
-        sudo apt install fish silversearcher-ag dash bat -y
-        lnsf /usr/bin/batcat "$HOME/.local/bin/bat"
+        sudo add-apt-repository ppa:fish-shell/release-3 -y -n
+        pm_update
+        sudo apt install fish silversearcher-ag -y
+        echo DISTRIB_RELEASE_MAJOR: $DISTRIB_RELEASE_MAJOR
+        echo DISTRIB_RELEASE: $DISTRIB_RELEASE
+        if [ "$DISTRIB_RELEASE_MAJOR" -gt 19 ] || [ "$DISTRIB_RELEASE" = "19.10" ]; then
+            sudo apt install dash bat  -y
+        fi
+        sudo ln -sf /usr/bin/batcat /usr/bin/bat
         intorepo https://github.com/junegunn/fzf.git "$HOME/.fzf"
         ./install --all
         exitrepo
         ;;
     pacman)
-        sudo pacman -S  --noconfirm --needed fish the_silver_searcher dash bat fzf
+        sudo pacman -S --noconfirm --needed fish the_silver_searcher dash bat fzf
         # prevent bash upgradation relink /bin/sh
         sudo mkdir -p /etc/pacman.d/hooks
         echo "
@@ -36,19 +40,15 @@ case "$PM" in
         ;;
 esac
 
-log 'Setting up bat'
-BAT_THEMES="$(bat --config-dir)/themes"
-BAT_GRUVBOX="$BAT_THEMES/gruvbox"
-if [ ! -d "$BAT_GRUVBOX" ]; then
-    mkdir -p "$BAT_THEMES"
-    git_clone https://github.com/peaceant/gruvbox.git "$BAT_GRUVBOX"
-fi
 
-log 'Setting up dash as default shell'
-sudo /usr/bin/ln -sfT dash /usr/bin/sh
+# only for local machine with gui
+if [ -z "$SSH_CLIENT" ] && [ -n "$DISPLAY" ] && has_cmd dash; then
+    log 'Setting up dash as default shell'
+    sudo /usr/bin/ln -sfT dash /usr/bin/sh
 
-if [ "$(awk -F':' '/^'"$USER"'/{print $7}' /etc/passwd)" != "/bin/sh" ]; then
-    chsh -s /bin/sh
+    if [ "$(awk -F':' '/^'"$USER"'/{print $7}' /etc/passwd)" != "/bin/sh" ]; then
+        chsh -s /bin/sh
+    fi
 fi
 
 
@@ -58,8 +58,11 @@ lnsf "$DIR/fish/functions/fish_prompt.fish" "$XDG_CONFIG_HOME/fish/functions/fis
 lnsf "$DIR/fish/functions/fish_right_prompt.fish" "$XDG_CONFIG_HOME/fish/functions/fish_right_prompt.fish"
 lnsf "$DIR/fish/functions/fisher.fish" "$XDG_CONFIG_HOME/fish/functions/fisher.fish"
 lnsf "$DIR/fish/functions/r.fish" "$XDG_CONFIG_HOME/fish/functions/r.fish"
+lnsf "$DIR/fish/functions/f.fish" "$XDG_CONFIG_HOME/fish/functions/f.fish"
 lnsf "$DIR/fish/functions/append_paths.fish" "$XDG_CONFIG_HOME/fish/functions/append_paths.fish"
 lnsf "$DIR/fish/functions/source_files.fish" "$XDG_CONFIG_HOME/fish/functions/source_files.fish"
+lnsf "$DIR/fish/functions/git_clone_all.fish" "$XDG_CONFIG_HOME/fish/functions/git_clone_all.fish"
+lnsf "$DIR/fish/functions/winip.fish" "$XDG_CONFIG_HOME/fish/functions/winip.fish"
 
 # install plugins
 # for better keybinding: C-o open file with $EDITOR / C-r search history / C-g open with xdg-open
