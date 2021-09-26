@@ -3,7 +3,6 @@
 if status is-interactive
     # === default programs
     set -gx EDITOR vim
-    set -gx TMUX_SHELL (command -v fish)
 
     # === fzf configuration
     set -gx FZF_DEFAULT_COMMAND 'ag -g ""'

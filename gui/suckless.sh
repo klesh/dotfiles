@@ -64,6 +64,7 @@ cat <<'EOT' | sed "s|__PDIR__|$PDIR|g" > ~/.profile
 export PATH=__PDIR__/bin:$HOME/.local/bin:$PATH
 export VIM_MODE=enhanced
 export DMENU_DEFAULT_OPTS='-i -c -fn monospace:13 -nb #222222 -nf #bbbbbb -sb #5b97f7 -sf #eeeeee -l 20'
+export TMUX_SHELL=$(command -v fish)
 
 # auto startx
 [ -z "$DISPLAY" ] && [ -n "$XDG_VTNR" ] && [ "$XDG_VTNR" -eq "1" ] \
