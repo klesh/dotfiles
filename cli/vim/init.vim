@@ -69,6 +69,17 @@ nnoremap <leader>l <C-w>l
 nnoremap <leader>oo <C-w>o
 nnoremap <leader>q <C-w>q
 
+
+function! GetXCopyCmd()
+    let l:status = system("command -v termux-clipboard-set")
+    if len(l:status) > 0
+        return "termux-clipboard-set"
+    endif
+    return "xsel -b"
+endfunction
+
+let g:xcopy = GetXCopyCmd()
+
 function! XCopy()
     " Why is this not a built-in Vim script function?!
     let [line_start, column_start] = getpos("'<")[1:2]
@@ -79,7 +90,7 @@ function! XCopy()
     endif
     let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
     let lines[0] = lines[0][column_start - 1:]
-    call system('xsel -b', join(lines, "\n"))
+    call system(g:xcopy, join(lines, "\n"))
 endfunction
 
 function! YankFileLineNo()
