@@ -1,0 +1,41 @@
+#!/bin/sh
+
+set -e
+
+HOLIDAY=~/.local/holiday.csv
+JQ_CSV_FMT='.holiday[] | "\(.date),\(.holiday),\(.name)"'
+
+# update holiday database
+update_holiday() {
+    curl http://timor.tech/api/holiday/year/$(date +%Y) | jq "$JQ_CSV_FMT" -r > $HOLIDAY
+    if [ $(date +%m) -eq 12 ]; then
+        curl http://timor.tech/api/holiday/year/$(date -d '+1 year' ) >> $HOLIDAY
+    fi
+}
+
+format_date() {
+    date -d "$1" +%Y-%m-%d
+}
+
+is_holiday() {
+    DATE=$(format_date $1)
+    IS_HOLIDAY=$(awk -F, '$1=="'$DATE'" { print $2 }' $HOLIDAY)
+    if [ -n "$IS_HOLIDAY" ]; then
+        [ "$IS_HOLIDAY" = "true" ]
+    else
+        WEEKDAY=$(date -d "$1" +%w)
+        [ "$WEEKDAY" -eq 6 ] || [ "$WEEKDAY" -eq 0 ]
+    fi
+}
+
+# automatically update if file didn't exist
+[ ! -f "$HOLIDAY" ] && update_holiday
+
+case "$1" in
+    update)
+        update_holiday
+        ;;
+    *)
+        is_holiday "$@"
+        ;;
+esac

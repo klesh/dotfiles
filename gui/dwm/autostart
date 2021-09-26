@@ -24,4 +24,10 @@ launchapp flameshot
 launchapp ibus-daemon -drx
 launchapp nextcloud --background
 
+if ! holiday today; then
+    launchapp thunderbird
+    launchapp chromium
+    launchapp st -c class workterm
+fi
+
 nitrogen --restore
