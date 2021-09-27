@@ -1,0 +1,11 @@
+# Adjust speed, scrolling direction
+
+1. install `xinput`
+2. `xinput list` to find out your touchpad id
+3. `xinput list-props <device_id>` to find settings
+   ```sh
+   libinput Natural Scrolling Enabled (298):       0
+   libinput Natural Scrolling Enabled Default (299):       0
+   ```
+4. `xinput set-prop 298 1` to set Natural Scrolling
+4. `xinput set-prop 299 1` to set Natural Scrolling

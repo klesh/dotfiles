@@ -7,7 +7,7 @@ xrandr | awk '
 $2 == "connected" && $3 == "primary" {
     if (match($0, / ([0-9]+)x([0-9]+)\+([0-9]+)\+([0-9]+) (left|right)?/, m1) &&
         match($0, / ([0-9]+)mm x ([0-9]+)mm$/, m2)) {
-        DPI=m1[1]*25.4/m2[m1[5]?2:1]
+        DPI=m1[1]*25.4/m2[m1[5]?2:1]*0.8
         printf "Xft.dpi: %i", DPI
     }
 }
