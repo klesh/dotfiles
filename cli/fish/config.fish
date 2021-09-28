@@ -51,6 +51,10 @@ if status is-interactive
     alias issh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
     alias iscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
     alias dt='date "+%Y%m%d-%H%M%S"'
+    alias cnpm="npm --registry=https://registry.npmmirror.com \
+            --cache=$HOME/.npm/.cache/cnpm \
+            --disturl=https://npmmirror.com/dist \
+            --userconfig=$HOME/.cnpmrc"
 
     # === PATH and file sourcing
     append_paths ~/go/bin \
