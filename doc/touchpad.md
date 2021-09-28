@@ -8,4 +8,14 @@
    libinput Natural Scrolling Enabled Default (299):       0
    ```
 4. `xinput set-prop 298 1` to set Natural Scrolling
-4. `xinput set-prop 299 1` to set Natural Scrolling
+5. `xinput set-prop 299 1` to set Natural Scrolling
+
+id can be replaced by name
+
+```bash
+#!/bin/sh
+
+xinput set-prop "06CB0001:00 06CB:CE78 Touchpad" "libinput Natural Scrolling Enabled" 1
+xinput set-prop "06CB0001:00 06CB:CE78 Touchpad" "libinput Accel Speed" 0.4
+```
+
