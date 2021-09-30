@@ -13,7 +13,8 @@ if status is-interactive
 
     # === less configuration
     # no line-wrapping, good for `docker ps`
-    set -gx LESS "-SRXF"
+    #set -gx LESS "-SRXF"
+    set -gx LESS "-SRX" # for nnn help to how, remove F
 
     # === nvm configuration
     set -gx nvm_mirror http://npm.taobao.org/mirrors/node
@@ -21,6 +22,9 @@ if status is-interactive
     # === `ls` configuration
     # change OTHER-WRITABLE color for `ls` command
     set -gx LS_COLORS 'ow=34;42;40'
+
+    # === nnn configuration
+    set -gx NNN_PLUG 'c:fzcd;m:nmount;x:!chmod +x $nnn;d:dragdrop'
 
     # === bat configuration
     set -gx BAT_THEME 'OneHalfDark'

@@ -50,7 +50,7 @@ noremap <C-f> <Right>
 noremap <C-b> <Left>
 
 vnoremap <leader>p pgvy
-nnoremap <leader>q :qall<CR>
+nnoremap Q :qall<CR>
 nnoremap <Leader>v <c-v>
 nnoremap <Leader>s :b#<CR>
 
@@ -68,6 +68,7 @@ nnoremap <leader>k <C-w>k
 nnoremap <leader>l <C-w>l
 nnoremap <leader>oo <C-w>o
 nnoremap <leader>q <C-w>q
+nnoremap <leader>x :!chmod +x %<Cr>
 
 
 function! GetXCopyCmd()
@@ -169,6 +170,7 @@ Plug 'alvan/vim-closetag'
 "Plug 'francoiscabrol/ranger.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'voldikss/vim-floaterm'
 Plug 'preservim/nerdtree'
 
 if $VIM_MODE == 'enhanced'
@@ -367,9 +369,20 @@ highlight SpellBad gui=undercurl
 " commitmsg
 autocmd BufEnter,BufRead commitmsg.md :set colorcolumn=100
 
-" nerdtree
+" ==== nerdtree ====
 nnoremap <leader>t :NERDTreeToggle<CR>
 
 " go organize import on save
+" ==== golang ====
 command! -nargs=0 OR :call CocAction('runCommand', 'editor.action.organizeImport')
 autocmd BufWritePre *.go :OR
+
+" ==== floaterm ====
+nnoremap <leader>tt :FloatermNew nnn<CR>
+let g:floaterm_autohide=1
+let g:floaterm_autoclose=1
+let g:floaterm_opener='edit'
+let g:floaterm_keymap_new    = '<F7>'
+let g:floaterm_keymap_prev   = '<F8>'
+let g:floaterm_keymap_next   = '<F9>'
+let g:floaterm_keymap_toggle = '<F12>'
