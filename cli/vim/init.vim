@@ -381,6 +381,7 @@ autocmd BufWritePre *.go :OR
 nnoremap <leader>tt :FloatermNew nnn<CR>
 let g:floaterm_autohide=1
 let g:floaterm_autoclose=1
+let g:floaterm_shell='fish'
 let g:floaterm_opener='edit'
 let g:floaterm_keymap_new    = '<F7>'
 let g:floaterm_keymap_prev   = '<F8>'

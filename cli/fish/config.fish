@@ -24,7 +24,8 @@ if status is-interactive
     set -gx LS_COLORS 'ow=34;42;40'
 
     # === nnn configuration
-    set -gx NNN_PLUG 'c:fzcd;m:nmount;x:!chmod +x $nnn;d:dragdrop'
+    set -gx NNN_PLUG 'c:fzcd;m:nmount;x:!chmod +x $nnn;d:dragdrop;p:preview-tui'
+    set -gx NNN_FIFO /tmp/nnn.fifo
 
     # === bat configuration
     set -gx BAT_THEME 'OneHalfDark'
