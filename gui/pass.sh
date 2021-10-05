@@ -7,16 +7,17 @@ DIR=$(dirname "$(readlink -f "$0")")
 if ! has_cmd go; then
     "$PDIR/devel/go.sh"
 fi
+GNUPG=$HOME/.gnupg
+GPG_AGENT_CONF=$GNUPG/gpg-agent.conf
+mkdir -p "$GNUPG"
 
 # install pass
 case "$PM" in
     apt)
-        sudo apt install -y pass
-        GNUPG=$HOME/.gnupg
-        GPG_AGENT_CONF=$GNUPG/gpg-agent.conf
+        sudo apt install -y pass webext-browserpass
         if [ -n "$WSL" ]; then
             PINENTRY=$PDIR/bin/pinentry-wsl-ps1.sh
-            BROWSERPASS_NATIVE= "$(wsl-win-path.sh %USERPROFILE%)/browser-wsl.bat"
+            BROWSERPASS_NATIVE="$(wsl-win-path.sh %USERPROFILE%)/browser-wsl.bat"
             echo "@echo off\r\nbash -c 'browserpass'" \
                 > "$BROWSERPASS_NATIVE"
         else
@@ -24,33 +25,30 @@ case "$PM" in
             PINENTRY=$(command -v pinentry-gtk-2)
         fi
         SETTING="pinentry-program $PINENTRY"
-        mkdir -p "$GNUPG"
-        if ! grep -Fq "$SETTING" "$GPG_AGENT_CONF"; then
-            echo "$SETTING" > GPG_AGENT_CONF
-        fi
         ;;
     pacman)
         sudo pacman -S --noconfirm --needed \
             go \
             browserpass
+            # install browserpass-native
+            intorepo https://github.com/browserpass/browserpass-native.git "$DIR/repos/browserpass-native"
+            make configure
+            make
+            sudo make install
+            exitrepo
         ;;
 esac
 
 # longer password caching time
 cat <<EOF >  ~/.gnupg/gpg-agent.conf
+$SETTING
 default-cache-ttl 28800
 max-cache-ttl 28800
 EOF
 
 # enable browser-native for google-chrome
-make -C /usr/lib/browserpass hosts-chrome-user
+#make -C /usr/lib/browserpass hosts-chrome-user
 
-# install browserpass-native
-intorepo https://github.com/browserpass/browserpass-native.git "$DIR/repos/browserpass-native"
-make configure
-make
-sudo make install
-exitrepo
 
 # chrome extension: https://chrome.google.com/webstore/detail/browserpass/naepdomgkenhinolocfifgehidddafch
 
