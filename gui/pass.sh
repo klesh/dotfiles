@@ -14,7 +14,7 @@ mkdir -p "$GNUPG"
 # install pass
 case "$PM" in
     apt)
-        sudo apt install -y pass webext-browserpass
+        sudo apt install -y pass
         if [ -n "$WSL" ]; then
             PINENTRY=$PDIR/bin/pinentry-wsl-ps1.sh
             BROWSERPASS_NATIVE="$(wsl-win-path.sh %USERPROFILE%)/browser-wsl.bat"
@@ -30,12 +30,6 @@ case "$PM" in
         sudo pacman -S --noconfirm --needed \
             go \
             browserpass
-            # install browserpass-native
-            intorepo https://github.com/browserpass/browserpass-native.git "$DIR/repos/browserpass-native"
-            make configure
-            make
-            sudo make install
-            exitrepo
         ;;
 esac
 
@@ -45,6 +39,19 @@ $SETTING
 default-cache-ttl 28800
 max-cache-ttl 28800
 EOF
+
+
+# install browserpass-native
+if [ -n "$WSL" ]; then
+    echo "Please download browserpass-native for windows 64 and extract it to /usr/local/bin"
+    x-open https://github.com/browserpass/browserpass-native/releases/latest
+else
+    intorepo https://github.com/browserpass/browserpass-native.git "$DIR/repos/browserpass-native"
+    make configure
+    make
+    sudo make install
+    exitrepo
+fi
 
 # enable browser-native for google-chrome
 #make -C /usr/lib/browserpass hosts-chrome-user
