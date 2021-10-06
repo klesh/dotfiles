@@ -10,4 +10,4 @@ sudo timedatectl set-ntp on || true
 . "$DIR/fish.sh"
 . "$DIR/vim.sh"
 . "$DIR/tmux.sh"
-. "$DIR/ranger.sh"
+. "$DIR/nnn.sh"

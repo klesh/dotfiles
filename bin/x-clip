@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# xsel simulation in WSL
+# usage:
+#     xsel -o
+#     xsel -i [string]
+# From https://www.reddit.com/r/neovim/comments/fyj7mp/neovim_in_wsl_copy_to_windows_clipboard/fn241ig/
+
+if command -v pwsh.exe >/dev/null 2>&1; then
+  pwsh="pwsh.exe"
+elif command -v powershell.exe >/dev/null 2>&1; then
+  pwsh="powershell.exe"
+else
+  exit 1
+fi
+pwsh="$pwsh -NoProfile -NoLogo -NonInteractive"
+
+OUTPUT=
+for i in "$@"
+do
+  case "$i" in
+    -o|--output|-out)
+        OUTPUT=1
+        break
+        ;;
+  esac
+done
+
+if [ "$OUTPUT" = "1" ]; then
+    $pwsh -command 'Get-Clipboard'
+else
+    clip.exe
+fi

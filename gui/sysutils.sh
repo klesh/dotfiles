@@ -19,7 +19,8 @@ case "$PM" in
             network-manager network-manager-gnome \
             exfat-utils \
             dunst \
-            xclip xsel xdotool \
+            xclip xsel \
+            xdotool \
             libnotify-bin \
             flameshot scrot \
             thunar gvfs-bin gvfs-backends thunar-archive-plugin file-roller tumbler
