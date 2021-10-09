@@ -7,11 +7,12 @@ DIR=$(dirname "$(readlink -f "$0")")
 FILES_PATH=$PREFIX/nodejs
 NODE_BIN=$PREFIX/bin/node
 NODE_URL=https://nodejs.org/dist
-NODE_VERSION=v14.15.4
+NODE_VERSION=v14.18.0
 NPM_BIN=npm
+NPM_CONFIG_REGISTRY=
 if in_china; then
-    NPM_REGISTRY_URL=https://npmreg.mirrors.ustc.edu.cn
-    NODE_URL=$NPM_REGISTRY
+    export NPM_CONFIG_REGISTRY=https://registry.npmmirror.com
+    NODE_URL=https://npmmirror.com/mirrors/node
     NPM_BIN=npm
 fi
 export NPM_BIN
@@ -61,14 +62,14 @@ install() {
         | sudo tee "$FILES_PATH" >/dev/null
     # remove download path
     rm "/tmp/$NAME"
-    sudo npm install -g yarn
     configure_nodejs
 }
 
 configure_nodejs() {
     if in_china; then
-        echo "registry=$NPM_REGISTRY_URL" > ~/.npmrc
-        yarnpkg config set registry $NPM_REGISTRY_URL --global
+        echo "registry=$NPM_CONFIG_REGISTRY" > ~/.npmrc
+        ! has_cmd yarnpkg && sudo npm install -g yarn
+        yarnpkg config set registry $NPM_CONFIG_REGISTRY --global
         #yarnpkg config set disturl https://npm.taobao.org/dist --global
         #yarnpkg config set sass_binary_site https://npm.taobao.org/mirrors/node-sass --global
         #yarnpkg config set electron_mirror https://npm.taobao.org/mirrors/electron/ --global
