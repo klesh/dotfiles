@@ -20,6 +20,7 @@ case "$PM" in
     pkg)
         pkg install python
         pip install virtualfish
+        ;;
     apt)
         #for older ubuntu distro
         #sudo add-apt-repository ppa:deadsnakes/ppa
