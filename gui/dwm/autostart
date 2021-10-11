@@ -27,7 +27,7 @@ launchapp nextcloud --background
 if ! holiday today; then
     launchapp thunderbird
     launchapp chromium
-    launchapp st -c workterm tmux
+    #launchapp st -c workterm tmux
 fi
 
 nitrogen --restore
