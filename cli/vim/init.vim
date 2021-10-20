@@ -1,4 +1,5 @@
 " basic settings
+let mapleader=";"
 set ts=4
 set sw=4
 set cc=120
@@ -51,8 +52,8 @@ noremap <C-b> <Left>
 
 vnoremap <leader>p pgvy
 nnoremap Q :qall<CR>
-nnoremap <Leader>v <c-v>
-nnoremap <Leader>s :b#<CR>
+nnoremap <leader>v <c-v>
+nnoremap <leader>bb :b#<CR>
 
 nnoremap <leader>1 :b1<CR>
 nnoremap <leader>2 :b2<CR>
