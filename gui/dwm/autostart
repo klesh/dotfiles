@@ -31,4 +31,3 @@ if ! holiday today; then
 fi
 
 nitrogen --restore
-/home/klesh/Nextcloud/bin/kleshhz &
