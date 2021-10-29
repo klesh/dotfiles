@@ -17,6 +17,7 @@ set noswapfile
 set ignorecase
 set smarttab
 set smartindent
+set smartcase
 set cursorline
 set incsearch
 set signcolumn=yes
@@ -25,6 +26,7 @@ set fillchars=vert:\ ,fold:-
 set clipboard=unnamedplus  " system clipboard as default register. for vim to work need installing gvim package
 set mouse=a
 set spell
+set scrolloff=8
 filetype plugin indent on
 syntax on
 au! BufWritePost $MYVIMRC source %
