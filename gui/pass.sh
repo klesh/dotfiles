@@ -42,15 +42,14 @@ EOF
 
 
 # install browserpass-native
+intorepo https://github.com/browserpass/browserpass-native.git "$DIR/repos/browserpass-native"
+make configure
+make
+sudo make install
+exitrepo
 if [ -n "$WSL" ]; then
     echo "Please download browserpass-native for windows 64 and extract it to /usr/local/bin"
     x-open https://github.com/browserpass/browserpass-native/releases/latest
-else
-    intorepo https://github.com/browserpass/browserpass-native.git "$DIR/repos/browserpass-native"
-    make configure
-    make
-    sudo make install
-    exitrepo
 fi
 
 # enable browser-native for google-chrome
@@ -60,11 +59,13 @@ fi
 # chrome extension: https://chrome.google.com/webstore/detail/browserpass/naepdomgkenhinolocfifgehidddafch
 
 # enable browserpass for browsers
-cd /usr/lib/browserpass
-has_cmd chromium && make hosts-chromium-user
-has_cmd firefox && make hosts-firefox-user
-has_cmd google-chrome && make hosts-chrome-user
-cd -
+if [ -f /usr/lib/browserpass ]; then
+    cd /usr/lib/browserpass
+    has_cmd chromium && make hosts-chromium-user
+    has_cmd firefox && make hosts-firefox-user
+    has_cmd google-chrome && make hosts-chrome-user
+    cd -
+fi
 
 # android
 # [OpenKeyChain - encryption/decryption](https://f-droid.org/packages/org.sufficientlysecure.keychain/)
