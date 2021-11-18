@@ -88,8 +88,7 @@ if status is-interactive
             if string match -q '#*' $line
                 continue
             end
-            set -l kv (string split -m 1 = -- $line)
-            set -gx $kv
+            eval export $line
         end < $argv[1]
     end
 
