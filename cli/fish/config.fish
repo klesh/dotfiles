@@ -88,7 +88,8 @@ if status is-interactive
             if string match -q '#*' $line
                 continue
             end
-            eval export $line
+            set pair (string split -m 1 '=' -- $line)
+            eval "set -gx $pair[1] \"$pair[2]\""
         end < $argv[1]
     end
 
@@ -97,5 +98,6 @@ if status is-interactive
             loadenv .env
        end
     end
+    readenv
 end
 
