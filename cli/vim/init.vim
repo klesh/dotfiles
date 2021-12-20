@@ -246,9 +246,9 @@ nmap <silent> <leader>ct :CloseTagToggleBuffer<CR>
 
 " ==== grepper configuration ====
 "
-nnoremap <leader>sg :Grepper -tool git<CR>
-nnoremap <leader>sc :Grepper -tool grep<CR>
-nnoremap <leader>sa :Grepper -tool ag<CR>
+nnoremap <leader>sg :Grepper -noquickfix -tool git<CR>
+nnoremap <leader>sc :Grepper -noquickfix -tool grep<CR>
+nnoremap <leader>sa :Grepper -noquickfix -tool ag<CR>
 
 " ==== quickfix configuration ====
 nnoremap <leader>cj :cn<CR>
