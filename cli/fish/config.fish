@@ -89,7 +89,11 @@ if status is-interactive
                 continue
             end
             set pair (string split -m 1 '=' -- $line)
-            eval "set -gx $pair[1] \"$pair[2]\""
+            if string match -q "'*" $pair[2]; or string match -q '"*' $pair[2]
+                eval "set -gx $pair[1] $pair[2]"
+            else
+                eval "set -gx $pair[1] \"$pair[2]\""
+            end
         end < $argv[1]
     end
 
