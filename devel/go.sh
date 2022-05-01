@@ -6,6 +6,7 @@ DIR=$(dirname "$(readlink -f "$0")")
 log "Setting up go"
 # install go
 
+if ! has_cmd go; then
 case "$PM" in
     pkg)
         pkg install golang -y
@@ -19,6 +20,7 @@ case "$PM" in
             go
         ;;
 esac
+fi
 
 if in_china; then
     go env -w GO111MODULE=on

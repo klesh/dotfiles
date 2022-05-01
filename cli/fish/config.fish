@@ -88,15 +88,23 @@ if status is-interactive
             if string match -q '#*' $line
                 continue
             end
-            set -l kv (string split -m 1 = -- $line)
-            set -gx $kv
+            set pair (string split -m 1 '=' -- $line)
+            if string match -q "'*" $pair[2]; or string match -q '"*' $pair[2]
+                eval "set -gx $pair[1] $pair[2]"
+            else
+                if not eval "export $pair[1]=\"$pair[2]\""
+                   echo failed to export pair $pair
+                   return
+                end
+            end
         end < $argv[1]
     end
 
-    function readenv --on-variable PWD
-        if test -r .env
-            loadenv .env
-       end
-    end
+    #function readenv --on-variable PWD
+       #if test -r .env
+            #loadenv .env
+       #end
+    #end
+    #readenv
 end
 

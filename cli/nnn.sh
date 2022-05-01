@@ -6,7 +6,7 @@ DIR=$(dirname "$(readlink -f "$0")")
 
 log 'Setting up nnn'
 
-$NNN_CONFIG_DIR="$XDG_CONFIG_HOME/nnn/plugins"
+NNN_CONFIG_DIR="$XDG_CONFIG_HOME/nnn"
 
 # setup package mirror for CHINA
 case "$PM" in
@@ -19,13 +19,12 @@ case "$PM" in
         rm -rf nnn.tar.gz
         cd -
 
-        mkdir -p "$NNN_CONFIG_DIR"
+        mkdir -p "$NNN_CONFIG_DIR/plugins"
         HTTPS_PROXY=$GITHUB_PROXY curl -Lo  "$NNN_CONFIG_DIR/plugins/fzcd" https://github.com/jarun/nnn/raw/master/plugins/fzcd
         HTTPS_PROXY=$GITHUB_PROXY curl -Lo  "$NNN_CONFIG_DIR/plugins/preview-tui" https://github.com/jarun/nnn/raw/master/plugins/preview-tui
         ;;
     pacman)
         sudo pacman -S --noconfirm --needed nnn
-        yay -S --noconfirm --needed dragon-drag-and-drop
         cp -r /usr/share/nnn/plugins/. "$NNN_CONFIG_DIR"
 esac
 
