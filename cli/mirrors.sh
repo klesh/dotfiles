@@ -48,6 +48,7 @@ case "$PM" in
         mkdir -p /etc/xbps.d
         cp /usr/share/xbps.d/*-repository-*.conf /etc/xbps.d/
         sed -i 's|https://alpha.de.repo.voidlinux.org|https://mirrors.tuna.tsinghua.edu.cn/voidlinux|g' /etc/xbps.d/*-repository-*.conf
+        ;;
 esac
 
 
