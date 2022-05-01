@@ -44,6 +44,10 @@ case "$PM" in
         END { print buffer }
         ' /etc/pacman.d/mirrorlist.bak | sudo tee /etc/pacman.d/mirrorlist >/dev/null
         ;;
+    xbps)
+        mkdir -p /etc/xbps.d
+        cp /usr/share/xbps.d/*-repository-*.conf /etc/xbps.d/
+        sed -i 's|https://alpha.de.repo.voidlinux.org|https://mirrors.tuna.tsinghua.edu.cn/voidlinux|g' /etc/xbps.d/*-repository-*.conf
 esac
 
 
