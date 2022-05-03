@@ -45,7 +45,6 @@ if ! has_cmd "$VIM"; then
             sudo pacman -S --noconfirm --needed vim
             if enhance_vim; then
                 sudo pip install pyvim
-                sudo pacman -S clang
             fi
             ;;
     esac

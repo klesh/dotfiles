@@ -29,7 +29,7 @@ if status is-interactive
 
     # === bat configuration
     set -gx BAT_THEME 'OneHalfDark'
-    set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
+    #set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
 
     # === dict.sh configuration
     set -gx D_SELECTOR 'plainsel'

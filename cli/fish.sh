@@ -51,16 +51,6 @@ if [ -n "$WSL" ]; then
 fi
 
 
-# only for local machine with gui
-if [ -z "$SSH_CLIENT" ] && [ -n "$DISPLAY" ] && has_cmd dash; then
-    log 'Setting up dash as default shell'
-    sudo /usr/bin/ln -sfT dash /usr/bin/sh
-
-    if [ "$(awk -F':' '/^'"$USER"'/{print $7}' /etc/passwd)" != "/bin/sh" ]; then
-        chsh -s /bin/sh
-    fi
-fi
-
 
 log 'Setting up fish'
 lnsf "$DIR/fish/config.fish" "$XDG_CONFIG_HOME/fish/config.fish"
@@ -106,3 +96,13 @@ set -U fish_pager_color_description B3A06D yellow
 set -U fish_pager_color_prefix white --bold --underline
 set -U fish_pager_color_progress brwhite --background=cyan
 ' > /dev/null
+
+# only for local machine with gui
+if [ -z "$SSH_CLIENT" ] && [ -n "$DISPLAY" ] && has_cmd dash; then
+    log 'Setting up dash as default shell'
+    sudo /usr/bin/ln -sfT dash /usr/bin/sh
+
+    if [ "$(awk -F':' '/^'"$USER"'/{print $7}' /etc/passwd)" != "/bin/sh" ]; then
+        chsh -s /bin/sh
+    fi
+fi

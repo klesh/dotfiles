@@ -10,6 +10,7 @@ fi
 GNUPG=$HOME/.gnupg
 GPG_AGENT_CONF=$GNUPG/gpg-agent.conf
 mkdir -p "$GNUPG"
+chmod 700 "$GNUPG"
 
 # install pass
 case "$PM" in
@@ -24,18 +25,22 @@ case "$PM" in
             sudo apt install -y pinentry-gtk2
             PINENTRY=$(command -v pinentry-gtk-2)
         fi
-        SETTING="pinentry-program $PINENTRY"
         ;;
     pacman)
         sudo pacman -S --noconfirm --needed \
             go \
-            browserpass
+            browserpass pinentry-qt
+        PINENTRY=$(command -v pinentry-qt)
+        ;;
+    xbps)
+        sudo xbps-install -y go browserpass pass pinentry
+        PINENTRY=$(command -v pinentry-qt)
         ;;
 esac
 
 # longer password caching time
 cat <<EOF >  ~/.gnupg/gpg-agent.conf
-$SETTING
+pinentry-program $PINENTRY
 default-cache-ttl 28800
 max-cache-ttl 28800
 EOF

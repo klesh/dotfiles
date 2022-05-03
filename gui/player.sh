@@ -14,6 +14,9 @@ case "$PM" in
     pacman)
         sudo pacman -S --noconfirm --needed mpd mpc ncmpcpp mpv
         ;;
+    xbps)
+        sudo xbps-install -y mpd mpc ncmpcpp mpv
+        ;;
 esac
 
 # symlink configuration
@@ -26,12 +29,14 @@ lnsf "$DIR/ncmpcpp/bindings" "$XDG_CONFIG_HOME/ncmpcpp/bindings"
 lnsf "$DIR/ncmpcpp/config" "$XDG_CONFIG_HOME/ncmpcpp/config"
 
 # prevent system-wide mpd
-sudo systemctl disable mpd
-sudo systemctl stop mpd
+if has_cmd systemctl; then
+    sudo systemctl disable mpd
+    sudo systemctl stop mpd
+    # enable for current user
+    systemctl --user enable mpd
+    systemctl --user start mpd
+fi
 mkdir -p "$HOME/.mpd/playlists"
 
-# enable for current user
-systemctl --user enable mpd
-systemctl --user start mpd
 
 # command to update your database: mpc update

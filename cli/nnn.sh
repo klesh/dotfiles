@@ -8,6 +8,14 @@ log 'Setting up nnn'
 
 NNN_CONFIG_DIR="$XDG_CONFIG_HOME/nnn"
 
+download_nnn_plugins() {
+    mkdir -p "$NNN_CONFIG_DIR/plugins"
+    HTTPS_PROXY=$GITHUB_PROXY curl -Lo  "$NNN_CONFIG_DIR/plugins/fzcd" https://github.com/jarun/nnn/raw/master/plugins/fzcd
+    HTTPS_PROXY=$GITHUB_PROXY curl -Lo  "$NNN_CONFIG_DIR/plugins/preview-tui" https://github.com/jarun/nnn/raw/master/plugins/preview-tui
+    HTTPS_PROXY=$GITHUB_PROXY curl -Lo  "$NNN_CONFIG_DIR/plugins/dragdrop" https://github.com/jarun/nnn/raw/master/plugins/dragdrop
+    chmod +x $NNN_CONFIG_DIR/plugins/*
+}
+
 # setup package mirror for CHINA
 case "$PM" in
     apt)
@@ -18,14 +26,16 @@ case "$PM" in
         mv nnn-static ~/.local/bin/nnn
         rm -rf nnn.tar.gz
         cd -
-
-        mkdir -p "$NNN_CONFIG_DIR/plugins"
-        HTTPS_PROXY=$GITHUB_PROXY curl -Lo  "$NNN_CONFIG_DIR/plugins/fzcd" https://github.com/jarun/nnn/raw/master/plugins/fzcd
-        HTTPS_PROXY=$GITHUB_PROXY curl -Lo  "$NNN_CONFIG_DIR/plugins/preview-tui" https://github.com/jarun/nnn/raw/master/plugins/preview-tui
+        download_nnn_plugins
         ;;
     pacman)
         sudo pacman -S --noconfirm --needed nnn
         cp -r /usr/share/nnn/plugins/. "$NNN_CONFIG_DIR"
+        ;;
+    xbps)
+        sudo xbps-install -y nnn ueberzug dragon
+        download_nnn_plugins
+        ;;
 esac
 
 # configuration

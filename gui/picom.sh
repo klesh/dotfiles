@@ -21,12 +21,17 @@ case "$PM" in
     pacman)
         sudo pacman -S --noconfirm --needed uthash ninja meson libev libconfig
         ;;
+    xbps)
+        sudo xbps-install -y uthash ninja meson libev libev-devel libconfig \
+            libX11-devel xcb-util-renderutil-devel xcb-util-image-devel \
+            libXext-devel pixman-devel libconfig-devel pcre-devel libglvnd-devel dbus-devel
+        ;;
 esac
 
 # build and install picom
 #intorepo https://github.com/klesh/picom.git "$DIR/repos/picom"
-#intorepo https://github.com/yshui/picom.git "$DIR/repos/picom"
-intorepo https://github.com/ibhagwan/picom.git "$DIR/repos/picom"
+intorepo https://github.com/yshui/picom.git "$DIR/repos/picom"
+#intorepo https://github.com/ibhagwan/picom.git "$DIR/repos/picom"
 meson --buildtype=release . build
 sudo ninja -C build install
 exitrepo

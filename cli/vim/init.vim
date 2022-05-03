@@ -80,7 +80,7 @@ function! GetXCopyCmd()
     if len(l:status) > 0
         return "termux-clipboard-set"
     endif
-    return "xsel -b"
+    return "xclip -selection clipboard"
 endfunction
 
 let g:xcopy = GetXCopyCmd()

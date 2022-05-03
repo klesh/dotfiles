@@ -63,6 +63,13 @@ exitrepo() {
     cd "$ODIR"
 }
 
+
+makeinstallrepo () {
+    intorepo "$1" "$DIR/repos/$2"
+    make && sudo make install
+    exitrepo
+}
+
 log() {
     printf "\n\033[32m%s\033[0m\n" "$@"
 }
@@ -116,6 +123,8 @@ elif has_cmd pkg; then
     }
 elif has_cmd apt; then
     PM=apt
+elif has_cmd xbps-install; then
+    PM=xbps
 fi
 
 if [ "$PM" = "n/a" ]; then

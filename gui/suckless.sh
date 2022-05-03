@@ -1,6 +1,4 @@
 #!/bin/sh
-
-set -e
 DIR=$(dirname "$(readlink -f "$0")")
 . "$DIR/../env.sh"
 
@@ -21,17 +19,12 @@ esac
 
 # clone / compile utilities and dwm itself
 
-installrepo () {
-    intorepo "$1" "$DIR/repos/$2"
-    make && sudo make install
-    exitrepo
-}
 
-installrepo https://gitee.com/klesh/st.git st
-installrepo https://gitee.com/klesh/dmenu.git dmenu
-installrepo https://gitee.com/klesh/slock.git slock
-installrepo https://gitee.com/klesh/dwm.git dwm
-installrepo https://github.com/klesh/dict.sh.git dict.sh
+$DIR/dmenu.sh
+$DIR/slock.sh
+$DRI/dict.sh
+makeinstallrepo https://gitee.com/klesh/st.git st
+makeinstallrepo https://gitee.com/klesh/dwm.git dwm
 
 # config xinit to start for dwm
 cat <<EOT > ~/.xinitrc

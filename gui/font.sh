@@ -6,6 +6,17 @@ DIR=$(dirname "$(readlink -f "$0")")
 
 log 'Setting up fonts'
 
+install_wqy_microhei() {
+    # official wqy-microhei package doesn't fix the Korean Glyphs stacking bug
+    # https://code.google.com/p/chromium/issues/detail?id=233851
+    # use debian package instead
+    DEB_PKG_NAME=fonts-wqy-microhei_0.2.0-beta-3_all.deb
+    if [ ! -f "/tmp/$DEB_PKG_NAME" ]; then
+        wget http://mirrors.163.com/debian/pool/main/f/fonts-wqy-microhei/$DEB_PKG_NAME -O /tmp/$DEB_PKG_NAME
+    fi
+    ar p "/tmp/$DEB_PKG_NAME" data.tar.xz | sudo tar Jxv -C /
+}
+
 case "$PM" in
     apt)
         # fonts
@@ -26,19 +37,15 @@ case "$PM" in
             ttf-dejavu \
             noto-fonts-emoji \
             gucharmap
-        # official wqy-microhei package doesn't fix the Korean Glyphs stacking bug
-        # https://code.google.com/p/chromium/issues/detail?id=233851
-        # use debian package instead
-        DEB_PKG_NAME=fonts-wqy-microhei_0.2.0-beta-3_all.deb
-        if [ ! -f "/tmp/$DEB_PKG_NAME" ]; then
-            wget http://mirrors.163.com/debian/pool/main/f/fonts-wqy-microhei/$DEB_PKG_NAME -O /tmp/$DEB_PKG_NAME
-        fi
-        ar p "/tmp/$DEB_PKG_NAME" data.tar.xz | sudo tar Jxv -C /
+        install_wqy_microhei
         # install symbola for plain emojis(no-color) for st
         if ! fc-list | grep -qi symbola; then
             yay -S --noconfirm --needed ttf-symbola-free
         fi
         ;;
+    xbps)
+        sudo xbps-install noto-fonts-emoji
+        install_wqy_microhei
 esac
 
 
@@ -62,14 +69,13 @@ install_nerdfont () {
     rm -rf "$LOCAL_REPO_PATH"
 }
 
+#install_nerdfont Agave agave v2.1.0
 #install_nerdfont Hermit Hurmit v2.1.0
-install_nerdfont Agave agave v2.1.0
 #install_nerdfont CascadiaCode Caskaydia v2.1.0
 #install_nerdfont DaddyTimeMono DaddyTimeMono v2.1.0
 
-log 'Setting up font rendering'
-sudo ln -sf /etc/fonts/conf.avail/70-no-bitmaps.conf /etc/fonts/conf.d
-sudo ln -sf /etc/fonts/conf.avail/10-sub-pixel-rgb.conf /etc/fonts/conf.d
-sudo ln -sf /etc/fonts/conf.avail/11-lcdfilter-default.conf /etc/fonts/conf.d
-sudo cp "$DIR/font/freetype2.sh" "/etc/profile.d/freetype2.sh"
-lnsf "$DIR/font/fonts.conf" "$XDG_CONFIG_HOME/fontconfig/fonts.conf"
+#log 'Setting up font rendering'
+#sudo ln -sf /etc/fonts/conf.avail/70-no-bitmaps.conf /etc/fonts/conf.d
+#sudo ln -sf /etc/fonts/conf.avail/10-sub-pixel-rgb.conf /etc/fonts/conf.d
+#sudo ln -sf /etc/fonts/conf.avail/11-lcdfilter-default.conf /etc/fonts/conf.d
+#sudo cp "$DIR/font/freetype2.sh" "/etc/profile.d/freetype2.sh"
