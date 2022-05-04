@@ -9,7 +9,7 @@ function fish_right_prompt
     test -z $CMD_DURATION -o \( $CMD_DURATION -lt 3000 \) && return
     test -z $WINDOWID && return
     set active_window (xdotool getactivewindow 2>/dev/null)
-    test "$active_window" -eq "$WINDOWID" && return
+    test "$active_window" = "$WINDOWID" && return
     set message (history --max=1) [$duration]
     notify-send (test "$s" -ne 0 && echo '--icon=dialog-warning') $message
 end
