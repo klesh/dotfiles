@@ -20,6 +20,9 @@ local calendar_widget = require("awesome-wm-widgets.calendar-widget.calendar")
 local logout_menu_widget = require("awesome-wm-widgets.logout-menu-widget.logout-menu")
 local mpdarc_widget = require("awesome-wm-widgets.mpdarc-widget.mpdarc")
 
+awful.spawn.with_shell("pipewire")
+awful.spawn.with_shell("pipewire-pulse")
+--pipewire-media-session &
 
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
@@ -60,6 +63,7 @@ beautiful.font_name = "agave Nerd Font Mono"
 beautiful.wallpaper = "/home/klesh/Nextcloud/wallpapers/仙湖植物园3440x1440.jpg"
 beautiful.font = "agave Nerd Font 12"
 beautiful.notification_max_width = 400
+beautiful.master_width_factor = 0.6
 
 -- This is used later as the default terminal and editor to run.
 terminal = "alacritty -e fish"
@@ -76,18 +80,18 @@ modkey = "Mod4"
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
     awful.layout.suit.tile,
+    awful.layout.suit.spiral,
     --awful.layout.suit.spiral.dwindle,
     --awful.layout.suit.floating,
     --awful.layout.suit.tile.left,
     --awful.layout.suit.tile.bottom,
     --awful.layout.suit.tile.top,
-    awful.layout.suit.fair,
     --awful.layout.suit.fair.horizontal,
-    --awful.layout.suit.spiral,
     awful.layout.suit.max,
     --awful.layout.suit.max.fullscreen,
-    awful.layout.suit.magnifier,
-    awful.layout.suit.corner.nw,
+    awful.layout.suit.fair,
+    --awful.layout.suit.magnifier,
+    --awful.layout.suit.corner.nw,
     -- awful.layout.suit.corner.ne,
     -- awful.layout.suit.corner.sw,
     -- awful.layout.suit.corner.se,
@@ -273,7 +277,8 @@ awful.screen.connect_for_each_screen(function(s)
                                 device = "default",
                                 widget_type = "horizontal_bar",
                                 with_icon = true,
-                                bg_color = "#ffffff33"
+                                bg_color = "#ffffff33",
+                                step = 1
                             },
                             cpu_widget({
                                 width = 70,
@@ -317,6 +322,19 @@ root.buttons(gears.table.join(
 ))
 -- }}}
 
+
+-- Cursor follow focus
+local function move_mouse_onto_focused_client(c)
+    if mouse.object_under_pointer() ~= c then
+        local geometry = c:geometry()
+        local x = geometry.x + geometry.width/2
+        local y = geometry.y + geometry.height/2
+        mouse.coords({x = x, y = y}, true)
+    end
+end
+--client.connect_signal("focus", move_mouse_onto_focused_client)
+
+
 -- {{{ Key bindings
 globalkeys = gears.table.join(
     awful.key({}, 'XF86AudioRaiseVolume', volume_widget.inc,
@@ -344,18 +362,32 @@ globalkeys = gears.table.join(
 
     awful.key({ modkey,           }, "j",
         function ()
+            local c = awful.client.next(1)
             awful.client.focus.byidx( 1)
+            move_mouse_onto_focused_client(c)
         end,
         {description = "focus next by index", group = "client"}
     ),
     awful.key({ modkey,           }, "k",
         function ()
+            local c = awful.client.next(-1)
             awful.client.focus.byidx(-1)
+            move_mouse_onto_focused_client(c)
         end,
         {description = "focus previous by index", group = "client"}
     ),
-    awful.key({ modkey,           }, "w", function () mymainmenu:show() end,
-              {description = "show main menu", group = "awesome"}),
+    awful.key({ modkey,           }, ".",
+        function ()
+            if client.focus == awful.client.getmaster() then
+                awful.client.swap.byidx(1)
+                awful.client.focus.byidx(-1)
+            else
+                move_mouse_onto_focused_client(awful.client.getmaster())
+                awful.client.setmaster(client.focus)
+            end
+        end,
+        {description = "swap master", group = "client"}
+    ),
 
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,
@@ -680,22 +712,8 @@ client.connect_signal("unfocus", function(c)
     c.border_width = 0
 end)
 
-
--- Cursor follow focus
-local function move_mouse_onto_focused_client(c)
-    if mouse.object_under_pointer() ~= c then
-        local geometry = c:geometry()
-        local x = geometry.x + geometry.width/2
-        local y = geometry.y + geometry.height/2
-        mouse.coords({x = x, y = y}, true)
-    end
-end
-client.connect_signal("focus", move_mouse_onto_focused_client)
-
 -- Autostart
 awful.spawn.with_shell("picomdaemon")
-awful.spawn.with_shell("pipewire")
-awful.spawn.with_shell("pipewire-pulse")
 awful.spawn.with_shell("! /bin/pgrep nextcloud && nextcloud")
 awful.spawn.with_shell("ibus-daemon -drx")
 awful.spawn.with_shell("flameshot")
