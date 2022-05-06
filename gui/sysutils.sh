@@ -78,10 +78,17 @@ case "$PM" in
             Thunar gvfs-smb gvfs-mtp thunar-archive-plugin file-roller tumbler \
             pipewire pipewire-pulse alsa-pipewire alsa-utils pulseaudio-utils pavucontrol libpulseaudio \
             ibus ibus-rime \
-            base-devel libX11-devel libXft-devel libXinerama-devel
+            base-devel libX11-devel libXft-devel libXinerama-devel \
+            socklog-void
+        # config alsa
         sudo mkdir -p /etc/alsa/conf.d
         sudo ln -s /usr/share/alsa/alsa.conf.d/50-pipewire.conf /etc/alsa/conf.d
         sudo ln -s /usr/share/alsa/alsa.conf.d/99-pipewire-default.conf /etc/alsa/conf.d
+        # enable ntp
+        sudo ln -sf /etc/sv/chronyd /var/service/
+        # enable logging
+        sudo ln -sf /etc/sv/socklog-unix /var/service/
+        sudo ln -sf /etc/sv/nanoklogd /var/service/
         echo "Wubi"
         echo "download rime-data-wubi from http://mirrors.163.com/ubuntu/pool/universe/r/rime-wubi/rime-data-wubi_0.0~git20200908.f1876f0-3_amd64.deb"
         echo "  ar x rime-data-wubi_0.0~git20200908.f1876f0-3_amd64.deb"
@@ -118,6 +125,4 @@ if has_cmd systemctl; then
 
     echo for amd ryzen laptop add "acpi_backlight=vendor" to /etc/default/grub and then run
     echo sudo grub-mkconfig -o /boot/grub/grub.cfg
-else
-    sudo ln -sf /etc/sv/chronyd /var/service/
 fi
