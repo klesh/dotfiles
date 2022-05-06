@@ -5,6 +5,7 @@ pcall(require, "luarocks.loader")
 -- Standard awesome library
 local gears = require("gears")
 local awful = require("awful")
+local common = require("awful.widget.common")
 require("awful.autofocus")
 -- Widget and layout library
 local wibox = require("wibox")
@@ -53,6 +54,11 @@ do
 end
 -- }}}
 
+-- Rounded corner
+local function rrect(cr, w, h)
+    gears.shape.rounded_rect(cr, w, h, 8)
+end
+
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
@@ -62,8 +68,19 @@ beautiful.border_focus = "#5b97f7"
 beautiful.font_name = "agave Nerd Font Mono"
 beautiful.wallpaper = "/home/klesh/Nextcloud/wallpapers/仙湖植物园3440x1440.jpg"
 beautiful.font = "agave Nerd Font 12"
-beautiful.notification_max_width = 400
+beautiful.notification_width = 400
+beautiful.notification_shape = rrect
+beautiful.notification_border_width = 0
+beautiful.notification_border_color = "#00000000"
+beautiful.notification_bg = "#c27193"
+beautiful.notification_fg = "#e1e1e1"
+beautiful.notification_margin = 10
+beautiful.notification_font = "serif 11"
 beautiful.master_width_factor = 0.6
+beautiful.border_normal = "#000000"
+beautiful.tasklist_bg_minimize = "#000000"
+beautiful.tasklist_bg_focus = "#aaaaaa"
+beautiful.tasklist_fg_focus = "#000000"
 
 -- This is used later as the default terminal and editor to run.
 terminal = "alacritty -e fish"
@@ -80,7 +97,7 @@ modkey = "Mod4"
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
     awful.layout.suit.tile,
-    awful.layout.suit.spiral,
+    --awful.layout.suit.spiral,
     --awful.layout.suit.spiral.dwindle,
     --awful.layout.suit.floating,
     --awful.layout.suit.tile.left,
@@ -89,7 +106,7 @@ awful.layout.layouts = {
     --awful.layout.suit.fair.horizontal,
     awful.layout.suit.max,
     --awful.layout.suit.max.fullscreen,
-    awful.layout.suit.fair,
+    --awful.layout.suit.fair,
     --awful.layout.suit.magnifier,
     --awful.layout.suit.corner.nw,
     -- awful.layout.suit.corner.ne,
@@ -191,11 +208,6 @@ local function set_wallpaper(s)
     end
 end
 
--- Rounded corner
-local function rrect(cr, w, h)
-    gears.shape.rounded_rect(cr, w, h, 8)
-end
-
 client.connect_signal("manage", function (c)
     c.shape = rrect
 end)
@@ -240,7 +252,14 @@ awful.screen.connect_for_each_screen(function(s)
         layout  = {
             spacing = 10,
             layout = wibox.layout.fixed.horizontal,
-        }
+        },
+        update_function = function(w, buttons, label, data, clients, args)
+            s.mytasklist.clientlist = clients
+            for k, v in pairs(data) do
+                gears.debug.print_error(string.format("k: %s, v: %s", k, v))
+            end
+            common.list_update(w, buttons, label, data, clients, args)
+        end
     }
 
     -- Create the wibox
@@ -278,7 +297,7 @@ awful.screen.connect_for_each_screen(function(s)
                                 widget_type = "horizontal_bar",
                                 with_icon = true,
                                 bg_color = "#ffffff33",
-                                step = 1
+                                step = 3
                             },
                             cpu_widget({
                                 width = 70,
@@ -292,6 +311,7 @@ awful.screen.connect_for_each_screen(function(s)
                                 onpoweroff = function() awful.spawn.with_shell("sudo poweroff") end,
                                 onlogout  = awful.quit,
                                 onreboot = function() awful.spawn.with_shell("sudo shutdown -r now") end,
+                                onlock = function () awful.spawn.with_shell("xset dpms force off") end
                             },
                         },
                 },
@@ -353,9 +373,9 @@ globalkeys = gears.table.join(
               { description = 'toggle mute', group = 'hotkeys'} ),
     --awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               --{description = "show help", group="awesome"}),
-    awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
+    awful.key({ modkey,           }, "comma",   awful.tag.viewprev,
               {description = "view previous", group = "tag"}),
-    awful.key({ modkey,           }, "Right",  awful.tag.viewnext,
+    awful.key({ modkey,           }, "period",  awful.tag.viewnext,
               {description = "view next", group = "tag"}),
     awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
               {description = "go back", group = "tag"}),
@@ -376,7 +396,7 @@ globalkeys = gears.table.join(
         end,
         {description = "focus previous by index", group = "client"}
     ),
-    awful.key({ modkey,           }, ".",
+    awful.key({ modkey,           }, "/",
         function ()
             if client.focus == awful.client.getmaster() then
                 awful.client.swap.byidx(1)
@@ -463,6 +483,9 @@ globalkeys = gears.table.join(
     -- Launcher
     awful.key({ modkey }, "p", function() awful.spawn.with_shell("dmenu_launcher") end,
               {description = "dmenu launcher", group = "launcher"}),
+    -- Window switcher
+    awful.key({ modkey }, "w", function() awful.spawn.with_shell("rofi -show window") end,
+              {description = "window switcher", group = "launcher"}),
 
     -- Bookmark
     awful.key({ modkey }, "b", function() awful.spawn.with_shell('BOOKMARK_SEARCHER="dmenu $DMENU_DEFAULT_OPTS" bm') end,
@@ -522,48 +545,63 @@ clientkeys = gears.table.join(
 -- This should map on the top row of your keyboard, usually 1 to 9.
 for i = 1, 9 do
     globalkeys = gears.table.join(globalkeys,
-        -- View tag only.
+        -- focus window.
         awful.key({ modkey }, "#" .. i + 9,
                   function ()
+        --filter  = awful.widget.tasklist.filter.currenttags,
                         local screen = awful.screen.focused()
-                        local tag = screen.tags[i]
-                        if tag then
-                           tag:view_only()
+                        local c = screen.mytasklist.clientlist[i]
+                        if c == nil then
+                            return
                         end
+                        if c.minimized then
+                            c.minimized = false
+                        end
+                        client.focus = c
                   end,
-                  {description = "view tag #"..i, group = "tag"}),
-        -- Toggle tag display.
-        awful.key({ modkey, "Control" }, "#" .. i + 9,
-                  function ()
-                      local screen = awful.screen.focused()
-                      local tag = screen.tags[i]
-                      if tag then
-                         awful.tag.viewtoggle(tag)
-                      end
-                  end,
-                  {description = "toggle tag #" .. i, group = "tag"}),
-        -- Move client to tag.
-        awful.key({ modkey, "Shift" }, "#" .. i + 9,
-                  function ()
-                      if client.focus then
-                          local tag = client.focus.screen.tags[i]
-                          if tag then
-                              client.focus:move_to_tag(tag)
-                          end
-                     end
-                  end,
-                  {description = "move focused client to tag #"..i, group = "tag"}),
-        -- Toggle tag on focused client.
-        awful.key({ modkey, "Control", "Shift" }, "#" .. i + 9,
-                  function ()
-                      if client.focus then
-                          local tag = client.focus.screen.tags[i]
-                          if tag then
-                              client.focus:toggle_tag(tag)
-                          end
-                      end
-                  end,
-                  {description = "toggle focused client on tag #" .. i, group = "tag"})
+                  {description = "view tag #"..i, group = "tag"})
+        ---- View tag only.
+        --awful.key({ modkey }, "#" .. i + 9,
+                  --function ()
+                        --local screen = awful.screen.focused()
+                        --local tag = screen.tags[i]
+                        --if tag then
+                           --tag:view_only()
+                        --end
+                  --end,
+                  --{description = "view tag #"..i, group = "tag"}),
+        ---- Toggle tag display.
+        --awful.key({ modkey, "Control" }, "#" .. i + 9,
+                  --function ()
+                      --local screen = awful.screen.focused()
+                      --local tag = screen.tags[i]
+                      --if tag then
+                         --awful.tag.viewtoggle(tag)
+                      --end
+                  --end,
+                  --{description = "toggle tag #" .. i, group = "tag"}),
+        ---- Move client to tag.
+        --awful.key({ modkey, "Shift" }, "#" .. i + 9,
+                  --function ()
+                      --if client.focus then
+                          --local tag = client.focus.screen.tags[i]
+                          --if tag then
+                              --client.focus:move_to_tag(tag)
+                          --end
+                     --end
+                  --end,
+                  --{description = "move focused client to tag #"..i, group = "tag"}),
+        ---- Toggle tag on focused client.
+        --awful.key({ modkey, "Control", "Shift" }, "#" .. i + 9,
+                  --function ()
+                      --if client.focus then
+                          --local tag = client.focus.screen.tags[i]
+                          --if tag then
+                              --client.focus:toggle_tag(tag)
+                          --end
+                      --end
+                  --end,
+                  --{description = "toggle focused client on tag #" .. i, group = "tag"})
     )
 end
 
@@ -753,11 +791,11 @@ end)
 
 client.connect_signal("focus", function(c)
     c.border_color = beautiful.border_focus
-    c.border_width = 3
+    --c.border_width = 3
 end)
 client.connect_signal("unfocus", function(c)
     c.border_color = beautiful.border_normal
-    c.border_width = 0
+    --c.border_width = 0
 end)
 
 -- Autostart
