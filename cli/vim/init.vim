@@ -72,6 +72,7 @@ nnoremap <leader>l <C-w>l
 nnoremap <leader>oo <C-w>o
 nnoremap <leader>q <C-w>q
 nnoremap <leader>x :!chmod +x %<Cr>
+nnoremap <leader>X :!chmod -x %<Cr>
 nnoremap <leader>scb :set scrollbind!<Cr>:set cursorbind!<Cr>
 
 
