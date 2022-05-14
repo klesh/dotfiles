@@ -152,8 +152,33 @@ local cw = calendar_widget({
     previous_month_button = 1,
     next_month_button = 3,
 })
+
+local charkeynames = {}
+charkeynames["-"] = "KP_Subtract"
+local function get_keyname(char)
+    local name = charkeynames[char]
+    if name ~= nil then
+        return name
+    end
+    return char
+end
 mytextclock:connect_signal("button::press", function(_, _, _, button)
-    if button == 1 then cw.toggle() end
+    if button == 1 then
+        cw.toggle()
+    elseif button == 3 then
+        local dt = os.date('*t')
+        local ds = string.format("%4d-%02d-%02d", dt.year, dt.month, dt.day)
+
+        for i=1, #ds do
+            local char = get_keyname(ds:sub(i,i))
+            root.fake_input('key_press'  , char)
+            root.fake_input('key_release', char)
+        end
+
+        --awful.spawn.with_shell(string.format("printf '%s' | /bin/xclip -b", ds))
+        --io.popen("xclip -selection clipboard", "w"):write(ds):close()
+        --awful.spawn(string.format("notify-send '%s'", ds))
+    end
 end)
 
 -- Create a wibox for each screen and add it
@@ -255,9 +280,9 @@ awful.screen.connect_for_each_screen(function(s)
         },
         update_function = function(w, buttons, label, data, clients, args)
             s.mytasklist.clientlist = clients
-            for k, v in pairs(data) do
-                gears.debug.print_error(string.format("k: %s, v: %s", k, v))
-            end
+            --for k, v in pairs(data) do
+                --gears.debug.print_error(string.format("k: %s, v: %s", k, v))
+            --end
             common.list_update(w, buttons, label, data, clients, args)
         end
     }
