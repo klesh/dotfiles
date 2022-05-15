@@ -838,5 +838,6 @@ awful.spawn.with_shell("flameshot")
 awful.spawn.with_shell("mpd")
 awful.spawn.with_shell("blueman-applet")
 awful.spawn.with_shell("nm-applet")
+awful.spawn.with_shell("copyq")
 
 -- }}}

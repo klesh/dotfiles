@@ -23,6 +23,7 @@ case "$UNAMEA" in
             xdotool \
             libnotify-bin \
             flameshot scrot \
+            copyq \
             thunar gvfs-bin gvfs-backends thunar-archive-plugin file-roller tumbler
         # desktop notification
         lnsf "$DIR/dunst/dunstrc" "$XDG_CONFIG_HOME/dunst/dunstrc"
@@ -55,6 +56,7 @@ case "$UNAMEA" in
             gnome-keyring libsecret \
             thunar gvfs-smb gvfs-mtp thunar-archive-plugin file-roller tumbler \
             flameshot \
+            copyq \
             alacritty
         # ntp
         sudo pacman -S --noconfirm --needed \
