@@ -34,6 +34,8 @@ export VIM_MODE=enhanced
 export XDG_RUNTIME_DIR=/tmp/runtime-klesh
 mkdir -p $XDG_RUNTIME_DIR
 
+autorandr --change --force
+
 exec dbus-run-session -- awesome 2> /tmp/awesome.log
 EOT
 
