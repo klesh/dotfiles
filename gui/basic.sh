@@ -54,6 +54,7 @@ case "$UNAMEA" in
             exfat-utils \
             gnome-keyring libsecret \
             thunar gvfs-smb gvfs-mtp thunar-archive-plugin file-roller tumbler \
+            flameshot \
             alacritty
         # ntp
         sudo pacman -S --noconfirm --needed \

@@ -1,4 +1,5 @@
 configuration{
+    combi-modi: "drun,run,window";
     modi: "drun,run,window";
     lines: 5;
     font: "monospace 14";

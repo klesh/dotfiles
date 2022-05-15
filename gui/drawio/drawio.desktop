@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=drawio
+Icon=drawio.svg
+Exec=drawio %f
+Comment=Diagram
+Categories=Utility
+Terminal=false
+MimeType=image/svg
