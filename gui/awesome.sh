@@ -14,7 +14,7 @@ esac
 # necessary tools
 #$DIR/dmenu.sh
 #$DIR/slock.sh
-$DRI/dict.sh
+$DIR/dict.sh
 
 # install widgets
 if [ ! -d "$XDG_CONFIG_HOME/awesome/awesome-wm-widgets" ]; then
@@ -24,9 +24,6 @@ fi
 
 # ~/.xinitrc
 cat <<'EOT' > ~/.xinitrc
-export BOOKMARK_SEARCHER="rofi -dmenu"
-export D_SELECTOR="rofi -dmenu"
-
 export QT_QPA_PLATFORMTHEME="qt5ct"
 export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
 

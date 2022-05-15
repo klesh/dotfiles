@@ -1,7 +1,7 @@
 configuration{
-    modi: "run,drun,window";
+    modi: "drun,run,window";
     lines: 5;
-    font: "JetBrainsMono Nerd Font 14";
+    font: "monospace 14";
     show-icons: true;
     icon-theme: "Oranchelo";
     terminal: "st";
@@ -14,9 +14,6 @@ configuration{
     display-window: " 﩯  window";
     display-Network: " 󰤨  Network";
     sidebar-mode: true;
-    drun {
-        parse-user: true;
-    }
 }
 
 @theme "catppuccin"
@@ -89,13 +86,13 @@ element selected {
 
 mode-switcher {
     spacing: 0;
-  }
+}
 
 button {
     padding: 10px;
     background-color: @bg-col-light;
     text-color: @grey;
-    vertical-align: 0.5; 
+    vertical-align: 0.5;
     horizontal-align: 0.5;
 }
 

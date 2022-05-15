@@ -516,15 +516,15 @@ globalkeys = gears.table.join(
     -- Launcher
     --awful.key({ modkey }, "p", function() awful.spawn.with_shell("dmenu_launcher") end,
     --          {description = "dmenu launcher", group = "launcher"}),
-    awful.key({ modkey }, "p", function() awful.spawn.with_shell("rofi -show combi -combi-modi drun,window,run") end,
+    awful.key({ modkey }, "p", function() awful.spawn.with_shell("rofi -show combi") end,
               {description = "rofi", group = "launcher"}),
 
     -- Bookmark
-    awful.key({ modkey }, "b", function() awful.spawn.with_shell('bm') end,
+    awful.key({ modkey }, "b", function() awful.spawn.with_shell('BOOKMARK_SEARCHER="rofi -dmenu -p bookmark" bm') end,
               {description = "bookmark", group = "launcher"}),
 
     -- Dict.sh
-    awful.key({ modkey }, "t", function() awful.spawn.with_shell('D_SELECTOR= d "$(xsel -o)"') end,
+    awful.key({ modkey }, "t", function() awful.spawn.with_shell('D_SELECTOR="rofi -dmenu -p dict.sh" d "$(xsel -o)"') end,
               {description = "dict.sh", group = "launcher"})
 )
 

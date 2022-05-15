@@ -7,6 +7,7 @@
     fg-col: #D9E0EE;
     fg-col2: #F28FAD;
     grey: #D9E0EE;
-    width: 600;
+    width: 900;
+    border-radius: 5px;
 }
 
