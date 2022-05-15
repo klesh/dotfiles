@@ -78,7 +78,7 @@ case "$UNAMEA" in
         # laptop
         if is_laptop; then
             sudo pacman -S --noconfirm --needed \
-                acpi light python-pip
+                acpi acpilight python-pip
             yay -S auto-cpufreq-git
             sudo mkdir -p /etc/runit/sv/auto-cpufreq
             sudo cp ./auto-cpufreq/auto-cpufreq-runit /etc/runit/sv/auto-cpufreq/run
