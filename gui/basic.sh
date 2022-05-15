@@ -46,7 +46,7 @@ case "$UNAMEA" in
     *artix*)
         sudo pacman -S --noconfirm --needed \
             xorg-server xorg-xinit xorg-xrandr xorg-xprop xorg-xev xdotool \
-            pipewire pipewire-pulse pipewire-jack pavucontrol  \
+            pulseaudio pulseaudio-alsa pulseaudio-bluetooth alsa-utils pavucontrol \
             xclip xsel \
             clang \
             ibus ibus-rime rime-wubi \
@@ -104,4 +104,10 @@ if is_laptop; then
     echo RUN+="/bin/chgrp video /sys/class/backlight/intel_backlight/brightness"
     echo RUN+="/bin/chmod g+w /sys/class/backlight/intel_backlight/brightness"
     echo ```
+
 fi
+
+# auto execute autorandr for monitor hotplug
+echo 'ACTION=="change", SUBSYSTEM=="drm", RUN+="/usr/bin/autorandr --batch --change --force"' \
+    > sudo tee /etc/udev/rules.d/40-monitor-hotplug.rules
+

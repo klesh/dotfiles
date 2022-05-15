@@ -22,9 +22,9 @@ local logout_menu_widget = require("awesome-wm-widgets.logout-menu-widget.logout
 local mpdarc_widget = require("awesome-wm-widgets.mpdarc-widget.mpdarc")
 local batteryarc_widget = require("awesome-wm-widgets.batteryarc-widget.batteryarc")
 
-awful.spawn.once("pipewire")
-awful.spawn.once("pipewire-pulse")
-awful.spawn.with_shell("killall pipewire-media-session; sleep 2 && pipewire-media-session")
+--awful.spawn.once("pipewire")
+--awful.spawn.once("pipewire-pulse")
+--awful.spawn.with_shell("killall pipewire-media-session; sleep 2 && pipewire-media-session")
 --awful.spawn("wireplumber")
 -- &
 
