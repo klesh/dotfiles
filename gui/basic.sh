@@ -79,11 +79,11 @@ case "$UNAMEA" in
         if is_laptop; then
             sudo pacman -S --noconfirm --needed \
                 acpi acpilight python-pip
-            yay -S auto-cpufreq-git
+            yay -S --needed --noconfirm auto-cpufreq-git
             sudo mkdir -p /etc/runit/sv/auto-cpufreq
-            sudo cp ./auto-cpufreq/auto-cpufreq-runit /etc/runit/sv/auto-cpufreq/run
+            sudo cp $DIR/auto-cpufreq/auto-cpufreq-runit /etc/runit/sv/auto-cpufreq/run
             sudo chmod +x /etc/runit/sv/auto-cpufreq/run
-            sudo ln -s /etc/runit/sv/auto-cpufreq/ /run/runit/service/
+            sudo ln -sf /etc/runit/sv/auto-cpufreq/ /run/runit/service/
         fi
         ;;
 esac

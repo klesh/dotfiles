@@ -11,9 +11,16 @@ if [ -z "$LOGIN" ]; then
     return
 fi
 
-sudo mkdir -p /etc/systemd/system/getty@tty1.service.d
-echo "
-[Service]
-ExecStart=
-ExecStart=-/sbin/agetty --autologin $LOGIN --noclear %I \$TERM
-" | sudo tee /etc/systemd/system/getty@tty1.service.d/override.conf > /dev/null
+case "$UNAMEA" in
+    *Ubuntu*)
+        sudo mkdir -p /etc/systemd/system/getty@tty1.service.d
+        echo "
+        [Service]
+        ExecStart=
+        ExecStart=-/sbin/agetty --autologin $LOGIN --noclear %I \$TERM
+        " | sudo tee /etc/systemd/system/getty@tty1.service.d/override.conf > /dev/null
+        ;;
+    *artix*)
+        sudo sed -i 's/"--noclear"/"--noclear --autologin '$LOGIN'"'
+        ;;
+esace

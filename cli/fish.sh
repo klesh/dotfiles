@@ -6,8 +6,8 @@ DIR=$(dirname "$(readlink -f "$0")")
 
 log 'Setting up shell'
 
-case "$PM" in
-    apt)
+case "$UNAMEA" in
+    *Ubuntu*)
         if ! has_cmd fish; then
             sudo add-apt-repository ppa:fish-shell/release-3 -y -n
             pm_update
@@ -24,8 +24,8 @@ case "$PM" in
         ./install --all
         exitrepo
         ;;
-    pacman)
-        sudo pacman -S --noconfirm --needed fish the_silver_searcher dash bat fzf
+    *artix*)
+        sudo pacman -S --noconfirm --needed fish dash fzf bat the_silver_searcher
         # prevent bash upgradation relink /bin/sh
         sudo mkdir -p /etc/pacman.d/hooks
         echo "
@@ -98,9 +98,9 @@ set -U fish_pager_color_progress brwhite --background=cyan
 ' > /dev/null
 
 # only for local machine with gui
-if [ -z "$SSH_CLIENT" ] && [ -n "$DISPLAY" ] && has_cmd dash; then
+if [ -z "$SSH_CLIENT" ] && has_cmd dash; then
     log 'Setting up dash as default shell'
-    sudo /usr/bin/ln -sfT dash /usr/bin/sh
+    sudo /usr/bin/ln -sfT $(command -v dash) /usr/bin/sh
 
     if [ "$(awk -F':' '/^'"$USER"'/{print $7}' /etc/passwd)" != "/bin/sh" ]; then
         chsh -s /bin/sh

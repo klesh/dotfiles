@@ -29,7 +29,7 @@ case "$PM" in
     pacman)
         sudo pacman -S --noconfirm --needed \
             go \
-            browserpass pinentry-qt
+            browserpass pass pinentry
         PINENTRY=$(command -v pinentry-qt)
         ;;
     xbps)
@@ -64,7 +64,7 @@ fi
 # chrome extension: https://chrome.google.com/webstore/detail/browserpass/naepdomgkenhinolocfifgehidddafch
 
 # enable browserpass for browsers
-if [ -f /usr/lib/browserpass ]; then
+if [ -d /usr/lib/browserpass ]; then
     cd /usr/lib/browserpass
     has_cmd chromium && make hosts-chromium-user
     has_cmd firefox && make hosts-firefox-user

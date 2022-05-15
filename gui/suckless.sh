@@ -7,12 +7,14 @@ log 'Setting up suckless'
 case "$PM" in
     apt)
         sudo apt install \
+            dunst \
             trayer
         sudo apt remove gdm3
         ;;
     pacman)
         sudo pacman -S --noconfirm --needed \
             trayer \
+            dunst \
             xorg-xsetroot
         ;;
 esac
@@ -23,7 +25,6 @@ esac
 $DIR/dmenu.sh
 $DIR/slock.sh
 $DRI/dict.sh
-makeinstallrepo https://gitee.com/klesh/st.git st
 makeinstallrepo https://gitee.com/klesh/dwm.git dwm
 
 # config xinit to start for dwm

@@ -32,10 +32,6 @@ case "$PM" in
         sudo pacman -S --noconfirm --needed nnn
         cp -r /usr/share/nnn/plugins/. "$NNN_CONFIG_DIR"
         ;;
-    xbps)
-        sudo xbps-install -y nnn ueberzug dragon
-        download_nnn_plugins
-        ;;
 esac
 
 # configuration

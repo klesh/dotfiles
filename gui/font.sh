@@ -17,8 +17,8 @@ install_wqy_microhei() {
     ar p "/tmp/$DEB_PKG_NAME" data.tar.xz | sudo tar Jxv -C /
 }
 
-case "$PM" in
-    apt)
+case "$UNAMEA" in
+    *Ubuntu*)
         # fonts
         sudo apt install -y \
             fonts-urw-base35 \
@@ -28,26 +28,10 @@ case "$PM" in
             fonts-dejavu-core \
             gucharmap
         ;;
-    pacman)
-        # fonts
+    *artix*)
         sudo pacman -S --noconfirm --needed \
-            freetype2 \
-            gsfonts \
-            ttf-cascadia-code \
-            ttf-dejavu \
-            noto-fonts-emoji \
-            gucharmap
-        install_wqy_microhei
-        # install symbola for plain emojis(no-color) for st
-        if ! fc-list | grep -qi symbola; then
-            yay -S --noconfirm --needed ttf-symbola-free
-        fi
-        ;;
-    xbps)
-        sudo xbps-install noto-fonts-emoji
-        install_wqy_microhei
+            noto-fonts noto-fonts-cjk noto-fonts-emoji
 esac
-
 
 # install hermit nerd font
 install_nerdfont () {
@@ -60,6 +44,7 @@ install_nerdfont () {
     # shortcircuit if font already in system
     fc-list | grep -F "$PATCHED_PAT" | grep -i nerd && return
     # clone single branch from gitee
+    rm -rf "$LOCAL_REPO_PATH"
     git clone --single-branch --branch "$ORIGIN_NAME" --depth 1 \
         https://gitee.com/klesh/nerd-fonts.git \
         "$LOCAL_REPO_PATH"
@@ -69,7 +54,7 @@ install_nerdfont () {
     rm -rf "$LOCAL_REPO_PATH"
 }
 
-#install_nerdfont Agave agave v2.1.0
+install_nerdfont Agave agave v2.1.0
 #install_nerdfont Hermit Hurmit v2.1.0
 #install_nerdfont CascadiaCode Caskaydia v2.1.0
 #install_nerdfont DaddyTimeMono DaddyTimeMono v2.1.0
@@ -79,3 +64,20 @@ install_nerdfont () {
 #sudo ln -sf /etc/fonts/conf.avail/10-sub-pixel-rgb.conf /etc/fonts/conf.d
 #sudo ln -sf /etc/fonts/conf.avail/11-lcdfilter-default.conf /etc/fonts/conf.d
 #sudo cp "$DIR/font/freetype2.sh" "/etc/profile.d/freetype2.sh"
+
+
+install_googlefont() {
+    NAME=$1
+    PATT=$2
+    FONTS=~/.local/share/fonts
+    mkdir "$FONTS"
+    wget -O "/tmp/$NAME.zip" "$URL"
+    unzip -d "$FONTS" "/tmp/$NAME.zip" "$PATT"
+    rm "/tmp/$NAME.zip"
+}
+
+install_googlefont lato "https://fonts.google.com/download?family=Lato"
+install_googlefont besley "https://fonts.google.com/download?family=Besley" "static/*"
+
+# configuration
+lnsf "$DIR/font/fonts.conf" "$XDG_CONFIG_HOME/fontconfig/fonts.conf"

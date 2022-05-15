@@ -4,33 +4,36 @@ DIR=$(dirname "$(readlink -f "$0")")
 
 log 'Setting up awesome'
 
-case "$PM" in
-    apt)
-        ;;
-    pacman)
-        ;;
-    xbps)
-        sudo xbps-install -y awesome
+case "$UNAMER" in
+    *artix*)
+        sudo pacman -S --noconfirm --needed awesome rofi
         ;;
 esac
 
 
 # necessary tools
-$DIR/dmenu.sh
-$DIR/slock.sh
+#$DIR/dmenu.sh
+#$DIR/slock.sh
 $DRI/dict.sh
 
 # install widgets
-HTTPS_PROXY=$GITHUB_PROXY git clone https://github.com/klesh/awesome-wm-widgets.git "$XDG_CONFIG_HOME/awesome/awesome-wm-widgets"
+if [ ! -d "$XDG_CONFIG_HOME/awesome/awesome-wm-widgets" ]; then
+    echo cloning awesome widget
+    git clone https://gitee.com/klesh/awesome-wm-widgets.git "$XDG_CONFIG_HOME/awesome/awesome-wm-widgets"
+fi
 
 # ~/.xinitrc
 cat <<'EOT' > ~/.xinitrc
+export BOOKMARK_SEARCHER="rofi -dmenu"
+export D_SELECTOR="rofi -dmenu"
+
+export QT_QPA_PLATFORMTHEME="qt5ct"
+export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
+
 export XMODIFIERS="@im=ibus"
 export QT_IM_MODULE=ibus
 export GTK_IM_MODULE=xim
 export VIM_MODE=enhanced
-export DMENU_DEFAULT_OPTS='-i -c -fn monospace:13 -nb #222222 -nf #bbbbbb -sb #5b97f7 -sf #eeeeee -l 20'
-export TMUX_SHELL=/usr/bin/fish
 export XDG_RUNTIME_DIR=/tmp/runtime-klesh
 mkdir -p $XDG_RUNTIME_DIR
 
@@ -40,7 +43,10 @@ EOT
 
 # ~/.profile
 cat <<'EOT' | sed "s|__PDIR__|$PDIR|g" > ~/.profile
-export WINIP=localhost
+export PROXY_HOST=localhost
+export PROXY_PORT=4780
+export PROXY_PROTO=http
+export TMUX_SHELL=/usr/bin/fish
 export PATH=~/dotfiles/bin:~/.local/bin:$PATH
 
 # startx Automatically
@@ -52,3 +58,5 @@ EOT
 
 # configuration
 lnsf "$DIR/awesome/rc.lua" "$XDG_CONFIG_HOME/awesome/rc.lua"
+lnsf "$DIR/rofi/config.rasi" "$XDG_CONFIG_HOME/rofi/config.rasi"
+lnsf "$DIR/rofi/catppuccin.rasi" "$XDG_CONFIG_HOME/rofi/catppuccin.rasi"

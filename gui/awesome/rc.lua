@@ -20,10 +20,13 @@ local cpu_widget = require("awesome-wm-widgets.cpu-widget.cpu-widget")
 local calendar_widget = require("awesome-wm-widgets.calendar-widget.calendar")
 local logout_menu_widget = require("awesome-wm-widgets.logout-menu-widget.logout-menu")
 local mpdarc_widget = require("awesome-wm-widgets.mpdarc-widget.mpdarc")
+local batteryarc_widget = require("awesome-wm-widgets.batteryarc-widget.batteryarc")
 
-awful.spawn.with_shell("pipewire")
-awful.spawn.with_shell("pipewire-pulse")
---pipewire-media-session &
+awful.spawn.once("pipewire")
+awful.spawn.once("pipewire-pulse")
+awful.spawn.with_shell("killall pipewire-media-session; sleep 2 && pipewire-media-session")
+--awful.spawn("wireplumber")
+-- &
 
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
@@ -66,7 +69,7 @@ beautiful.useless_gap = 5
 beautiful.border_width = 3
 beautiful.border_focus = "#5b97f7"
 beautiful.font_name = "agave Nerd Font Mono"
-beautiful.wallpaper = "/home/klesh/Nextcloud/wallpapers/仙湖植物园3440x1440.jpg"
+beautiful.wallpaper = "/home/klesh/Nextcloud/wallpapers/great-pretender.jpg"
 beautiful.font = "agave Nerd Font 12"
 beautiful.notification_width = 400
 beautiful.notification_shape = rrect
@@ -330,6 +333,7 @@ awful.screen.connect_for_each_screen(function(s)
                                 step_spacing = 0,
                                 color = '#434c5e'
                             }),
+                            batteryarc_widget(),
                             wibox.widget.systray(),
                             mytextclock,
                             logout_menu_widget{
@@ -394,6 +398,10 @@ globalkeys = gears.table.join(
               { description = 'toggle play', group = 'hotkeys'} ),
     awful.key({}, 'XF86AudioPrev', function() awful.spawn.with_shell("mpc prev") end,
               { description = 'toggle play', group = 'hotkeys'} ),
+    awful.key({}, 'XF86MonBrightnessUp', function() awful.spawn.with_shell("sudo light -A 5") end,
+              { description = 'increase backlight', group = 'control'} ),
+    awful.key({}, 'XF86MonBrightnessDown', function() awful.spawn.with_shell("sudo light -U 5") end,
+              { description = 'decrease backlight', group = 'control'} ),
     awful.key({}, 'F1', function () awful.spawn.with_shell("flameshot gui")  end,
               { description = 'toggle mute', group = 'hotkeys'} ),
     --awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
@@ -506,14 +514,13 @@ globalkeys = gears.table.join(
               end,
               {description = "lua execute prompt", group = "awesome"}),
     -- Launcher
-    awful.key({ modkey }, "p", function() awful.spawn.with_shell("dmenu_launcher") end,
-              {description = "dmenu launcher", group = "launcher"}),
-    -- Window switcher
-    awful.key({ modkey }, "w", function() awful.spawn.with_shell("rofi -show window") end,
-              {description = "window switcher", group = "launcher"}),
+    --awful.key({ modkey }, "p", function() awful.spawn.with_shell("dmenu_launcher") end,
+    --          {description = "dmenu launcher", group = "launcher"}),
+    awful.key({ modkey }, "p", function() awful.spawn.with_shell("rofi -show combi") end,
+              {description = "rofi", group = "launcher"}),
 
     -- Bookmark
-    awful.key({ modkey }, "b", function() awful.spawn.with_shell('BOOKMARK_SEARCHER="dmenu $DMENU_DEFAULT_OPTS" bm') end,
+    awful.key({ modkey }, "b", function() awful.spawn.with_shell('bm') end,
               {description = "bookmark", group = "launcher"}),
 
     -- Dict.sh
@@ -829,5 +836,7 @@ awful.spawn.with_shell("! /bin/pgrep nextcloud && nextcloud")
 awful.spawn.with_shell("ibus-daemon -drx")
 awful.spawn.with_shell("flameshot")
 awful.spawn.with_shell("mpd")
+awful.spawn.with_shell("blueman-applet")
+awful.spawn.with_shell("nm-applet")
 
 -- }}}
