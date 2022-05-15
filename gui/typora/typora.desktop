@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Typora
+Icon=/home/klesh/Programs/Typora-linux-x64/resources/assets/icon/icon_128x128.png
+Exec=/home/klesh/Programs/Typora-linux-x64/Typora %f
+Comment=Minimal markdown md editor
+Categories=Office;TextEditor;Utility
+Terminal=false
+MimeType=text/markdown
+X-Desktop-File-Install-Version=0.26

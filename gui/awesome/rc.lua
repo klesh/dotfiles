@@ -68,8 +68,8 @@ beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 beautiful.useless_gap = 5
 beautiful.border_width = 3
 beautiful.border_focus = "#5b97f7"
+beautiful.wallpaper = ""
 beautiful.font_name = "agave Nerd Font Mono"
-beautiful.wallpaper = "/home/klesh/Nextcloud/wallpapers/great-pretender.jpg"
 beautiful.font = "agave Nerd Font 12"
 beautiful.notification_width = 400
 beautiful.notification_shape = rrect
@@ -516,7 +516,7 @@ globalkeys = gears.table.join(
     -- Launcher
     --awful.key({ modkey }, "p", function() awful.spawn.with_shell("dmenu_launcher") end,
     --          {description = "dmenu launcher", group = "launcher"}),
-    awful.key({ modkey }, "p", function() awful.spawn.with_shell("rofi -show combi") end,
+    awful.key({ modkey }, "p", function() awful.spawn.with_shell("rofi -show combi -combi-modi drun,window,run") end,
               {description = "rofi", group = "launcher"}),
 
     -- Bookmark
@@ -838,5 +838,6 @@ awful.spawn.with_shell("flameshot")
 awful.spawn.with_shell("mpd")
 awful.spawn.with_shell("blueman-applet")
 awful.spawn.with_shell("nm-applet")
+awful.spawn.with_shell("autorandr --change --force")
 
 -- }}}

@@ -16,6 +16,4 @@ $2 == "connected" && $3 == "primary" {
 }
 ' | xrdb -merge
 
-systemctl --user restart dunst
-
 nitrogen --restore

@@ -47,7 +47,6 @@ case "$UNAMEA" in
         sudo pacman -S --noconfirm --needed \
             xorg-server xorg-xinit xorg-xrandr xorg-xprop xorg-xev xdotool \
             pipewire pipewire-pulse pipewire-jack pavucontrol  \
-            arandr \
             xclip xsel \
             clang \
             ibus ibus-rime rime-wubi \
@@ -78,7 +77,8 @@ case "$UNAMEA" in
         # laptop
         if is_laptop; then
             sudo pacman -S --noconfirm --needed \
-                acpi acpilight python-pip
+                arandr autorandr \
+                acpi light python-pip
             yay -S --needed --noconfirm auto-cpufreq-git
             sudo mkdir -p /etc/runit/sv/auto-cpufreq
             sudo cp $DIR/auto-cpufreq/auto-cpufreq-runit /etc/runit/sv/auto-cpufreq/run
@@ -90,6 +90,7 @@ esac
 
 
 # configuration
+lnsf "$DIR/autorandr/postswitch" "$XDG_CONFIG_HOME/autorandr/postswitch"
 lnsf "$DIR/thunar/uca.xml" "$XDG_CONFIG_HOME/Thunar/uca.xml"
 lnsf "$DIR/alacritty/alacritty.yml" "$XDG_CONFIG_HOME/alacritty/alacritty.yml"
 

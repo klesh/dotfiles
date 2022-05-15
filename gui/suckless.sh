@@ -69,4 +69,3 @@ EOT
 # config dwm
 mkdir -p "$XDG_CONFIG_HOME/dwm"
 lnsf "$DIR/dwm/autostart" "$XDG_CONFIG_HOME/dwm/autostart"
-lnsf "$DIR/autorandr/postswitch" "$XDG_CONFIG_HOME/autorandr/postswitch"
