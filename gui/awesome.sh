@@ -35,6 +35,8 @@ export XDG_RUNTIME_DIR=/tmp/runtime-klesh
 mkdir -p $XDG_RUNTIME_DIR
 
 autorandr --change --force
+mpd
+picomdaemon
 
 exec dbus-run-session -- awesome 2> /tmp/awesome.log
 EOT
@@ -46,7 +48,7 @@ export PROXY_HOST=localhost
 export PROXY_PORT=4780
 export PROXY_PROTO=http
 export TMUX_SHELL=/usr/bin/fish
-export PATH=~/dotfiles/bin:~/.local/bin:$PATH
+export PATH=~/dotfiles/bin:~/.local/bin:~/Nextcloud/bin:$PATH
 
 # startx Automatically
 if [ -z "$DISPLAY" ] && [ $(tty) = /dev/tty1 ]; then

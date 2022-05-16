@@ -831,11 +831,9 @@ client.connect_signal("unfocus", function(c)
 end)
 
 -- Autostart
-awful.spawn.with_shell("picomdaemon")
 awful.spawn.with_shell("! /bin/pgrep nextcloud && nextcloud")
 awful.spawn.with_shell("ibus-daemon -drx")
 awful.spawn.with_shell("flameshot")
-awful.spawn.with_shell("mpd")
 awful.spawn.with_shell("blueman-applet")
 awful.spawn.with_shell("nm-applet")
 awful.spawn.with_shell("copyq")
