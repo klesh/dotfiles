@@ -48,6 +48,7 @@ case "$UNAMEA" in
         sudo pacman -S --noconfirm --needed \
             xorg-server xorg-xinit xorg-xrandr xorg-xprop xorg-xev xdotool \
             pulseaudio pulseaudio-alsa pulseaudio-bluetooth alsa-utils pavucontrol \
+            perl-file-mimeinfo \
             xclip xsel \
             clang \
             ibus ibus-rime rime-wubi \
