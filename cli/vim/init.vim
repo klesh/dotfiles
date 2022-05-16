@@ -102,7 +102,7 @@ endfunction
 function! YankFileLineNo()
     let yl=expand("%") . ':' . line(".")
     call system('tmux set-buffer "'.yl.'"')
-    "let @+=yl
+    call system(g:xcopy, yl)
 endfunction
 
 xnoremap <leader>y <esc>:call XCopy()<CR>
