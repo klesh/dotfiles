@@ -38,6 +38,10 @@ autorandr --change --force
 mpd
 picomdaemon
 
+# power save
+xset 600
+xss-lock $(command -v lock.sh) &
+
 exec dbus-run-session -- awesome 2> /tmp/awesome.log
 EOT
 

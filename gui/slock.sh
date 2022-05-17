@@ -4,4 +4,15 @@ DIR=$(dirname "$(readlink -f "$0")")
 
 log 'Setting up slock'
 
+case "$UNAMEA" in
+    *Ubuntu*)
+        sudo apt install -y \
+            xss-lock
+        ;;
+    *artix*)
+        sudo pacman -S --noconfirm --needed \
+            xss-lock
+        ;;
+esac
+
 makeinstallrepo https://gitee.com/klesh/slock.git slock

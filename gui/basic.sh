@@ -14,7 +14,6 @@ case "$UNAMEA" in
             pavucontrol \
             ibus ibus-table ibus-table-wubi \
             gnome-keyring \
-            xss-lock \
             nitrogen \
             network-manager network-manager-gnome \
             exfat-utils \

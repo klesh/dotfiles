@@ -337,10 +337,11 @@ awful.screen.connect_for_each_screen(function(s)
                             wibox.widget.systray(),
                             mytextclock,
                             logout_menu_widget{
-                                onpoweroff = function() awful.spawn.with_shell("sudo poweroff") end,
                                 onlogout  = awful.quit,
-                                onreboot = function() awful.spawn.with_shell("sudo shutdown -r now") end,
-                                onlock = function () awful.spawn.with_shell("xset dpms force off") end
+                                onpoweroff = function() awful.spawn.with_shell("loginctl poweroff") end,
+                                onreboot = function() awful.spawn.with_shell("loginctl reboot") end,
+                                onlock = function () awful.spawn.with_shell("loginctl lock-sessions") end,
+                                onsuspend = function() awful.spawn.with_shell("loginctl suspend") end,
                             },
                         },
                 },
