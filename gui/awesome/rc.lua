@@ -726,6 +726,7 @@ awful.rules.rules = {
           "DTA",  -- Firefox addon DownThemAll.
           "copyq",  -- Includes session name in class.
           "pinentry",
+          "file-roller",
         },
         class = {
           "Arandr",
@@ -748,8 +749,10 @@ awful.rules.rules = {
           "AlarmWindow",  -- Thunderbird's calendar.
           "ConfigManager",  -- Thunderbird's about:config.
           "pop-up",       -- e.g. Google Chrome's (detached) Developer Tools.
+          "EventDialog",
+          "Msgcompose",
         }
-      }, properties = { floating = true }},
+      }, properties = { floating = true, placement = awful.placement.centered }},
 
     -- Add titlebars to normal clients and dialogs
     { rule_any = {type = { "normal", "dialog" }
