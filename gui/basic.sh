@@ -57,6 +57,7 @@ case "$UNAMEA" in
             thunar gvfs-smb gvfs-mtp thunar-archive-plugin file-roller tumbler \
             flameshot \
             copyq \
+            sxiv \
             alacritty
         # ntp
         sudo pacman -S --noconfirm --needed \
@@ -93,6 +94,7 @@ esac
 
 
 # configuration
+lnsf "$DIR/sxiv/sxiv.desktop" ~/.local/share/applications/sxiv.desktop
 lnsf "$DIR/autorandr/postswitch" "$XDG_CONFIG_HOME/autorandr/postswitch"
 lnsf "$DIR/thunar/uca.xml" "$XDG_CONFIG_HOME/Thunar/uca.xml"
 lnsf "$DIR/alacritty/alacritty.yml" "$XDG_CONFIG_HOME/alacritty/alacritty.yml"
