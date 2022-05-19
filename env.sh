@@ -11,7 +11,7 @@ GITHUB_PROXY=${GITHUB_PROXY-$HTTPS_PROXY}
 WSL=$(grep -i Microsoft /proc/sys/kernel/osrelease || true)
 TMPDIR=${TMPDIR-"/tmp"}
 UNAMEA=$(uname -a)
-RUNIT=$(command -v runit)
+RUNIT=$(command -v runit || true)
 
 in_china() {
     ! [ -f $TMPDIR/myip_full ] && curl -s myip.ipip.net > $TMPDIR/myip_full
