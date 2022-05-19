@@ -34,6 +34,8 @@ export VIM_MODE=enhanced
 export XDG_RUNTIME_DIR=/tmp/runtime-klesh
 mkdir -p $XDG_RUNTIME_DIR
 
+export LOCKER='i3lock -i /home/klesh/Nextcloud/wallpapers/1027.png -t --nofork'
+
 autorandr --change --force
 mpd
 picomdaemon
