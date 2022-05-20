@@ -34,15 +34,16 @@ export VIM_MODE=enhanced
 export XDG_RUNTIME_DIR=/tmp/runtime-klesh
 mkdir -p $XDG_RUNTIME_DIR
 
-export LOCKER='i3lock -i /home/klesh/Nextcloud/wallpapers/1027.png -t --nofork'
+export LOCKER='/usr/bin/i3lock -i /home/klesh/Nextcloud/wallpapers/1027.png -t --nofork'
 
 autorandr --change --force
 mpd
 picomdaemon
 
-# power save
-xset 600
-xss-lock $(command -v lock.sh) &
+# disable screen saver / turn off monitor if inactived for 300 secs
+xset s off
+xset dpms 300 300 300
+xss-lock -l $(command -v lock.sh) &
 
 exec dbus-run-session -- awesome 2> /tmp/awesome.log
 EOT

@@ -1,5 +1,5 @@
 configuration{
-    combi-modi: "drun,run,window";
+    combi-modi: "drun,run,window,filebrowser";
     modi: "drun,run,window";
     lines: 5;
     font: "monospace 14";
@@ -15,6 +15,12 @@ configuration{
     display-window: " 﩯  window";
     display-Network: " 󰤨  Network";
     sidebar-mode: true;
+    matching: "fuzzy";
+
+    filebrowser {
+        sorting-method: "name";
+        directories-first: true;
+    }
 }
 
 @theme "catppuccin"
