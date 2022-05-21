@@ -58,9 +58,12 @@ end
 -- }}}
 
 -- Rounded corner
-local function rrect(cr, w, h)
-    gears.shape.rounded_rect(cr, w, h, 8)
+local function rounded_rect(radius)
+    return function(cr, w, h)
+        gears.shape.rounded_rect(cr, w, h, radius)
+    end
 end
+local rrect = rounded_rect(8)
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
@@ -68,7 +71,7 @@ beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 beautiful.useless_gap = 5
 beautiful.border_width = 3
 beautiful.border_focus = "#5b97f7"
-beautiful.wallpaper = ""
+beautiful.wallpaper = nil
 beautiful.font_name = "agave Nerd Font Mono"
 beautiful.font = "agave Nerd Font 12"
 beautiful.notification_width = 400
@@ -242,7 +245,8 @@ end)
 
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
-beautiful.tasklist_shape = rrect
+beautiful.tasklist_shape = rounded_rect(3)
+beautiful.taglist_shape = rounded_rect(3)
 awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
     set_wallpaper(s)
@@ -842,7 +846,7 @@ end)
 awful.spawn.with_shell("! /bin/pgrep nextcloud && nextcloud")
 awful.spawn.with_shell("ibus-daemon -drx")
 awful.spawn.with_shell("flameshot")
-awful.spawn.with_shell("blueman-applet")
+--awful.spawn.with_shell("blueman-applet")
 awful.spawn.with_shell("nm-applet")
 awful.spawn.with_shell("copyq")
 
