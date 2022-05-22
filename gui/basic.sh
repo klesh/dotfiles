@@ -63,6 +63,10 @@ case "$UNAMEA" in
         sudo pacman -S --noconfirm --needed \
             chrony chrony-runit
         sudo ln -sf /etc/runit/sv/chrony/ /run/runit/service/
+        # syslog
+        sudo pacman -S --noconfirm --needed \
+            socklog
+        sudo ln -sf /etc/runit/sv/socklog/ /run/runit/service/
         # ime
         RIME_CFG="$XDG_CONFIG_HOME/ibus/rime/build/default.yaml"
         if ! grep -F "wubi86" "$RIME_CFG"; then
