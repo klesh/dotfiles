@@ -281,10 +281,11 @@ awful.screen.connect_for_each_screen(function(s)
         screen  = s,
         filter  = awful.widget.tasklist.filter.currenttags,
         buttons = tasklist_buttons,
-        layout  = {
-            spacing = 10,
-            layout = wibox.layout.fixed.horizontal,
-        },
+        --layout  = {
+            --spacing = 10,
+            --forced_width = 100,
+            --layout = wibox.layout.fixed.horizontal,
+        --},
         update_function = function(w, buttons, label, data, clients, args)
             s.mytasklist.clientlist = clients
             --for k, v in pairs(data) do
@@ -540,7 +541,9 @@ globalkeys = gears.table.join(
 
     -- Dict.sh
     awful.key({ modkey }, "t", function() awful.spawn.with_shell('D_SELECTOR="rofi -dmenu -p dict.sh" d "$(xsel -o)"') end,
-              {description = "dict.sh", group = "launcher"})
+              {description = "dict.sh", group = "launcher"}),
+    awful.key({ modkey }, "o", function() awful.spawn.with_shell('find ~/Nextcloud/notes/ | rofi -dmenu -title notes | xargs xdg-open') end,
+              {description = "open note", group = "launcher"})
 )
 
 clientkeys = gears.table.join(
@@ -558,10 +561,6 @@ clientkeys = gears.table.join(
               {description = "move to master", group = "client"}),
     --awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
               --{description = "move to screen", group = "client"}),
-    awful.key({ modkey,           }, "o",      function (c)
-        awful.spawn.with_shell("find ~/Nextcloud/notes/ | rofi -dmenu -title notes | xargs xdg-open")
-    end,
-              {description = "open note", group = "hotkeys"}),
     --awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,
               --{description = "toggle keep on top", group = "client"}),
     awful.key({ modkey,           }, "n",
@@ -747,6 +746,7 @@ awful.rules.rules = {
           "file-roller",
         },
         class = {
+          "Thunar",
           "Arandr",
           "Blueman-manager",
           "Gpick",
@@ -859,5 +859,6 @@ awful.spawn.with_shell("flameshot")
 --awful.spawn.with_shell("blueman-applet")
 awful.spawn.with_shell("nm-applet")
 awful.spawn.with_shell("copyq")
+awful.spawn.with_shell("bluetoothctl power on")
 
 -- }}}
