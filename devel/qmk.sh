@@ -28,6 +28,8 @@ case "$PM" in
         sudo apt install avr-libc
         ;;
     pacman)
+        #sudo pacman -S --noconfirm --needed arm-none-eabi-gcc avr-gcc avrdude dfu-programmer dfu-util arv-libc
+        sudo pacman -S avrdude
         sudo pip install qmk
         ;;
 esac
@@ -39,3 +41,9 @@ sudo cp "$QMK_HOME/util/udev/50-qmk.rules" /etc/udev/rules.d/
 if [ ! -d "$QMK_HOME/lib/chibios/.git" ]; then
     qmk setup
 fi
+
+
+echo "Use following command to compile firmware"
+echo '  util/docker_build.sh yk/do43:default'
+echo "Use following command to flash firemware (remember to reset your keyboard first)"
+echo '  sudo avrdude -v -patmega32u4 -cavr109 -P/dev/ttyACM0 -b57600 -Uflash:w:"yk_do43_default.hex":i '
