@@ -21,6 +21,6 @@ case "$UNAMEA" in
         " | sudo tee /etc/systemd/system/getty@tty1.service.d/override.conf > /dev/null
         ;;
     *artix*)
-        sudo sed -i 's/"--noclear"/"--noclear --autologin '$LOGIN'"'
+        sudo sed -i 's/"--noclear"/"--noclear --autologin '$LOGIN'"/' /etc/runit/sv/agetty-tty1/conf
         ;;
-esace
+esac
