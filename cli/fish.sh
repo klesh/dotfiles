@@ -6,8 +6,8 @@ DIR=$(dirname "$(readlink -f "$0")")
 
 log 'Setting up shell'
 
-case "$UNAMEA" in
-    *Ubuntu*)
+case "$PM" in
+    *apt*)
         if ! has_cmd fish; then
             sudo add-apt-repository ppa:fish-shell/release-3 -y -n
             pm_update
@@ -24,6 +24,9 @@ case "$UNAMEA" in
         ./install --all
         exitrepo
         ;;
+esac
+
+case "$UNAMEA" in
     *artix*)
         sudo pacman -S --noconfirm --needed fish dash fzf bat the_silver_searcher
         # prevent bash upgradation relink /bin/sh

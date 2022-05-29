@@ -18,7 +18,7 @@ case "$PM" in
         sudo apt install -y pass
         if [ -n "$WSL" ]; then
             PINENTRY=$PDIR/bin/pinentry-wsl-ps1.sh
-            BROWSERPASS_NATIVE="$(wsl-win-path.sh %USERPROFILE%)/browser-wsl.bat"
+            BROWSERPASS_NATIVE="$(wsl-win-path.sh %USERPROFILE%)/browserpass-wsl.bat"
             echo "@echo off\r\nbash -c 'browserpass'" \
                 > "$BROWSERPASS_NATIVE"
         else
@@ -52,10 +52,6 @@ make configure
 make
 sudo make install
 exitrepo
-if [ -n "$WSL" ]; then
-    echo "Please download browserpass-native for windows 64 and extract it to /usr/local/bin"
-    x-open https://github.com/browserpass/browserpass-native/releases/latest
-fi
 
 # enable browser-native for google-chrome
 #make -C /usr/lib/browserpass hosts-chrome-user
@@ -79,6 +75,6 @@ fi
 # configuration
 
 if [ -n "$WSL" ]; then
-    echo "Please update path in *-host.json file located at C:\Program Files\Browserpass to"
-    echo $BROWSERPASS_NATIVE
+    echo 'Please update path in files "C:\Program Files\Browserpass\*-host.json" to'
+    cmd.exe /c 'echo %USERPROFILE%\browserpass-wsl.bat' 2>/dev/null | sed 's/\\/\\\\/g'
 fi

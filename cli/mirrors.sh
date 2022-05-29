@@ -37,10 +37,8 @@ pacman_china_mirror() {
     ' "$MIRRORLIST_BAK" | sudo tee "$MIRRORLIST"  >/dev/null
 }
 
-
-# setup package mirror for CHINA
-case "$UNAMEA" in
-    *Ubuntu*)
+case "$PM" in
+    *apt*)
         # backup original sources.list
         if [ ! -f /etc/apt/sources.list.bak ]; then
             sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak
@@ -49,6 +47,11 @@ case "$UNAMEA" in
         awk '$0 ~ /^deb/ {$2="https://mirrors.aliyun.com/ubuntu/"; print}' /etc/apt/sources.list.bak \
             | sudo tee /etc/apt/sources.list
         ;;
+esac
+
+
+# setup package mirror for CHINA
+case "$UNAMEA" in
     *artix*)
         # enable arch repo
         sudo pacman -S --needed --noconfirm artix-archlinux-support
@@ -63,8 +66,8 @@ case "$UNAMEA" in
             echo "[multilib]" >> sudo tee -a /etc/pacman
             echo "Include = /etc/pacman.d/mirrorlist-arch" >> sudo tee -a /etc/pacman
         fi
-        ;;
         pacman_china_mirror /etc/pacman.d/mirrorlist Asia
         pacman_china_mirror /etc/pacman.d/mirrorlist-arch
         sudo pacman -Sy
+        ;;
 esac
