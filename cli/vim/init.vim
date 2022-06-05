@@ -75,6 +75,10 @@ nnoremap <leader>x :!chmod +x %<Cr>
 nnoremap <leader>X :!chmod -x %<Cr>
 nnoremap <leader>scb :set scrollbind!<Cr>:set cursorbind!<Cr>
 
+" replace highlighted text
+nnoremap <leader>r :%s///g<left><left>
+xnoremap <leader>r :s///g<left><left>
+
 
 function! GetXCopyCmd()
     let l:status = system("command -v termux-clipboard-set")
@@ -177,6 +181,7 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'voldikss/vim-floaterm'
 Plug 'preservim/nerdtree'
+Plug 'nelstrom/vim-visual-star-search'
 
 if $VIM_MODE == 'enhanced'
     if !executable("node") || !executable("npm")
