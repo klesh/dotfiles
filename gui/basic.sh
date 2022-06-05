@@ -86,12 +86,14 @@ case "$UNAMEA" in
         if is_laptop; then
             sudo pacman -S --noconfirm --needed \
                 arandr autorandr \
+                xf86-input-synaptics \
                 acpi light python-pip
             yay -S --needed --noconfirm auto-cpufreq-git
             sudo mkdir -p /etc/runit/sv/auto-cpufreq
             sudo cp $DIR/auto-cpufreq/auto-cpufreq-runit /etc/runit/sv/auto-cpufreq/run
             sudo chmod +x /etc/runit/sv/auto-cpufreq/run
             sudo ln -sf /etc/runit/sv/auto-cpufreq/ /run/runit/service/
+            sudo cp $DIR/x11/70-synaptics.conf /etc/X11/xorg.conf.d/
         fi
         ;;
 esac
