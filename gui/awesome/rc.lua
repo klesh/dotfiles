@@ -332,12 +332,12 @@ awful.screen.connect_for_each_screen(function(s)
                                 bg_color = "#ffffff33",
                                 step = 3
                             },
-                            cpu_widget({
-                                width = 70,
-                                step_width = 2,
-                                step_spacing = 0,
-                                color = '#434c5e'
-                            }),
+                            --cpu_widget({
+                                --width = 70,
+                                --step_width = 2,
+                                --step_spacing = 0,
+                                --color = '#434c5e'
+                            --}),
                             batteryarc_widget(),
                             wibox.widget.systray(),
                             mytextclock,
