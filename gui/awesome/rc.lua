@@ -864,6 +864,7 @@ awful.spawn.with_shell("flameshot")
 awful.spawn.with_shell("nm-applet")
 awful.spawn.with_shell("copyq")
 awful.spawn.with_shell("bluetoothctl power on")
-awful.spawn.with_shell("env > ~/.env")
+awful.spawn.with_shell("echo DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS > ~/.cron.env")
+awful.spawn.with_shell("echo DISPLAY=$DISPLAY >> ~/.cron.env")
 
 -- }}}
