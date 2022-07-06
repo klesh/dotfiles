@@ -37,21 +37,24 @@ case "$PM" in
         fi
         ;;
     pacman)
-        #sudo pacman -S --noconfirm --needed neovim
+        #sudo pacman -S --noconfirm --needed neovim ripgrep
+        #git clone --depth 1 https://github.com/wbthomason/packer.nvim \
+         #~/.local/share/nvim/site/pack/packer/start/packer.nvim
         #if enhance_vim; then
             #sudo pip install pyvim neovim
         #fi
         sudo pacman -S --noconfirm --needed nodejs npm yarn vim
-        if enhance_vim; then
-            $PDIR/devel/nodejs.sh config
-            sudo pip install pyvim
-        fi
+        #if enhance_vim; then
+            #$PDIR/devel/nodejs.sh config
+            #sudo pip install pyvim
+        #fi
         ;;
 esac
 
 # symlink configuration
 #sudo ln -sf "$(command -v vim)" /usr/bin/v
-lnsf "$DIR/vim/init.vim" "$XDG_CONFIG_HOME/nvim/init.vim"
+lnsf "$DIR/vim/neovim/init.lua" "$XDG_CONFIG_HOME/nvim/init.lua"
+lnsf "$DIR/vim/neovim/lua" "$XDG_CONFIG_HOME/nvim/lua"
+lnsf "$DIR/vim/vim/vimrc" "$HOME/.vimrc"
 lnsf "$DIR/vim/coc-settings.json" "$XDG_CONFIG_HOME/nvim/coc-settings.json"
 lnsf "$DIR/vim/coc-settings.json" "$HOME/.vim/coc-settings.json"
-lnsf "$DIR/vim/init.vim" "$HOME/.vimrc"

@@ -2,7 +2,8 @@
 
 if status is-interactive
     # === default programs
-    set -gx EDITOR vim
+    set -gx EDITOR nvim
+    set -gx GOPROXY https://goproxy.io,direct
 
     # === fzf configuration
     set -gx FZF_DEFAULT_COMMAND 'ag -g ""'
