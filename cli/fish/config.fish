@@ -27,6 +27,7 @@ if status is-interactive
     # === nnn configuration
     set -gx NNN_PLUG 'c:fzcd;m:nmount;x:!chmod +x $nnn;X:!chmod -x $nnn;d:dragdrop;p:preview-tui'
     set -gx NNN_FIFO /tmp/nnn.fifo
+    set -gx NNN_ARCHIVE '\.(7z|a|ace|alz|arc|arj|bz|bz2|cab|cpio|deb|gz|jar|lha|lz|lzh|lzma|lzo|rar|rpm|rz|t7z|tar|tbz|tbz2|tgz|tlz|txz|tZ|tzo|war|xpi|xz|Z|zip)$'
 
     # === bat configuration
     set -gx BAT_THEME 'OneHalfDark'

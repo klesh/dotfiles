@@ -3,10 +3,9 @@ if not telescope_ok then
   return
 end
 
-telescope.load_extension "file_browser"
+-- telescope.load_extension "file_browser"
 telescope.setup({
         extensions = {
-                file_browser = {
-                }
+                -- file_browser = {}
         }
 })

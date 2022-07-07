@@ -6,6 +6,7 @@ require("packer").startup(function(use)
         use "jiangmiao/auto-pairs"
         use "tpope/vim-fugitive"
         use "ellisonleao/gruvbox.nvim"
+        use "editorconfig/editorconfig-vim"
 
         -- nvim-surround
         use({
@@ -18,7 +19,7 @@ require("packer").startup(function(use)
                 "nvim-telescope/telescope.nvim",
                 requires = { {"nvim-lua/plenary.nvim"} },
         }
-        use  "nvim-telescope/telescope-file-browser.nvim" 
+        -- use "nvim-telescope/telescope-file-browser.nvim" 
 
         -- bufferline
         use {
@@ -48,6 +49,9 @@ require("packer").startup(function(use)
 
         -- comment
         use "numToStr/Comment.nvim"
+
+        -- filetree
+        use "kyazdani42/nvim-tree.lua"
 end)
 
 
@@ -56,3 +60,4 @@ require("plugins/lsp")
 require("plugins/bufferline")
 require("plugins/statusline")
 require("plugins/comment")
+require("plugins/tree")

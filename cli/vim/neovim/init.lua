@@ -23,6 +23,7 @@ vim.o.mouse = "a"
 
 -- window options
 vim.wo.number = true
+vim.wo.relativenumber = true
 
 -- more
 require("keybindings")
