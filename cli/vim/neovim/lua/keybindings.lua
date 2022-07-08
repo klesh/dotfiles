@@ -13,6 +13,7 @@ keymap(NORMAL, '<leader>ss', ':source ~/.config/nvim/init.lua<cr>', { noremap = 
 keymap(NORMAL, '<leader>sc', ':source %<cr>', { noremap = true })
 keymap(NORMAL, '<leader>w', ':w<cr>', { noremap = true })
 keymap(VISUAL, '<leader>y', '"+y<cr>', { noremap = true })
+keymap(VISUAL, '<leader>p', '"0p<cr>', { noremap = true })
 keymap(NORMAL, '<leader>q', ':bd<cr>', { noremap = true })
 keymap(NORMAL, '<leader>qq', ':qall<cr>', { noremap = true })
 keymap(NORMAL, '<leader>ne', ':e %:h<cr>', { noremap = true })

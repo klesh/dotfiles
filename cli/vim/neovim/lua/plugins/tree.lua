@@ -3,5 +3,11 @@ if not nvim_tree_ok then
   return
 end
 
-nvim_tree.setup{}
+nvim_tree.setup{
+        actions = {
+                change_dir = {
+                        global = true
+                }
+        }
+}
 
