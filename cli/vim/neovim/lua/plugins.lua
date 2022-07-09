@@ -20,6 +20,7 @@ require("packer").startup(function(use)
                 requires = { {"nvim-lua/plenary.nvim"} },
         }
         -- use "nvim-telescope/telescope-file-browser.nvim" 
+        use "nvim-telescope/telescope-media-files.nvim"
 
         -- bufferline
         use {
