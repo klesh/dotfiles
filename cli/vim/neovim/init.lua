@@ -18,8 +18,12 @@ vim.o.colorcolumn = 120
 vim.o.scrolloff = 8
 --vim.o.clipboard = "unnamedplus"
 vim.o.expandtab = true
+vim.o.tabstop = 4
+vim.o.shiftwidth = 4
 vim.o.list = true
 vim.o.mouse = "a"
+vim.o.ignorecase = true
+vim.o.smartcase = true
 
 -- window options
 vim.wo.number = true

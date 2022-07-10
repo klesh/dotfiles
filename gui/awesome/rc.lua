@@ -426,8 +426,17 @@ globalkeys = gears.table.join(
               {description = "view previous", group = "tag"}),
     awful.key({ modkey,           }, "period",  awful.tag.viewnext,
               {description = "view next", group = "tag"}),
-    awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
-              {description = "go back", group = "tag"}),
+    -- awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
+    --           {description = "go back", group = "tag"}),
+
+    awful.key({ modkey,           }, "Escape",
+        function ()
+            cw.toggle(false)
+            volume_widget:toggle(false)
+            logout_menu_widget:toggle(false)
+        end,
+        {description = "close all widget", group = "control"}
+    ),
 
     awful.key({ modkey,           }, "j",
         function ()
