@@ -5,5 +5,5 @@ DIR=$(dirname "$(readlink -f "$0")")
 log 'Setting up typora'
 
 lnsf "$DIR/typora/typora.desktop" ~/.local/share/applications/typora.desktop
-lnsf "$DIR/typora/base.user.css" ~/.local/share/applications/base.user.css
+lnsf "$DIR/typora/base.user.css" ~/.config/Typora/themes/base.user.css
 
