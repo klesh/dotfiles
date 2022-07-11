@@ -77,8 +77,8 @@ beautiful.font = "agave Nerd Font 12"
 beautiful.notification_width = 400
 beautiful.notification_shape = rrect
 beautiful.notification_border_width = 0
-beautiful.notification_border_color = "#00000000"
-beautiful.notification_bg = "#c27193"
+beautiful.notification_border_color = "#2e3440"
+beautiful.notification_bg = "#2e3440"
 beautiful.notification_fg = "#e1e1e1"
 beautiful.notification_margin = 10
 beautiful.notification_font = "serif 11"
@@ -873,7 +873,7 @@ awful.spawn.with_shell("flameshot")
 awful.spawn.with_shell("nm-applet")
 awful.spawn.with_shell("copyq")
 awful.spawn.with_shell("bluetoothctl power on")
+-- store session variables for crontab
 awful.spawn.with_shell("echo DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS > ~/.cron.env")
 awful.spawn.with_shell("echo DISPLAY=$DISPLAY >> ~/.cron.env")
-
 -- }}}
