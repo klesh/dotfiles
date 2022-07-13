@@ -14,15 +14,18 @@ sudo modprobe v4l2loopback -r -f
 # create 2 virtual webcam
 sudo modprobe v4l2loopback video_nr=21,22 card_label=virtcam1,virtcam2 exclusive_caps=1
 
+
 # pipe actual webcam to virtcams
 actualwebcam() {
-    if [ -n "$FAKER_PID" ]; then
-        kill -s INT "$FAKER_PID"
-        FAKER_PID=
-    fi
     ffmpeg -f v4l2 -i /dev/video0 -codec copy -f v4l2 /dev/video21 -f v4l2 /dev/video22 >/dev/null 2>&1 </dev/null &
     echo $!
 }
+
+ffmpeg -re -stream_loop -1 -i ~/Video/stub.mp4 -f v4l2 -vcodec rawvideo -pix_fmt yuyv422 -framerate 30 /dev/video21 >/dev/null 2>&1 </dev/null &
+SPID=$!
+echo "showing static image, press ENTER for actualwebcam"
+read C
+kill -s INT $SPID
 
 while true; do
     PID=$(actualwebcam)
@@ -33,7 +36,7 @@ while true; do
     echo recording stopped
     ffmpeg -y -i ~/Video/seq.mp4 -vf reverse ~/Video/reversed.mp4 >/dev/null 2>&1
     echo reversed clip created
-    ffmpeg -y -i ~/Video/seq.mp4 -i ~/Video/reversed.mp4 -filter_complex "[0:v] [1:v] concat=n=2:v=1 [v]" -map "[v]" loop.mp4 >/dev/null 2>&1
+    ffmpeg -y -i ~/Video/seq.mp4 -i ~/Video/reversed.mp4 -filter_complex "[0:v] [1:v] concat=n=2:v=1 [v]" -map "[v]" ~/Video/loop.mp4 >/dev/null 2>&1
     echo looping clip created
     kill -s INT $PID
     echo webcam stopped, enter looping mode, press [q] to resume webcam
