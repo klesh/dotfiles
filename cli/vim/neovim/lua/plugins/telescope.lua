@@ -4,10 +4,19 @@ if not telescope_ok then
 end
 
 -- telescope.load_extension "file_browser"
+local actions = require("telescope.actions")
 telescope.load_extension('media_files')
 telescope.setup({
-        extensions = {
-                -- file_browser = {}
-                media_files = {}
-        }
+    defaults = {
+        mappings = {
+            i = {
+                ["<C-u>"] = false,
+                ["<esc>"] = actions.close,
+            },
+        },
+    },
+    extensions = {
+        -- file_browser = {}
+        media_files = {}
+    }
 })
