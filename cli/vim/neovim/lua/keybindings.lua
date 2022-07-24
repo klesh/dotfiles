@@ -5,6 +5,19 @@ local VISUAL = 'v'
 local COMMAND = 'c'
 
 
+vim.api.nvim_create_user_command("CloseOtherBuffers", function()
+    local current_buffer_name = vim.api.nvim_buf_get_name(0)
+    for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_loaded(bufnr) then
+            local bufname = vim.api.nvim_buf_get_name(bufnr)
+            if bufname ~= current_buffer_name then
+                vim.cmd(":bd " .. bufnr)
+            end
+        end
+    end
+end, {})
+
+
 keymap(NORMAL, '<c-pagedown>', ':bnext<cr>', { noremap = true })
 keymap(NORMAL, '<c-pageup>', ':bprev<cr>', { noremap = true })
 keymap(INSERT, '<c-pagedown>', '<esc>:bnext<cr>', { noremap = true })
@@ -44,9 +57,13 @@ keymap(NORMAL, '<leader>gg', ':Git pull<cr>', { noremap = true })
 keymap(NORMAL, '<leader>gb', ':Git blame<cr>', { noremap = true })
 keymap(NORMAL, '<leader>gl', ':Git log<cr>', { noremap = true })
 keymap(NORMAL, '<leader>gpr', ':!gpr<cr>', { noremap = true })
+keymap(NORMAL, 'gp', ':GotoParent<cr>', { noremap = true })
 keymap(NORMAL, '<leader>cn', ':cnext<cr>', { noremap = true })
 keymap(NORMAL, '<leader>cp', ':cprev<cr>', { noremap = true })
-keymap(NORMAL, '<leader>bo', ':%bd | e#<cr>', { noremap = true })
+keymap(NORMAL, '<leader>bo', ':CloseOtherBuffers<cr>', { noremap = true })
+keymap(NORMAL, '<leader>sif', ':SearchInFolder<cr>', { noremap = true })
+keymap(NORMAL, '<leader>cx', ':ToggleExecutable<cr>', { noremap = true })
+keymap(NORMAL, '<leader>rs', ':RunScript<cr>', { noremap = true })
 
 
 -- command mode
@@ -65,3 +82,5 @@ keymap(COMMAND, '<C-p>', '<Up>', { noremap = true })
 -- keymap(INSERT, '<C-d>', '<Delete>', { noremap = true })
 -- keymap(INSERT, '<C-n>', '<Down>', { noremap = true })
 -- keymap(INSERT, '<C-p>', '<Up>', { noremap = true })
+
+vim.g.AutoPairsShortcutToggle = "<leader>ap"

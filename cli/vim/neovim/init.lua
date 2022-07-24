@@ -24,16 +24,19 @@ vim.o.list = true
 vim.o.mouse = "a"
 vim.o.ignorecase = true
 vim.o.smartcase = true
+vim.o.swapfile = false
 
 -- window options
 vim.wo.number = true
 vim.wo.relativenumber = true
 
+vim.cmd "set colorcolumn=120"
+
 -- more
 require("keybindings")
 require("plugins")
 
-gruvbox_ok, gruvbox = pcall(require, "gruvbox")
+local gruvbox_ok, _ = pcall(require, "gruvbox")
 if gruvbox_ok then
         vim.o.background = "dark"
         vim.cmd [[
@@ -42,3 +45,6 @@ if gruvbox_ok then
         highlight CursorLine ctermbg=240
         ]]
 end
+
+
+vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.formatting_sync()]]
