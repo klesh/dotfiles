@@ -774,7 +774,8 @@ awful.rules.rules = {
             "Wpa_gui",
             "veromix",
             "st-256color",
-            "xtightvncviewer" },
+            "xtightvncviewer"
+        },
 
         -- Note that the name property shown in xprop might be set slightly after creation of the client
         -- and the name shown there might not match defined rules here.
@@ -883,4 +884,5 @@ awful.spawn.with_shell("bluetoothctl power on")
 awful.spawn.with_shell("echo DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS > ~/.cron.env")
 awful.spawn.with_shell("echo DISPLAY=$DISPLAY >> ~/.cron.env")
 awful.spawn.with_shell("grep -F 0 /sys/class/power_supply/ACAD/online && sudo light -S 30")
+awful.spawn.with_shell("cd ~/dotfiles/gui/virtcam && lua virtcam.lua")
 -- }}}
