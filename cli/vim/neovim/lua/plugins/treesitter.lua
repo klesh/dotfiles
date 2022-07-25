@@ -98,7 +98,7 @@ end
 M.nvim_create_augroups({
     open_folds = {
         -- { "BufReadPost,FileReadPost,VimEnter", "*", "normal zR" },
-        { "BufReadPost,FileReadPost,VimEnter", "*", "TSBufEnable highlight" },
+        { "BufEnter,FileReadPost,VimEnter", "*", "TSBufEnable highlight" },
     }
 })
 
