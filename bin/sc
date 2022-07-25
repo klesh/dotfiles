@@ -7,8 +7,9 @@ function _stop
     killall screenkey 2>/dev/null
     if test -f /tmp/recording.pid
         read recpid < /tmp/recording.pid
-        pkill --signal 15 -g $recpid
-        rm /tmp/recording.pid
+        kill -SIGTERM $recpid;
+        # pkill --signal 15 -g $recpid
+        and rm /tmp/recording.pid
     end
 end
 
@@ -25,7 +26,7 @@ function _start -a x y w h fps
         -f alsa -i default \
         -r $fps -c:v h264 -crf 0 -preset ultrafast \
         -c:a aac \
-        $outfile &
+        $outfile > /dev/null 2>&1 </dev/null &
     echo $last_pid > /tmp/recording.pid
     echo $outfile
 end
