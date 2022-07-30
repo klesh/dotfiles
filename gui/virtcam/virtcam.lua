@@ -73,21 +73,21 @@ local stage = "stopped"
 NewHttpServer("127.0.0.1", 10200, {
     ["POST /prepare"] = function(_, _)
         if stage == "stopped" then
-            run("pactl set-source-mute @DEFAULT_SOURCE@ 1")
+            -- run("pactl set-source-mute @DEFAULT_SOURCE@ 1")
             run_only(Actualcam)
             stage = "actual"
         end
     end,
     ["POST /actual"] = function(_, _)
         if stage ~= "actual" then
-            run("pactl set-source-mute @DEFAULT_SOURCE@ 0")
+            -- run("pactl set-source-mute @DEFAULT_SOURCE@ 0")
             run_only(Actualcam)
             stage = "actual"
         end
     end,
     ["POST /fake"] = function(_, _)
         if stage ~= "fake" then
-            run("pactl set-source-mute @DEFAULT_SOURCE@ 1")
+            -- run("pactl set-source-mute @DEFAULT_SOURCE@ 1")
             run_only(Actualcam)
             Recorder:start()
             run("sleep 3")
