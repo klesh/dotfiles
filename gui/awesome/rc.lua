@@ -872,17 +872,4 @@ client.connect_signal("unfocus", function(c)
     --c.border_width = 0
 end)
 
--- Autostart
-awful.spawn.with_shell("! /bin/pgrep nextcloud && nextcloud")
-awful.spawn.with_shell("ibus-daemon -drx")
-awful.spawn.with_shell("flameshot")
---awful.spawn.with_shell("blueman-applet")
-awful.spawn.with_shell("nm-applet")
-awful.spawn.with_shell("copyq")
-awful.spawn.with_shell("bluetoothctl power on")
--- store session variables for crontab
-awful.spawn.with_shell("echo DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS > ~/.cron.env")
-awful.spawn.with_shell("echo DISPLAY=$DISPLAY >> ~/.cron.env")
-awful.spawn.with_shell("grep -F 0 /sys/class/power_supply/ACAD/online && sudo light -S 30")
-awful.spawn.with_shell("cd ~/dotfiles/gui/virtcam && lua virtcam.lua")
--- }}}
+awful.spawn.with_shell("~/.config/awesome/autostart")

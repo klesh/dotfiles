@@ -66,5 +66,6 @@ EOT
 
 # configuration
 lnsf "$DIR/awesome/rc.lua" "$XDG_CONFIG_HOME/awesome/rc.lua"
+lnsf "$DIR/awesome/autostart" "$XDG_CONFIG_HOME/awesome/autostart"
 lnsf "$DIR/rofi/config.rasi" "$XDG_CONFIG_HOME/rofi/config.rasi"
 lnsf "$DIR/rofi/catppuccin.rasi" "$XDG_CONFIG_HOME/rofi/catppuccin.rasi"

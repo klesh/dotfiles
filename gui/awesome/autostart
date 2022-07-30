@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# startup apps
+! /bin/pgrep nextcloud && nextcloud &
+! /bin/pgrep flameshot && flameshot &
+! /bin/pgrep nm-applet && nm-applet &
+! /bin/pgrep copyq && copyq &
+! /bin/pgrep -f "lua virtcam.lua" && cd ~/dotfiles/gui/virtcam && lua virtcam.lua &
+
+# input method
+ibus-daemon -drx
+
+# turn bluetooth power on 
+bluetoothctl power on
+
+# export X variable for cronjob to send notification
+echo DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS > ~/.cron.env
+echo DISPLAY=$DISPLAY >> ~/.cron.env
+
+# adjust brightness in battery mode
+grep -F 0 /sys/class/power_supply/ACAD/online && sudo light -S 30
+
+# prioritize hdmi output
+HDMI_SINK=$(pactl list short sinks | awk '{print $2}' | grep hdmi)
+if [ -n "$HDMI_SINK" ]; then
+    pactl set-default-sink "$HDMI_SINK"
+fi
+
+# fix pulseaudio echo-cancel side effect
+pactl set-source-volume @DEFAULT_SOURCE@ 100%
