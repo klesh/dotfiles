@@ -1,6 +1,7 @@
 -- If LuaRocks is installed, make sure that packages installed through it are
 -- found (e.g. lgi). If LuaRocks is not installed, do nothing.
-pcall(require, "luarocks.loader")
+-- pcall(require, "luarocks.loader")
+require("luarocks.loader")
 
 -- Standard awesome library
 local gears = require("gears")
@@ -16,7 +17,7 @@ local naughty = require("naughty")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
 local volume_widget = require('awesome-wm-widgets.volume-widget.volume')
-local cpu_widget = require("awesome-wm-widgets.cpu-widget.cpu-widget")
+-- local cpu_widget = require("awesome-wm-widgets.cpu-widget.cpu-widget")
 local calendar_widget = require("awesome-wm-widgets.calendar-widget.calendar")
 local logout_menu_widget = require("awesome-wm-widgets.logout-menu-widget.logout-menu")
 local mpdarc_widget = require("awesome-wm-widgets.mpdarc-widget.mpdarc")
@@ -394,7 +395,7 @@ end
 
 
 -- {{{ Key bindings
-globalkeys = gears.table.join(
+local globalkeys = gears.table.join(
     awful.key({}, 'XF86AudioRaiseVolume', volume_widget.inc,
         { description = 'volume up', group = 'hotkeys' }),
     awful.key({}, 'XF86AudioLowerVolume', volume_widget.dec,
@@ -493,7 +494,7 @@ globalkeys = gears.table.join(
     -- Standard program
     awful.key({ modkey, }, "Return", function() awful.spawn(terminal) end,
         { description = "open a terminal", group = "launcher" }),
-    awful.key({ modkey, }, "`", function() awful.spawn("st -e /usr/bin/fish") end,
+    awful.key({ modkey, }, "`", function() awful.spawn("st -c st-256color-float -e /usr/bin/fish") end,
         { description = "open a terminal", group = "launcher" }),
     awful.key({ modkey, "Control" }, "r", awesome.restart,
         { description = "reload awesome", group = "awesome" }),
@@ -719,7 +720,8 @@ for i, key in pairs({ "a", "s", "d", "f" }) do
     )
 end
 
-clientbuttons = gears.table.join(
+-- global mouse buttons
+local clientbuttons = gears.table.join(
     awful.button({}, 1, function(c)
         c:emit_signal("request::activate", "mouse_click", { raise = true })
     end),
@@ -730,8 +732,149 @@ clientbuttons = gears.table.join(
     awful.button({ modkey }, 3, function(c)
         c:emit_signal("request::activate", "mouse_click", { raise = true })
         awful.mouse.client.resize(c)
+    end),
+    awful.button({}, 6, function()
+        mousegrabber.run(function()
+            volume_widget.dec()
+            return false
+        end, "mouse")
+    end),
+    awful.button({}, 7, function()
+        mousegrabber.run(function()
+            volume_widget.inc()
+            return false
+        end, "mouse")
     end)
 )
+
+
+
+local shift_on = false
+local function toggle_shift()
+    local event = "key_press"
+    if shift_on then
+        event = "key_release"
+    end
+    gears.debug.print_error("sending " .. event .. "Shift_L")
+    root.fake_input(event, "Shift_L")
+    shift_on = not shift_on
+end
+
+local socket = require "socket"
+local buttonmacros = {
+    -- [button] = {
+    --     [clicks] = macro
+    -- }
+    [9] = {
+        [2] = "Control_L+Page_Up",
+    },
+    [8] = {
+        [2] = "Control_L+Page_Down",
+    },
+    [11] = {
+        [1] = toggle_shift,
+        [2] = "F5",
+    },
+    [12] = {
+        [1] = "button_2",
+        [2] = "Control_L+w",
+        [3] = "Control_L+Shift_L+t",
+    },
+}
+local buttonstate = {
+    -- [button] = { timestamp1, timestamp2, ... }
+}
+local button_tapping_term = 0.5
+local replaying = 0
+
+-- check timeout and fireout combinations
+gears.timer.start_new(0.1, function()
+    for button, timestamps in pairs(buttonstate) do
+        -- accumulate dued clicks
+        local count = 0
+        if #timestamps > 0 then
+            local j = 2
+            while j <= #timestamps and timestamps[j] - timestamps[j - 1] < button_tapping_term do
+                j = j + 1
+            end
+            local i = j - 1
+            if socket.gettime() - timestamps[i] > button_tapping_term then
+                count = i
+                repeat
+                    table.remove(timestamps, i)
+                    i = i - 1
+                until i == 0
+            end
+        end
+        -- send out keystrokes
+        if count > 0 then
+            gears.debug.print_error("counted " .. tostring(count) .. " times for " .. tostring(button))
+            local macro = nil
+            local macros = buttonmacros[button]
+            if macros then
+                macro = macros[count]
+            end
+            -- send macro if defined
+            if macro then
+                gears.debug.print_error("macro for " .. tostring(button) .. " " .. tostring(macro))
+                if type(macro) == "function" then
+                    macro()
+                else
+                    local stack = {}
+                    for key in macro:gmatch("[^+]+") do
+                        local type = "key"
+                        local btn = key:match("^button_(%d+)")
+                        if btn then
+                            type = "button"
+                            key = btn
+                        end
+                        root.fake_input(type .. "_press", key)
+                        table.insert(stack, { type, key })
+                    end
+                    while #stack > 0 do
+                        local key = table.remove(stack)
+                        root.fake_input(key[1] .. "_release", key[2])
+                    end
+                end
+                -- or replay clicks
+            else
+                gears.debug.print_error("replay " .. tostring(count) .. " times for " .. tostring(button))
+                replaying = count
+                -- mousegrabber.run(function(_)
+                while count > 0 do
+                    count = count - 1
+                    root.fake_input("button_press", tonumber(button))
+                    root.fake_input("button_release", tonumber(button))
+                end
+                -- end, "mouse")
+            end
+        end
+    end
+    return true
+end)
+-- bind button click event
+for button in pairs(buttonmacros) do
+    buttonstate[button] = {}
+    gears.debug.print_error("register " .. tostring(button))
+    local function f(c)
+        if replaying > 0 then
+            replaying = replaying - 1
+            return
+        end
+        gears.debug.print_error("button clicked " .. tostring(button))
+        c:emit_signal("request::activate", "mouse_click", { raise = true })
+        mousegrabber.run(function(_)
+            local timestamps = buttonstate[button]
+            table.insert(timestamps, socket.gettime())
+            return false
+        end, "mouse")
+    end
+
+    clientbuttons = gears.table.join(clientbuttons,
+        awful.button({ "Shift" }, button, f),
+        awful.button({}, button, f)
+    )
+end
 
 -- Set keys
 root.keys(globalkeys)
@@ -773,7 +916,7 @@ awful.rules.rules = {
             "Tor Browser", -- Needs a fixed window size to avoid fingerprinting by screen size.
             "Wpa_gui",
             "veromix",
-            "st-256color",
+            "st-256color-float",
             "xtightvncviewer"
         },
 
