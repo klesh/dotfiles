@@ -79,7 +79,7 @@ if status is-interactive
         ~/.profile.fish
 
     # === auto cd into last activated directory
-    test "$PWD" = "$HOME" && cd $last_pwd
+    test "$PWD" = "$HOME" && test -d $last_pwd && cd $last_pwd
 
     function loadenv
         while read -l line
