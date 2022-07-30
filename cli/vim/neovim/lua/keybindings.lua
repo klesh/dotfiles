@@ -84,3 +84,33 @@ keymap(COMMAND, '<C-p>', '<Up>', { noremap = true })
 -- keymap(INSERT, '<C-p>', '<Up>', { noremap = true })
 
 vim.g.AutoPairsShortcutToggle = "<leader>ap"
+
+
+-- search and replace highlighted
+keymap(VISUAL, '/', "y/\\V<C-R>=escape(@\",'/\\')<CR><CR>", { noremap = true })
+keymap(NORMAL, '<leader>r', ':%s///g<left><left>', { noremap = true })
+-- xnoremap <leader>r :s///g<left><left>
+
+-- debugger
+local dap_ok, dap = pcall(require, "dap")
+if dap_ok then
+    vim.keymap.set('n', '<leader>db', function() dap.toggle_breakpoint() end)
+    vim.keymap.set('n', '<leader>dc', function() dap.set_breakpoint(vim.fn.input('Breakpoint condition: ')) end)
+    vim.keymap.set('n', '<C-k>', function() dap.step_out() end)
+    vim.keymap.set('n', "<C-l>", function() dap.step_into() end)
+    vim.keymap.set('n', '<C-j>', function() dap.step_over() end)
+    vim.keymap.set('n', '<C-h>', function() dap.continue() end)
+    vim.keymap.set('n', '<leader>dl', function() dap.run_to_cursor() end)
+    vim.keymap.set('n', '<leader>de', function() dap.terminate() end)
+    vim.keymap.set('n', '<leader>dB', function() dap.clear_breakpoints() end)
+    -- vim.keymap.set('n', '<leader>de', function() dap.set_exception_breakpoints({ "all" }) end)
+    vim.keymap.set('n', '<leader>da', function() require "debugHelper".attach() end)
+    vim.keymap.set('n', '<leader>dA', function() require "debugHelper".attachToRemote() end)
+    vim.keymap.set('n', '<leader>dh', function() require "dap.ui.widgets".hover() end)
+    vim.keymap.set('n', '<leader>d?', function() local w = require "dap.ui.widgets"; w.centered_float(w.scopes) end)
+    vim.keymap.set('n', '<leader>dk', function() dap.up() end)
+    vim.keymap.set('n', '<leader>dj', function() dap.down() end)
+    vim.keymap.set('n', '<leader>dr', function() dap.repl.toggle({}, "vsplit") end)
+    vim.keymap.set('n', '<leader>tds', ':Telescope dap frames<CR>')
+    vim.keymap.set('n', '<leader>tdb', ':Telescope dap list_breakpoints<CR>')
+end

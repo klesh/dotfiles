@@ -64,6 +64,12 @@ require("packer").startup(function(use)
         "/home/klesh/Projects/klesh/nvim-runscript",
         config = function() require("nvim-runscript").setup({}) end
     }
+
+
+    -- debugger
+    use 'mfussenegger/nvim-dap'
+    use 'leoluz/nvim-dap-go'
+    use 'nvim-telescope/telescope-dap.nvim'
 end)
 
 
@@ -75,3 +81,4 @@ require("plugins/comment")
 require("plugins/tree")
 require("plugins/searchinfolder")
 require("plugins/treesitter")
+require("plugins/debugging")

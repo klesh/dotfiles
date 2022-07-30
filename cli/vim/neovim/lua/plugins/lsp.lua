@@ -18,7 +18,7 @@ local language_servers = {
                 },
                 diagnostics = {
                     -- Get the language server to recognize the `vim` global
-                    globals = { 'vim' },
+                    globals = { 'vim', 'root', 'client', 'awesome', 'screen', 'mouse', 'keyboardgrabber', 'mousegrabber' },
                 },
                 workspace = {
                     -- Make the server aware of Neovim runtime files
@@ -138,5 +138,3 @@ null_ls.setup({
         null_ls.builtins.formatting.gofumpt,
     },
 })
-
-
