@@ -7,4 +7,4 @@ Exec=drawio %f
 Comment=Diagram
 Categories=Utility
 Terminal=false
-MimeType=image/svg
+MimeType=image/svg;application/vnd.jgraph.mxfile
