@@ -1,0 +1,5 @@
+#!/bin/sh
+
+[ -n "$TMUX" ] && tmux rename-window "neomutt"
+neomutt
+[ -n "$TMUX" ] && tmux set automatic-rename on
