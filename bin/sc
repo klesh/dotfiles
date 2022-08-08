@@ -31,6 +31,20 @@ function _start -a x y w h fps
     echo $outfile
 end
 
+set --append subcmds audio
+set audio_help '' 'record audio only'
+function audio
+    set outfile "$HOME/recording/audio-"(date '+%y%m%d-%H%M-%S')".aac"
+    touch /tmp/recording.pid
+    sleep 1
+    ffmpeg \
+        -f alsa -i default \
+        -c:a aac \
+        $outfile > /dev/null 2>&1 </dev/null &
+    echo $last_pid > /tmp/recording.pid
+    echo $outfile
+end
+
 
 set --append subcmds prepare
 set prepare_help '[w=1920] [h=1080]' 'create virtual monotors if physical size is higher than specified'
