@@ -773,7 +773,7 @@ local buttonmacros = {
     },
     [11] = {
         [1] = toggle_shift,
-        [2] = "F5",
+        [2] = "Space",
     },
     [12] = {
         [1] = "button_2",
@@ -929,7 +929,7 @@ awful.rules.rules = {
         role = {
             "AlarmWindow", -- Thunderbird's calendar.
             "ConfigManager", -- Thunderbird's about:config.
-            "pop-up", -- e.g. Google Chrome's (detached) Developer Tools.
+            -- "pop-up", -- e.g. Google Chrome's (detached) Developer Tools.
             "EventDialog",
             "Msgcompose",
         }

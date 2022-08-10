@@ -54,7 +54,7 @@ esac
 case "$UNAMEA" in
     *artix*)
         # enable arch repo
-        sudo pacman -S --needed --noconfirm artix-archlinux-support
+        sudo pacman -S --needed --noconfirm artix-archlinux-support archlinux-keyring
         if ! grep -qF "mirrorlist-arch" /etc/pacman.conf; then
             echo "# Arch" >> sudo tee -a /etc/pacman
             echo "[extra]" >> sudo tee -a /etc/pacman
@@ -65,6 +65,14 @@ case "$UNAMEA" in
             echo "" >> sudo tee -a /etc/pacman
             echo "[multilib]" >> sudo tee -a /etc/pacman
             echo "Include = /etc/pacman.d/mirrorlist-arch" >> sudo tee -a /etc/pacman
+            echo "" >> sudo tee -a /etc/pacman
+            echo '[universe]' >> sudo tee -a /etc/pacman
+            echo 'Server = https://universe.artixlinux.org/$arch' >> sudo tee -a /etc/pacman
+            echo 'Server = https://mirror1.artixlinux.org/universe/$arch' >> sudo tee -a /etc/pacman
+            echo 'Server = https://mirror.pascalpuffke.de/artix-universe/$arch' >> sudo tee -a /etc/pacman
+            echo 'Server = https://artixlinux.qontinuum.space/artixlinux/universe/os/$arch' >> sudo tee -a /etc/pacman
+            echo 'Server = https://mirror1.cl.netactuate.com/artix/universe/$arch' >> sudo tee -a /etc/pacman
+            echo 'Server = https://ftp.crifo.org/artix-universe/' >> sudo tee -a /etc/pacman
         fi
         pacman_china_mirror /etc/pacman.d/mirrorlist Asia
         pacman_china_mirror /etc/pacman.d/mirrorlist-arch
