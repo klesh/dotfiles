@@ -30,7 +30,7 @@ require("packer").startup(function(use)
 
     -- lsp
     use "neovim/nvim-lspconfig"
-    use "jose-elias-alvarez/null-ls.nvim"
+    -- use "jose-elias-alvarez/null-ls.nvim"
 
     -- nvim-cmp
     use "hrsh7th/nvim-cmp" -- The completion plugin
