@@ -1,0 +1,19 @@
+#!/bin/sh
+
+mpv /dev/video0 --no-osc --no-cache --untimed --no-demuxer-thread --video-sync=audio --vd-lavc-threads=1 &
+sleep 1
+MPV_PID=$!
+# MPV_PID=90177538
+awesome-client <<LUA
+    for _, c in ipairs(client.get()) do
+        if c.pid == $MPV_PID then
+            local c = client.focus
+            c.floating = true
+            c.width = 320
+            c.height = 180
+            c.ontop = true
+            c.x = 1734
+            c.y = 1248
+        end
+    end
+LUA
