@@ -531,8 +531,8 @@ local globalkeys = gears.table.join(
         { description = "restore minimized", group = "client" }),
 
     -- Prompt
-    awful.key({ modkey }, "r", function() awful.screen.focused().mypromptbox:run() end,
-        { description = "run prompt", group = "launcher" }),
+    -- awful.key({ modkey }, "r", function() awful.screen.focused().mypromptbox:run() end,
+    --     { description = "run prompt", group = "launcher" }),
 
     awful.key({ modkey }, "x",
         function()
@@ -553,6 +553,14 @@ local globalkeys = gears.table.join(
     -- Bookmark
     awful.key({ modkey }, "b", function() awful.spawn.with_shell('BOOKMARK_SEARCHER="rofi -dmenu -p bookmark" bm') end,
         { description = "bookmark", group = "launcher" }),
+
+    -- Recording
+    awful.key({ modkey }, "w",
+        function() awful.spawn.with_shell('sc window 25') end,
+        { description = "record window", group = "launcher" }),
+    awful.key({ modkey }, "e",
+        function() awful.spawn.with_shell('sc theend') end,
+        { description = "end recording", group = "launcher" }),
 
     -- Dict.sh
     awful.key({ modkey }, "t",
@@ -578,8 +586,8 @@ clientkeys = gears.table.join(
         { description = "move to master", group = "client" }),
     --awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
     --{description = "move to screen", group = "client"}),
-    --awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,
-    --{description = "toggle keep on top", group = "client"}),
+    awful.key({ modkey, "Control" }, "t", function(c) c.ontop = not c.ontop end,
+        { description = "toggle keep on top", group = "client" }),
     awful.key({ modkey, }, "n",
         function(c)
             -- The client currently has the input focus, so it cannot be
@@ -589,6 +597,17 @@ clientkeys = gears.table.join(
         { description = "minimize", group = "client" }),
     awful.key({ modkey, }, "m",
         function(c)
+            if c.maximized then
+                awful.screen.focused().padding = { top = "0", bottom = "0", left = "0", right = "0" }
+            else
+                local gap = beautiful.useless_gap * 2
+                awful.screen.focused().padding = {
+                    top = gap,
+                    bottom = gap,
+                    left = gap,
+                    right = gap,
+                }
+            end
             c.maximized = not c.maximized
             c:raise()
         end,
