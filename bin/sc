@@ -99,6 +99,7 @@ end
 set --append subcmds window
 set window_help '[fps=5]' 'record clicked window'
 function window -a fps
+    _stop
     test -z $fps && set fps 5
     set wininfo (xwininfo)
     for line in $wininfo
