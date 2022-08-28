@@ -1,215 +1,191 @@
-#!/bin/fish
+#!/bin/sh
 
-set VIRTMON virtmon
-set -q SC_FONT; or set SC_FONT 'WenQuanYi-Micro-Hei'
+set -e
+VIRTMON=virtmon
+SC_FONT=${SC_FONT:-'WenQuanYi-Micro-Hei'}
+PID_FILE="/tmp/recording.pid"
+OUTPUT_DIR="/home/klesh/Videos"
 
-function _stop
-    killall screenkey 2>/dev/null
-    if test -f /tmp/recording.pid
-        read recpid < /tmp/recording.pid
-        kill -SIGTERM $recpid;
-        # pkill --signal 15 -g $recpid
-        and rm /tmp/recording.pid
-    end
-end
+_stop_recording() {
+    killall screenkey 2>/dev/null || true
+    if [ -f "$PID_FILE" ]; then
+        PID=$(cat "$PID_FILE")
+        [ -n "$PID" ] && kill -s 15 $PID || true
+        rm "$PID_FILE"
+    fi
+}
 
-function _start -a x y w h fps
-    if test (count $argv) -ne 5
+_start_video_recording() {
+    _stop_recording
+    if [ "$#" -ne 5 ]; then
         echo "expected x y w h fps , got $argv"
         exit 1
-    end
-    set outfile "$HOME/recording/screencast-"(date '+%y%m%d-%H%M-%S')".mp4"
-    touch /tmp/recording.pid
+    fi
+    X=$1
+    Y=$2
+    W=$3
+    H=$4
+    FPS=${5:-30}
+
+    OUTPUT_FILE="$OUTPUT_DIR/screencast-$(date '+%y%m%d-%H%M-%S').mp4"
+    touch "$PID_FILE"
+    sleep 1
+    echo recording to $OUTPUT_FILE
+    # ffmpeg \
+    #     -f x11grab -s $W'x'$H -i "$DISPLAY+$X,$Y" \
+    #     -f alsa -i default \
+    #     -r $FPS -c:v h264 -crf 0 -preset ultrafast \
+    #     -c:a aac \
+    #     $OUTPUT_FILE
+    ffmpeg \
+        -f x11grab -s $W'x'$H -i "$DISPLAY+$X,$Y" \
+        -f alsa -i default \
+        -r $FPS -c:v h264 -crf 0 -preset ultrafast \
+        -c:a aac \
+        $OUTPUT_FILE > /dev/null 2>&1 </dev/null &
+    echo "$!" > "$PID_FILE"
+}
+
+audio() {
+    _stop_recording
+    OUTPUT_FILE="$OUTPUT_DIR/audio-$(date '+%y%m%d-%H%M-%S').aac"
+    touch "$PID_FILE"
     sleep 1
     ffmpeg \
-        -f x11grab -s $w'x'$h -i "$DISPLAY+$x,$y" \
-        -f alsa -i default \
-        -r $fps -c:v h264 -crf 0 -preset ultrafast \
-        -c:a aac \
-        $outfile > /dev/null 2>&1 </dev/null &
-    echo $last_pid > /tmp/recording.pid
-    echo $outfile
-end
-
-set --append subcmds audio
-set audio_help '' 'record audio only'
-function audio
-    set outfile "$HOME/recording/audio-"(date '+%y%m%d-%H%M-%S')".aac"
-    touch /tmp/recording.pid
-    sleep 1
-    ffmpeg \
         -f alsa -i default \
         -c:a aac \
-        $outfile > /dev/null 2>&1 </dev/null &
-    echo $last_pid > /tmp/recording.pid
-    echo $outfile
-end
+        $OUTPUT_FILE > /dev/null 2>&1 </dev/null &
+    echo "$!" > "$PID_FILE"
+    echo $OUTPUT_FILE
+}
 
+theend() {
+    _stop_recording
+}
 
-set --append subcmds prepare
-set prepare_help '[w=1920] [h=1080]' 'create virtual monotors if physical size is higher than specified'
-function prepare -a pw ph
-    test -z $pw && set pw 1920
-    test -z $ph && set ph 1080
-    set moninfo (xrandr | grep ' primary')
+prepare() {
+    # wanted size
+    WW=${1:-1920}
+    WH=${2:-1080}
 
-    if not set whxy (string match -r '([0-9]+)x([0-9]+)\+([0-9]+)\+([0-9]+)' $moninfo)
-        echo 'unable to find geometry info of the primary monitor' >&2
-        exit 1
-    end
-    set w $whxy[2]
-    set h $whxy[3]
-    set x $whxy[4]
-    set y $whxy[5]
-    if test $w -le $pw -a $h -le $ph
-        return
-    end
+    # actual size
+    #  0: +*DP-1 3440/797x1440/333+0+0  DP-1
+    #            resolution / physical
+    WHXY=$(xrandr --listmonitors | awk '$2 ~ /\*/ {
+        split($3, WHXY, /x|+|\//)
+        match($2, /\*(.+)$/, name)
+        print WHXY[1] " " WHXY[2] " " WHXY[3] " " WHXY[4] " " WHXY[5] " " WHXY[6] " " name[1]
+    }')
+    W=$(echo "$WHXY" | awk '{print $1}')
+    PW=$(echo "$WHXY" | awk '{print $2}')
+    H=$(echo "$WHXY" | awk '{print $3}')
+    PH=$(echo "$WHXY" | awk '{print $4}')
+    X=$(echo "$WHXY" | awk '{print $5}')
+    Y=$(echo "$WHXY" | awk '{print $6}')
+    NAME=$(echo "$WHXY" | awk '{print $7}')
 
-    if not set wmhm (string match -r '([0-9]+)mm x ([0-9]+)mm' $moninfo)
-        echo 'unable to find physical size of the primary monitor'
-        exit 1
-    end
-    set wm $wmhm[-2]
-    set hm $wmhm[-1]
+    # rest size
+    RW=$(( $W - $WW ))
+    RH=$(( $H - $WH ))
+    if [ "$RW" -lt 0 ] && [ "$RH" -lt 0 ]; then
+        return 0
+    fi
 
-    if not set pn (string match -r '^([A-Za-z0-9_-]+)' $moninfo)
-        echo 'unable to find name of the primary monitor name' >&2
-        exit 1
-    end
-    set name $pn[1]
+    # adjust rest size, either split horizontally or vertically
+    # physical size for wanted monitor
+    PWW=$(echo "scale=3; r = $WW / $W * $PW; scale=0; r / 1" | bc)
+    PWH=$(echo "scale=3; r = $WH / $H * $PH; scale=0; r / 1" | bc)
+    if [ "$RW" -gt 0 ]; then
+        # horizontally
+        PRW=$(( $PW - $PWW ))
+        PRH=$PH
+        RH=$H
+        RX=$WW
+        RY=0
+    fi
+    # echo WW $WW
+    # echo PWW $PWW
+    # echo WH $WH
+    # echo PWH $PWH
+    # echo X $X
+    # echo Y $Y
+    # echo RW $RW
+    # echo PRW $PRW
+    # echo RH $RH
+    # echo PRH $PRH
+    # echo RX $RX
+    # echo RY $RY
+    # exit
 
-    set pwm (math "round($pw / $w * $wm)")
-    set phm (math "round($ph / $h * $hm)")
-    set rwm   (math "$wm - $pwm")
-    set rw    (math "$w  - $pw")
+    # create virtual monitors
+    echo xrandr --setmonitor $VIRTMON-1 "${WW}/${PWW}x${WH}/${PWH}+0+0" $NAME
+    echo xrandr --setmonitor $VIRTMON-2 "${RW}/${PRW}x${RH}/${PRH}+${RX}+${RY}" none
+    echo nitrogen --restore
+}
 
-    xrandr --setmonitor $VIRTMON-1 $pw/$pwm'x'$ph/$phm+0+0 $name
-    xrandr --setmonitor $VIRTMON-2 $rw/$rwm'x'$h/$hm+$pw+0 none
-    nitrogen --restore
-end
-
-set --append subcmds finish
-set finish_help 'remove all virtual monitors'
-function finish
+finish() {
     xrandr --delmonitor $VIRTMON-1
     xrandr --delmonitor $VIRTMON-2
     nitrogen --restore
-end
+}
 
-set --append subcmds window
-set window_help '[fps=5]' 'record clicked window'
-function window -a fps
-    _stop
-    test -z $fps && set fps 5
-    set wininfo (xwininfo)
-    for line in $wininfo
-        set -l kv (string split ":" $line)
-        set -l k (string trim $kv[1])
-        set -l v (string trim $kv[2])
-        switch $k
-            case 'Absolute upper-left X'
-                set x $v
-            case 'Absolute upper-left Y'
-                set y $v
-            case 'Width'
-                set w $v
-            case 'Height'
-                set h $v
-        end
-    end
-    if not set -q x
-        echo 'unable to find geometry of the window'
-        exit 1
-    end
-    _start $x $y $w $h $fps
-end
+window() {
+    FPS=${1:-5}
 
-set --append subcmds desktop
-set desktop_help 'record desktop'
-function desktop -a fps
-    _stop
-    test -z $fps && set fps 30
-    set monsinfo (xrandr --listmonitors)
-    #0: virtmon-1 1920/445x1080/250+0+0  DP-2
-    if not set m (string match -r ' ([0-9]+)/[0-9]+x([0-9]+)/\d+\+([0-9]+)\+([0-9]+) ' $monsinfo[2])
-        echo 'unable to find geometry of the first monitor'
-        exit 1
-    end
-    #micvol 15000
-    pacmd set-source-volume noechosource 52000
-    _start $m[4] $m[5] $m[2] $m[3] $fps
-end
+    notify-send "Please click the window that you want to record"
+    WININFO=$(xwininfo)
+    X=$(echo "$WININFO" | awk -F: '$1 ~ /Absolute upper-left X/ { print $2  }')
+    Y=$(echo "$WININFO" | awk -F: '$1 ~ /Absolute upper-left Y/ { print $2  }')
+    W=$(echo "$WININFO" | awk -F: '$1 ~ /Width/ { print $2  }')
+    H=$(echo "$WININFO" | awk -F: '$1 ~ /Height/ { print $2  }')
+    _start_video_recording $X $Y $W $H $FPS
+}
 
-set --append subcmds theend
-set theend_help 'end recording'
-function theend
-    _stop
-end
+desktop() {
+    FPS=${1:-30}
+    # INPUT 0: +*DP-1 3440/797x1440/333+2560+80  DP-1
+    # OUTPUT 2560 80 3440 1440
+    XYWH=$(xrandr --listmonitors | awk '$2 ~ /\*/ {
+        split($3, pos, /\/|\+|x/)
+        print pos[5] " " pos[6] " " pos[1] " " pos[3]
+    }')
+    # pacmd set-source-volume noechosource 52000
+    _start_video_recording $XYWH $FPS
 
-set --append subcmds togif
-set togif_help '<infile> <outfile>' 'convert video file to gif'
-function togif -a infile outfile
-    convert -set delay 10 -layers Optimize $infile -ordered-dither o8x8,23 +map $outfile
-end
+}
 
-set --append subcmds cover
-set cover_help '<infile> <text> [gravity=center] [outfile=cover.png]' 'add text to infile(image) and output a cover'
-function cover -a infile text gravity outfile
-    set x 50
-    test -z $outfile && set outfile 'cover.png'
-    test -z $gravity && set gravity 'center' && set x 0 && set y 0
-    magick convert $infile -thumbnail 1146x -background black -gravity $gravity -extent 1146x717 resized.png
+togif() {
+    IN_FILE=$1
+    OUTPUT_FILE=$1
+    convert -set delay 10 -layers Optimize $IN_FILE -ordered-dither o8x8,23 +map $OUTPUT_FILE
+}
+
+cover() {
+    IN_FILE=$1
+    TEXT=$2
+    OUTPUT=${3:-'cover.png'}
+    GRAVITY=${4:-'center'}
+
+    X=50
+    if [ "$GRAVITY" = "50" ]; then
+        X=0
+    fi
+    magick convert $IN_FILE -thumbnail 1146x -background black -gravity $gravity -extent 1146x717 resized.png
     magick convert resized.png \
         -blur 0x8 \
-        -gravity $gravity \
+        -gravity $GRAVITY \
         -fill black \
         -pointsize 120 -font $SC_FONT \
         -interline-spacing 20 \
         -stroke '#e1e1e1' -strokewidth 40 \
-        -annotate +$x+0 "$text" \
+        -annotate +$X+0 "$TEXT" \
         -stroke '#000000' -strokewidth 5 \
-        -annotate +$x+0 "$text"\
-        $outfile
-end
+        -annotate +$X+0 "$TEXT"\
+        $OUTPUT_FILE
+}
 
-set --append subcmds keep_mic_vol
-function keep_mic_vol -a volume
-    while true
-        pacmd set-source-volume noechosource $volume
-        sleep 0.1
-    end
-end
-
-set --append subcmds micvol
-set micvol_help '<volume>' '0~65535'
-function micvol -a volume
-    set kmvpid (ps aux | grep ' keep_mic_vol ' | head -n -1 | awk '{print $2}')
-    if test -n "$kmvpid"
-        echo killing $kmvpid
-        kill $kmvpid
-    end
-    set sc (status filename)
-    $sc keep_mic_vol $volume &
-end
-
-set --append subcmds help
-set help_help '[subcmd]' 'print this menu'
-function help -a subcmd
-    if test -z $subcmd
-        echo "Usage "(basename (status filename))" <subcmd> [...args]"
-        for subcmd in $subcmds
-            set -l help_name $subcmd'_help'
-            set -l help_list $$help_name
-            printf "  %-45s %s\n" "$subcmd $help_list[-2]" "$help_list[-1]"
-        end
-        exit
-    end
-end
-
-if contains $argv[1] $subcmds
-    $argv
-else if test (count $argv ) -eq 0
+if [ "$#" -eq 0 ]; then
     desktop
 else
-    help
-end
+    $@
+fi
