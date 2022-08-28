@@ -38,6 +38,7 @@ if status is-interactive
 
     # === fish git prompt configuration
     # tune git icon for nerdfont
+    set -g __fish_git_prompt_showuntrackedfiles true
     set -g __fish_git_prompt_char_upstream_ahead '>'
     set -g __fish_git_prompt_char_upstream_behind '<'
     set -g __fish_git_prompt_char_upstream_prefix ''
