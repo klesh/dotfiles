@@ -10,7 +10,7 @@ local http_server = require "http.server"
 local http_headers = require "http.headers"
 local json = require "JSON"
 
-function NewHttpServer(host, port, handlers)
+local function NewHttpServer(host, port, handlers)
     local function reply(myserver, stream) -- luacheck: ignore 212
         -- Read in headers
         local req_headers = assert(stream:get_headers())

@@ -1,4 +1,5 @@
 local httpserver = require "httpserver"
+local CACHE_DIR = "~/Videos/virtcam"
 
 local function run(cmd)
     print(cmd)
@@ -9,6 +10,7 @@ end
 
 run("sudo modprobe v4l2loopback -r -f")
 run("sudo modprobe v4l2loopback video_nr=21 card_label=virtcam exclusive_caps=1")
+run("mkdir -p " .. CACHE_DIR)
 
 Ffmpeg = { cmd = "", proc = nil, name = "", started = false }
 
@@ -45,12 +47,13 @@ Actualcam = Ffmpeg:new {
 
 Recorder = Ffmpeg:new {
     name = "recorder",
-    cmd = "ffmpeg -y -i /dev/video21 ~/Video/seq.mp4",
+    cmd = "ffmpeg -y -i /dev/video21 " .. CACHE_DIR .. "/seq.mp4",
 }
 
 Looper = Ffmpeg:new {
     name = "looper",
-    cmd = "ffmpeg -re -stream_loop -1 -i ~/Video/loop.mp4 -f v4l2 -vcodec rawvideo -pix_fmt yuyv422 -framerate 30 /dev/video21 ",
+    cmd = "ffmpeg -re -stream_loop -1 -i " ..
+        CACHE_DIR .. "/loop.mp4 -f v4l2 -vcodec rawvideo -pix_fmt yuyv422 -framerate 30 /dev/video21 ",
 }
 
 
@@ -70,7 +73,7 @@ end
 
 local stage = "stopped"
 
-NewHttpServer("127.0.0.1", 10200, {
+httpserver.NewHttpServer("127.0.0.1", 10200, {
     ["POST /prepare"] = function(_, _)
         if stage == "stopped" then
             -- run("pactl set-source-mute @DEFAULT_SOURCE@ 1")
@@ -92,8 +95,12 @@ NewHttpServer("127.0.0.1", 10200, {
             Recorder:start()
             run("sleep 3")
             Recorder:stop()
-            run("ffmpeg -y -i ~/Video/seq.mp4 -vf reverse ~/Video/reversed.mp4")
-            run("ffmpeg -y -i ~/Video/seq.mp4 -i ~/Video/reversed.mp4 -filter_complex '[0:v] [1:v] concat=n=2:v=1 [v]' -map '[v]' ~/Video/loop.mp4")
+            run("ffmpeg -y -i " .. CACHE_DIR .. "/seq.mp4 -vf reverse " .. CACHE_DIR .. "/reversed.mp4")
+            run("ffmpeg -y -i " ..
+                CACHE_DIR ..
+                "/seq.mp4 -i " ..
+                CACHE_DIR ..
+                "/reversed.mp4 -filter_complex '[0:v] [1:v] concat=n=2:v=1 [v]' -map '[v]' " .. CACHE_DIR .. "/loop.mp4")
             run_only(Looper)
             stage = "fake"
         end
