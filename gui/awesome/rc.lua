@@ -555,10 +555,10 @@ local globalkeys = gears.table.join(
         { description = "bookmark", group = "launcher" }),
 
     -- Recording
-    awful.key({ modkey }, "w",
+    awful.key({ modkey }, "F1",
         function() awful.spawn.with_shell('sc window 25') end,
         { description = "record window", group = "launcher" }),
-    awful.key({ modkey }, "e",
+    awful.key({ modkey }, "F2",
         function() awful.spawn.with_shell('sc theend') end,
         { description = "end recording", group = "launcher" }),
 

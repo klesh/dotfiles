@@ -60,6 +60,7 @@ audio() {
 }
 
 theend() {
+    notify-send "recording ended"
     _stop_recording
 }
 
