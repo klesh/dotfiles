@@ -5,7 +5,7 @@
 ! /bin/pgrep flameshot && flameshot &
 ! /bin/pgrep nm-applet && nm-applet &
 ! /bin/pgrep copyq && copyq &
-! /bin/pgrep -f "lua virtcam.lua" && cd ~/dotfiles/gui/virtcam && lua virtcam.lua &
+# ! /bin/pgrep -f "lua virtcam.lua" && cd ~/dotfiles/gui/virtcam && lua virtcam.lua &
 
 # input method
 ibus-daemon -drx
@@ -28,3 +28,6 @@ fi
 
 # fix pulseaudio echo-cancel side effect
 pactl set-source-volume @DEFAULT_SOURCE@ 100%
+
+
+DOW=$(date +%u); [ "$DOW" -ge 1 ] &&  [ "$DOW" -le 5 ] && gpg -d "$(ls ~/.password-store/*.gpg | head -n 1)" > /dev/null
