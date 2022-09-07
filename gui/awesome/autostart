@@ -30,4 +30,9 @@ fi
 pactl set-source-volume @DEFAULT_SOURCE@ 100%
 
 
-DOW=$(date +%u); [ "$DOW" -ge 1 ] &&  [ "$DOW" -le 5 ] && gpg -d "$(ls ~/.password-store/*.gpg | head -n 1)" > /dev/null
+DOW=$(date +%u)
+HOD=$(date +%k)
+[ "$DOW" -ge 1 ] &&  [ "$DOW" -le 5 ] \
+    && [ "$HOD" -ge 8 ] && [ "$HOD" -le 20 ] \
+    && gpg -d "$(ls ~/.password-store/*.gpg | head -n 1)" > /dev/null
+
