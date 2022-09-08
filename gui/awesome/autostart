@@ -5,6 +5,7 @@
 ! /bin/pgrep flameshot && flameshot &
 ! /bin/pgrep nm-applet && nm-applet &
 ! /bin/pgrep copyq && copyq &
+! /bin/pgrep syncthing && syncthing &
 # ! /bin/pgrep -f "lua virtcam.lua" && cd ~/dotfiles/gui/virtcam && lua virtcam.lua &
 
 # input method
