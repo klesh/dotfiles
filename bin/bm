@@ -9,8 +9,7 @@
 # - [gmail](https://gmail.com)
 # ```
 
-set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
-set -q BOOKMARK_PATH; or set BOOKMARK_PATH $XDG_CONFIG_HOME/bookmarks.md
+set -q BOOKMARK_PATH; or set BOOKMARK_PATH $HOME/Documents/bookmarks.md
 if set -q BOOKMARK_SEARCHER
     set BOOKMARK_SEARCHER (string split ' ' $BOOKMARK_SEARCHER)
 else

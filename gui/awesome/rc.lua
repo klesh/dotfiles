@@ -567,7 +567,7 @@ local globalkeys = gears.table.join(
         function() awful.spawn.with_shell('D_SELECTOR="rofi -dmenu -p dict.sh" d "$(xsel -o)"') end,
         { description = "dict.sh", group = "launcher" }),
     awful.key({ modkey }, "o",
-        function() awful.spawn.with_shell('find ~/Nextcloud/notes/ | rofi -dmenu -title notes | xargs xdg-open') end,
+        function() awful.spawn.with_shell('find ~/Documents/ | rofi -dmenu -title notes | xargs xdg-open') end,
         { description = "open note", group = "launcher" })
 )
 
