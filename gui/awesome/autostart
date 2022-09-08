@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # startup apps
-! /bin/pgrep nextcloud && nextcloud &
+# ! /bin/pgrep nextcloud && nextcloud &
 ! /bin/pgrep flameshot && flameshot &
 ! /bin/pgrep nm-applet && nm-applet &
 ! /bin/pgrep copyq && copyq &
