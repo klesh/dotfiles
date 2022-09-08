@@ -105,6 +105,7 @@ lnsf "$DIR/autorandr/postswitch" "$XDG_CONFIG_HOME/autorandr/postswitch"
 lnsf "$DIR/thunar/uca.xml" "$XDG_CONFIG_HOME/Thunar/uca.xml"
 lnsf "$DIR/alacritty/alacritty.yml" "$XDG_CONFIG_HOME/alacritty/alacritty.yml"
 lnsf "$DIR/pulse/default.pa" "$XDG_CONFIG_HOME/pulse/default.pa"
+lnsf "$DIR/x11/mimeapps.list" "$XDG_CONFIG_HOME/mimeapps.list"
 
 if is_laptop; then
     echo for non-root user to change backlight, add following rule to /etc/udev/rules.d/backlight.rules

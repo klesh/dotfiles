@@ -1,0 +1,13 @@
+[Default Applications]
+x-scheme-handler/eclipse+command=_usr_lib_dbeaver_.desktop
+image/svg+xml=drawio.desktop
+text/html=chromium.desktop
+x-scheme-handler/http=chromium.desktop
+x-scheme-handler/https=chromium.desktop
+x-scheme-handler/about=chromium.desktop
+x-scheme-handler/unknown=chromium.desktop
+application/pdf=org.pwmt.zathura.desktop
+image/jpeg=sxiv.desktop
+
+[Added Associations]
+image/svg+xml=vim.desktop;drawio.desktop;
