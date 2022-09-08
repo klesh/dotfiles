@@ -1,0 +1,47 @@
+#!/bin/sh
+
+set -e
+
+# assuming we are composing worklog at the end of the day for tomorrow's standup
+# and OFFSET for opening previous worklog: `wl -1` to open working composed on yesterday
+
+format_date() {
+    date -d "$1" +%Y-%m-%d
+}
+
+THIS_DATE=$1
+if [ "$THIS_DATE" -eq "$THIS_DATE" ] 2>/dev/null; then # pure number, enter workday offsetting mode
+    COUNT=$THIS_DATE
+    STEP=+1
+    [ "$COUNT" -gt 0 ] && STEP=-1
+    THIS_DATE=$(format_date)
+    while [ "$COUNT" -ne 0 ]; do
+        THIS_DATE=$(format_date "$THIS_DATE - 1 day")
+        while holiday "$THIS_DATE"; do
+            THIS_DATE=$(format_date "$THIS_DATE - 1 day")
+        done
+        COUNT=$(echo "$COUNT $STEP" | bc)
+    done
+fi
+while holiday "$THIS_DATE"; do
+    THIS_DATE=$(format_date "$THIS_DATE - 1 day")
+done
+
+
+NEXT_DATE=$(format_date "$THIS_DATE + 1 day")
+while holiday "$NEXT_DATE"; do
+    NEXT_DATE=$(format_date "$NEXT_DATE + 1 day")
+done
+
+# create or open worklog file
+LOGPATH=$(date -d "$NEXT_DATE" +%Y-%m-%d).md
+THIS_DATE=$(date -d "$THIS_DATE" +%m/%d)
+NEXT_DATE=$(date -d "$NEXT_DATE" +%m/%d)
+cd ~/Documents/worklog/
+if [ ! -f $LOGPATH ]; then
+    echo $THIS_DATE > $LOGPATH
+    echo >> $LOGPATH
+    echo $NEXT_DATE >> $LOGPATH
+fi
+x-open $LOGPATH
+#Typora $LOGPATH

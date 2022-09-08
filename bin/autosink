@@ -1,0 +1,11 @@
+#!/bin/sh
+
+PREFERRED="bluez hdmi analog"
+
+for KEYWORD in bluez hdmi analog; do
+    SINK=$(pactl list short sinks | awk '$2~"'$KEYWORD'"{print $2}')
+    if [ -n "$SINK" ]; then
+        pactl set-default-sink "$SINK"
+        break
+    fi
+done

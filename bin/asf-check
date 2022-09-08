@@ -1,0 +1,110 @@
+#!/bin/sh
+
+set -e
+
+check() {
+    URL=$1
+    RELEASE=$(basename $URL)
+    WORKDIR=/tmp/apache-devlake-asf-check/$RELEASE
+    mkdir -p $WORKDIR
+
+    # Get files information
+    METAFILE=$WORKDIR/meta
+    if [ ! -f "$METAFILE" ]; then
+        curl $URL | grep -oP 'href="\K(apache.+?)(?=")' > "$METAFILE"
+        cat "$METAFILE"
+    fi
+
+    ARCHIVE=$(awk 'FNR == 1 {print}' $METAFILE)
+    GPG_SIGN=$ARCHIVE.asc
+    SHA_SUM=$ARCHIVE.sha512
+
+    echo ARCHIVE: "$ARCHIVE"
+    echo GPG_SIGN: "$GPG_SIGN"
+    echo SHA_SUM: "$SHA_SUM"
+
+    # Download files
+    for FILE in "$ARCHIVE" "$GPG_SIGN" "$SHA_SUM"; do
+        LOCAL_PATH=$WORKDIR/$FILE
+        if [ ! -f "$LOCAL_PATH" ]; then
+            FILE_URL=${URL%%/}/$FILE
+            echo "Downloading from $FILE_URL"
+            curl -o "$LOCAL_PATH" $FILE_URL
+        else
+            echo "$LOCAL_PATH exists"
+        fi
+    done
+
+    # Uncompress archive
+    ARCHIVE_PATH=$WORKDIR/$ARCHIVE
+    SRC=$WORKDIR/${ARCHIVE%%.tar.gz}
+    rm -rf $SRC
+    tar xvf "$ARCHIVE_PATH" -C "$WORKDIR"
+    echo SRC: "$SRC"
+
+    # Checksums and signatures
+    echo "** VERIFY CHECKSUM **"
+    (cd $WORKDIR && sha512sum -c "$SHA_SUM" 1>&2)
+    echo
+    echo "** VERIFY SINGUATURES **"
+    GPG_SIGN_PATH=$WORKDIR/$GPG_SIGN
+    gpg --verify $GPG_SIGN_PATH $ARCHIVE_PATH 1>&2
+    echo
+
+    # LICENSE/NOTICE/DISCLAIMER files exist
+    echo "** CHECK LICENSE NOTICE DISCLAIMER **"
+    DISCLAIMER=DISCLAIMER
+    test -s $SRC/LICENSE 1>&2 && echo LICENSE exists
+    test -s $SRC/NOTICE 1>&2 && echo NOTICE exists
+    if test -s $SRC/DISCLAIMER-WIP 1>&2 && echo DISCLAIMER-WIP exists; then
+        DISCLAIMER=DISCLAIMER-WIP
+        ! test -s $SRC/DISCLAIMER
+    else
+        test -s $SRC/DISCLAIMER 1>&2 && echo DISCLAIMER exists
+    fi
+    echo
+
+
+    # check unexpected binary files
+    echo "** CHECK UNEXPRECTED BINARY FILES **"
+    UNEXPRECTED_BIN_FILES="$(find $SRC -type f ! -size 0 ! -name '*.png' ! -name '*.ico' -exec grep -IL . '{}' \;)"
+    if [ -n "$UNEXPRECTED_BIN_FILES" ]; then
+        printf  "Found unexpected binary files: \n%s\n" "$UNEXPRECTED_BIN_FILES"
+    else
+        echo "no unexpected files"
+    fi
+    echo
+
+    # check headers
+    echo "** CHECK ASF HEADER **"
+    HEADER="$(cat $SRC/.golangci-goheader.template)"
+    test -n "$HEADER"
+    for FN in $(find -name '*.go'); do
+        if ! grep -qF "$HEADER" $FN; then
+            echo $FN has no ASF header
+            exit -1
+        fi
+    done
+    for FN in $(find -name '*.js' -not -path './config-ui/node_modules/*'); do
+        if ! cut -c4- $FN | grep -qF "$HEADER"; then
+            echo $FN has no ASF header
+            exit -1
+        fi
+    done
+    echo "All *.go *.js contains ASF headers"
+
+
+    echo "
++1
+
+I checked these items:
+- Download links are valid.
+- Checksums and signatures.
+- LICENSE/NOTICE/$DISCLAIMER files exist
+- No unexpected binary files
+- All source files have ASF headers (**.go and **.js)
+" | xsel -b
+    echo "All checks passed, the +1 mail body is copied to clipboard"
+}
+
+check $1

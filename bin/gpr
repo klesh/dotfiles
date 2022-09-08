@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# github pr helper
+# push current branch to ORIGIN and create a PR on UPSTREAM
+# UPSTREAM must be a https github url 
+
+BRANCH=$(git branch --show-current)
+ORIGIN_URL=$(git remote get-url origin)
+case "$ORIGIN_URL" in
+    git@github.com:*)
+        ORIGIN_ORG=$(printf "$ORIGIN_URL" | sed -E 's#^.+:([^/]+).+$#\1#')
+        # ORIGIN=$(printf "$ORIGIN_URL" | grep -oP 'git@github.com:\K.+(?=\.git$)')
+        ;;
+esac
+UPSTREAM_URL=$(git remote get-url upstream)
+UPSTREAM_URL=$(echo "$UPSTREAM_URL" | sed 's/.git$//')
+echo ORIGIN_ORG: $ORIGIN_ORG
+echo UPSTREAM_URL: $UPSTREAM_URL
+git push -f -u origin $BRANCH
+x-open "$UPSTREAM_URL/compare/main...merico-dev:$BRANCH?expand=1"
+sleep 2
+command -v awesome-client && awesome-client '
+local awful = require("awful")
+awful.client.urgent.jumpto()
+'
