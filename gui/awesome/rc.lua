@@ -926,6 +926,7 @@ awful.rules.rules = {
         class = {
             "flameshot",
             -- "Thunar",
+            "Nitrogen",
             "Arandr",
             "Blueman-manager",
             "Gpick",
