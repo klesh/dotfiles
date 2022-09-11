@@ -34,7 +34,8 @@ export VIM_MODE=enhanced
 export XDG_RUNTIME_DIR=/tmp/runtime-klesh
 mkdir -p $XDG_RUNTIME_DIR
 
-export LOCKER='/usr/bin/i3lock -i /home/klesh/Nextcloud/wallpapers/1027.png -t --nofork'
+export LOCKER='/usr/bin/i3lock -i /home/klesh/Documents/wallpapers/1027.png -t --nofork'
+echo "Xcursor.size: 36" | xrdb
 
 autorandr --change --force
 mpd
