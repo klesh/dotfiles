@@ -1,0 +1,11 @@
+#!/bin/sh
+
+MIMETYPE=$(xdg-mime query filetype "$1")
+case "$MIMETYPE" in
+    image/*)
+        gimp "$1"
+        ;;
+    *)
+        "$EDITOR" "$1"
+        ;;
+esac

@@ -32,6 +32,7 @@ case "$PM" in
         sudo pacman -S --noconfirm --needed nnn ueberzug
         mkdir -p "$NNN_CONFIG_DIR/plugins"
         cp -r /usr/share/nnn/plugins/* "$NNN_CONFIG_DIR/plugins"
+        yay -S dragon-drop
         ;;
 esac
 

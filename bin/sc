@@ -4,7 +4,7 @@ set -e
 VIRTMON=virtmon
 SC_FONT=${SC_FONT:-'WenQuanYi-Micro-Hei'}
 PID_FILE="/tmp/recording.pid"
-OUTPUT_DIR="/home/klesh/Videos"
+OUTPUT_DIR="$HOME/Videos"
 
 _stop_recording() {
     killall screenkey 2>/dev/null || true
