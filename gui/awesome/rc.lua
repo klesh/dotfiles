@@ -751,19 +751,20 @@ local clientbuttons = gears.table.join(
     awful.button({ modkey }, 3, function(c)
         c:emit_signal("request::activate", "mouse_click", { raise = true })
         awful.mouse.client.resize(c)
-    end),
-    awful.button({}, 6, function()
-        mousegrabber.run(function()
-            volume_widget.dec()
-            return false
-        end, "mouse")
-    end),
-    awful.button({}, 7, function()
-        mousegrabber.run(function()
-            volume_widget.inc()
-            return false
-        end, "mouse")
     end)
+-- ,
+-- awful.button({}, 6, function()
+--     mousegrabber.run(function()
+--         volume_widget.dec()
+--         return false
+--     end, "mouse")
+-- end),
+-- awful.button({}, 7, function()
+--     mousegrabber.run(function()
+--         volume_widget.inc()
+--         return false
+--     end, "mouse")
+-- end)
 )
 
 
@@ -872,28 +873,28 @@ gears.timer.start_new(0.1, function()
     return true
 end)
 -- bind button click event
-for button in pairs(buttonmacros) do
-    buttonstate[button] = {}
-    gears.debug.print_error("register " .. tostring(button))
-    local function f(c)
-        if replaying > 0 then
-            replaying = replaying - 1
-            return
-        end
-        gears.debug.print_error("button clicked " .. tostring(button))
-        c:emit_signal("request::activate", "mouse_click", { raise = true })
-        mousegrabber.run(function(_)
-            local timestamps = buttonstate[button]
-            table.insert(timestamps, socket.gettime())
-            return false
-        end, "mouse")
-    end
-
-    clientbuttons = gears.table.join(clientbuttons,
-        awful.button({ "Shift" }, button, f),
-        awful.button({}, button, f)
-    )
-end
+-- for button in pairs(buttonmacros) do
+--     buttonstate[button] = {}
+--     gears.debug.print_error("register " .. tostring(button))
+--     local function f(c)
+--         if replaying > 0 then
+--             replaying = replaying - 1
+--             return
+--         end
+--         gears.debug.print_error("button clicked " .. tostring(button))
+--         c:emit_signal("request::activate", "mouse_click", { raise = true })
+--         mousegrabber.run(function(_)
+--             local timestamps = buttonstate[button]
+--             table.insert(timestamps, socket.gettime())
+--             return false
+--         end, "mouse")
+--     end
+--
+--     clientbuttons = gears.table.join(clientbuttons,
+--         awful.button({ "Shift" }, button, f),
+--         awful.button({}, button, f)
+--     )
+-- end
 
 -- Set keys
 root.keys(globalkeys)
