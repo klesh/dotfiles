@@ -48,7 +48,7 @@ end
 
 
 -- format on save
-vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.formatting_sync()]]
+vim.cmd [[autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync()]]
 
 
 -- open quickfix buffer after :grep or :vimgrep

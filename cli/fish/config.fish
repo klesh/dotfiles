@@ -73,7 +73,7 @@ if status is-interactive
         ~/.config/yarn/global/node_modules/.bin \
         ~/dotfiles/bin \
         ~/dotfiles/devops/bin \
-        ~/Nextcloud/bin \
+        ~/basicfiles/bin \
         /usr/local/go/bin
     source_files /usr/share/autojump/autojump.fish /usr/local/share/autojump/autojump.fish \
         ~/.jabba/jabba.fish \

@@ -1,4 +1,4 @@
 #!/bin/sh
 
-sudo virsh start win10
-sudo virt-viewer win10 -w -H release-cursor=alt+escape -K Super_L=
+virsh start win10
+virt-viewer win10 -w -H release-cursor=alt+escape -K Super_L=

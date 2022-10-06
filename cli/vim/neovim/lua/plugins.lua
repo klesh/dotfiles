@@ -52,7 +52,7 @@ require("packer").startup(function(use)
     use "numToStr/Comment.nvim"
 
     -- filetree
-    use "klesh/nvim-tree.lua"
+    use "kyazdani42/nvim-tree.lua"
 
 
     -- treesitter
