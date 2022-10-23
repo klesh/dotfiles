@@ -33,6 +33,8 @@ local batteryarc_widget = require("awesome-wm-widgets.batteryarc-widget.batterya
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 
+naughty.config.defaults.position = "bottom_left"
+
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
