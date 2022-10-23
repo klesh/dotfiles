@@ -65,6 +65,7 @@ keymap(NORMAL, '<leader>bo', ':CloseOtherBuffers<cr>', { noremap = true })
 keymap(NORMAL, '<leader>sif', ':SearchInFolder<cr>', { noremap = true })
 keymap(NORMAL, '<leader>cx', ':ToggleExecutable<cr>', { noremap = true })
 keymap(NORMAL, '<leader>rs', ':RunScript<cr>', { noremap = true })
+keymap(NORMAL, '<leader>do', ':lua vim.diagnostic.open_float()<cr>', { noremap = true })
 
 
 -- command mode
