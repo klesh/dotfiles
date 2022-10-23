@@ -27,6 +27,12 @@ if [ -n "$HDMI_SINK" ]; then
     pactl set-default-sink "$HDMI_SINK"
 fi
 
+# prioritize condense microphone input
+CONDENSER_SOURCE=$(pactl list short sources | awk '{print $2}' | grep Condenser)
+if [ -n "$CONDENSER_SOURCE" ]; then
+    pactl set-default-source "$CONDENSER_SOURCE"
+fi
+
 # fix pulseaudio echo-cancel side effect
 pactl set-source-volume @DEFAULT_SOURCE@ 100%
 
