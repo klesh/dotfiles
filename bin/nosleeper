@@ -1,0 +1,10 @@
+#!/bin/sh
+
+echo hit Ctrl-C when you want to stop nosleeper
+
+while true; do
+    xdotool mousemove_relative 1 1
+    xdotool mousemove_relative -- -1 -1
+    sleep 60
+done
+
