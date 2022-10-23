@@ -348,7 +348,7 @@ awful.screen.connect_for_each_screen(function(s)
                                 onlogout   = awful.quit,
                                 onpoweroff = function() awful.spawn.with_shell("loginctl poweroff") end,
                                 onreboot   = function() awful.spawn.with_shell("loginctl reboot") end,
-                                onlock     = function() awful.spawn.with_shell("loginctl lock-session") end,
+                                onlock     = function() awful.spawn.with_shell("afk.sh") end,
                                 onsuspend  = function() awful.spawn.with_shell("loginctl suspend") end,
                             },
                         },
