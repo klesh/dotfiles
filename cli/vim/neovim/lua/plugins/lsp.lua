@@ -66,18 +66,24 @@ local language_servers = {
                 },
             },
         },
-    }
+    },
+    -- pylsp = {
+    -- }
+    -- west config build.cmake-args -- -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+    clangd = {},
 }
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
+local capabilities = nil
 
 
 local cmp_status_ok, cmp = pcall(require, "cmp")
-if cmp_status_ok then
+if cmp_status_ok and cmp ~= nil then
     local cmp_nvim_lsp_status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
     if cmp_nvim_lsp_status_ok then
-        capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
+        capabilities = cmp_nvim_lsp.default_capabilities()
     end
+else
+    return
 end
 
 for langsvr, settings in pairs(language_servers) do
@@ -184,3 +190,5 @@ lspconfig.golangci_lint_ls.setup {
 --         { "BufWritePre", "*.go", "lua goimports(1000)" },
 --     }
 -- })
+
+
