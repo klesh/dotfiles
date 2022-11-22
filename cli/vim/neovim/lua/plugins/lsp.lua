@@ -113,9 +113,11 @@ if cmp_status_ok and luasnip_status_ok then
             },
             ['<Tab>'] = cmp.mapping(function(fallback)
                 if cmp.visible() then
+                    print("select_next_item")
                     cmp.select_next_item()
-                elseif luasnip_status_ok and luasnip.expand_or_jumpable() then
-                    luasnip.expand_or_jump()
+                -- elseif luasnip_status_ok and luasnip.expand_or_jumpable() then
+                --     print("expand_or_jump")
+                --     luasnip.expand_or_jump()
                 else
                     fallback()
                 end
