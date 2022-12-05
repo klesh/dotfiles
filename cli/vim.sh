@@ -49,6 +49,8 @@ esac
 git clone --depth 1 https://github.com/wbthomason/packer.nvim\
  ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 
+# lua-language-server https://github.com/sumneko/lua-language-server/releases
+
 # symlink configuration
 #sudo ln -sf "$(command -v vim)" /usr/bin/v
 lnsf "$DIR/vim/neovim/init.lua" "$XDG_CONFIG_HOME/nvim/init.lua"
