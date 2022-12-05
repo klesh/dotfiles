@@ -49,7 +49,11 @@ esac
 git clone --depth 1 https://github.com/wbthomason/packer.nvim\
  ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 
-# lua-language-server https://github.com/sumneko/lua-language-server/releases
+echo "For lua"
+echo Download archive from  https://github.com/sumneko/lua-language-server/releases and extract the 'lua-language-server' and setup the PATH accordingly
+echo
+echo "For c/c++"
+echo "Insall the 'clang'(language server) and 'bear'(generate compile_commands.json from make command)"
 
 # symlink configuration
 #sudo ln -sf "$(command -v vim)" /usr/bin/v
