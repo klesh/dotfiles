@@ -20,21 +20,16 @@ log 'Setting up vim'
 export VIM=vim
 case "$PM" in
     apt)
-        # nvim not very compatible with CJK characters and ranger
-        #sudo add-apt-repository ppa:neovim-ppa/stable -y
-        #sudo apt update
-        #sudo apt install -y neovim
-        #if enhance_vim; then
-            #sudo pip3 install pyvim neovim
-        #fi
-
         # gui-common is required for clipboard integration
-        sudo add-apt-repository ppa:jonathonf/vim -y -n
-        pm_update
-        sudo apt install -y vim vim-gui-common
-        if enhance_vim; then
-            sudo pip3 install pyvim
-        fi
+        # sudo add-apt-repository ppa:jonathonf/vim -y -n
+        # pm_update
+        # sudo apt install -y vim vim-gui-common
+        # if enhance_vim; then
+        #     sudo pip3 install pyvim
+        # fi
+        sudo add-apt-repository ppa:neovim-ppa/stable
+        sudo apt-get update
+        sudo apt-get install neovim ripgrep
         ;;
     pacman)
         #sudo pacman -S --noconfirm --needed neovim ripgrep
@@ -50,6 +45,15 @@ case "$PM" in
         #fi
         ;;
 esac
+
+git clone --depth 1 https://github.com/wbthomason/packer.nvim\
+ ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+
+echo "For lua"
+echo Download archive from  https://github.com/sumneko/lua-language-server/releases and extract the 'lua-language-server' and setup the PATH accordingly
+echo
+echo "For c/c++"
+echo "Insall the 'clang'(language server) and 'bear'(generate compile_commands.json from make command)"
 
 # symlink configuration
 #sudo ln -sf "$(command -v vim)" /usr/bin/v
