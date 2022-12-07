@@ -8,7 +8,7 @@ local COMMAND = 'c'
 vim.api.nvim_create_user_command("CloseOtherBuffers", function()
     local current_buffer_name = vim.api.nvim_buf_get_name(0)
     for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-        if vim.api.nvim_buf_is_loaded(bufnr) then
+        if vim.api.nvim_buf_is_loaded(bufnr) and not vim.api.nvim_buf_get_option(bufnr, "modified") then
             local bufname = vim.api.nvim_buf_get_name(bufnr)
             if bufname ~= current_buffer_name then
                 vim.cmd(":bd " .. bufnr)
