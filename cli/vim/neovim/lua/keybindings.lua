@@ -17,6 +17,15 @@ vim.api.nvim_create_user_command("CloseOtherBuffers", function()
     end
 end, {})
 
+vim.api.nvim_create_user_command("Exit", function()
+    for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_loaded(bufnr) and not vim.api.nvim_buf_get_option(bufnr, "buflisted") then
+            vim.cmd(":bd! " .. bufnr)
+        end
+    end
+    vim.cmd(":qall")
+end, {})
+
 
 keymap(NORMAL, '<c-pagedown>', ':bnext<cr>', { noremap = true })
 keymap(NORMAL, '<c-pageup>', ':bprev<cr>', { noremap = true })
@@ -31,7 +40,7 @@ keymap(NORMAL, '<leader>yn', ':let @+=expand("%:t")<cr>', { noremap = true })
 keymap(NORMAL, '<leader>yl', ':let @+=expand("%") . ":" . line(".")<cr>', { noremap = true })
 keymap(VISUAL, '<leader>p', '"0p<cr>', { noremap = true })
 keymap(NORMAL, '<leader>q', ':bd<cr>', { noremap = true })
-keymap(NORMAL, '<leader>qq', ':qall<cr>', { noremap = true })
+keymap(NORMAL, '<leader>qq', ':Exit<cr>', { noremap = true })
 keymap(NORMAL, '<leader>ne', ':e %:h<cr>', { noremap = true })
 keymap(NORMAL, '<c-s>', ':w<cr>', { noremap = true })
 keymap(INSERT, '<c-s>', '<esc>:w<cr>a', { noremap = true })

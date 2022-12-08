@@ -1,3 +1,4 @@
 repos/
 cacheDir/
 *.result/
+.luarc.json
