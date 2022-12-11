@@ -11,6 +11,25 @@ case "$PM" in
         sudo pacman -S --noconfirm --needed neomutt isync lynx notmuch cronie urlscan
         yay -S --noconfirm --needed abook cyrus-sasl-xoauth2-git
         ;;
+    apt)
+        sudo apt install -y  gettext libgettextpo-dev libxml2-utils xsltproc libidn11-dev libsasl2-dev liblmdb-dev \
+            perl libssl-dev libnotmuch-dev msmtp
+        git clone git@github.com:neomutt/neomutt.git ~/Projects/klesh/neomutt
+        cd ~/Projects/klesh/neomutt
+        ./configure --disable-doc --sasl --with-lmdb=/usr/lib
+        make
+        sudo make install
+        git clone git@github.com:LukeSmithxyz/mutt-wizard.git ~/Projects/klesh/mutt-wizard
+        cd ~/Projects/klesh/mutt-wizard
+        sudo make install
+        git clone git clone https://git.code.sf.net/p/isync/isync isync-isync ~/Project/klesh/isync-isync
+
+        sudo cpan install Date::Parse
+        cd ~/Projects/klesh/isync-isync
+        ./autogen.sh
+        ./configure
+        make
+        sudo make install
 esac
 
 
