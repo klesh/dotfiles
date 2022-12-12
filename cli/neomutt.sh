@@ -13,17 +13,22 @@ case "$PM" in
         ;;
     apt)
         sudo apt install -y  gettext libgettextpo-dev libxml2-utils xsltproc libidn11-dev libsasl2-dev liblmdb-dev \
-            perl libssl-dev libnotmuch-dev msmtp
+            perl libssl-dev libnotmuch-dev msmtp lynx urlscan
+
+        # neomutt
         git clone git@github.com:neomutt/neomutt.git ~/Projects/klesh/neomutt
         cd ~/Projects/klesh/neomutt
         ./configure --disable-doc --sasl --with-lmdb=/usr/lib
         make
         sudo make install
+
+        # mutt-wizard
         git clone git@github.com:LukeSmithxyz/mutt-wizard.git ~/Projects/klesh/mutt-wizard
         cd ~/Projects/klesh/mutt-wizard
         sudo make install
         git clone git clone https://git.code.sf.net/p/isync/isync isync-isync ~/Project/klesh/isync-isync
 
+        # isync
         sudo cpan install Date::Parse
         cd ~/Projects/klesh/isync-isync
         ./autogen.sh
