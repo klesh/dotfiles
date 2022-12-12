@@ -17,8 +17,13 @@ if status is-interactive
     #set -gx LESS "-SRXF"
     set -gx LESS "-SRX" # for nnn help to how, remove F
 
-    # === nvm configuration
-    set -gx nvm_mirror http://npm.taobao.org/mirrors/node
+    # === nvm/node configuration
+    set -gx nvm_data ~/.local/nvm
+    set -gx nvm_mirror 'https://cdn.npmmirror.com/binaries/node'
+    alias cnpm="npm --registry=https://registry.npmmirror.com \
+    --cache=$HOME/.npm/.cache/cnpm \
+    --disturl=https://npmmirror.com/mirrors/node \
+    --userconfig=$HOME/.cnpmrc"
 
     # === `ls` configuration
     # change OTHER-WRITABLE color for `ls` command
