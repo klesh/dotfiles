@@ -41,8 +41,8 @@ esac
 # longer password caching time
 cat <<EOF >  ~/.gnupg/gpg-agent.conf
 pinentry-program $PINENTRY
-default-cache-ttl 28800
-max-cache-ttl 28800
+default-cache-ttl 43200
+max-cache-ttl 43200
 EOF
 
 
