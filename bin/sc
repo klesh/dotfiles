@@ -157,7 +157,7 @@ desktop() {
 
 togif() {
     IN_FILE=$1
-    OUTPUT_FILE=$1
+    OUTPUT_FILE=$2
     convert -set delay 10 -layers Optimize $IN_FILE -ordered-dither o8x8,23 +map $OUTPUT_FILE
 }
 

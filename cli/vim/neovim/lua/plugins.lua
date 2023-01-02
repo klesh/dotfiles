@@ -60,10 +60,10 @@ require("packer").startup(function(use)
     use "nvim-treesitter/playground"
     use "acarapetis/vim-sh-heredoc-highlighting"
 
-    use {
-        "/home/klesh/Projects/klesh/nvim-runscript",
-        config = function() require("nvim-runscript").setup({}) end
-    }
+    -- use {
+    --     "klesh/nvim-runscript",
+    --     config = function() require("nvim-runscript").setup({}) end
+    -- }
 
 
     -- debugger
