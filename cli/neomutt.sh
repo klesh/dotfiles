@@ -35,6 +35,15 @@ case "$PM" in
         ./configure
         make
         sudo make install
+
+        # isync xoauth2
+        git clone https://github.com/moriyoshi/cyrus-sasl-xoauth2.git ~/Projects/klesh/cyrus-sasl-xoauth2
+        cd ~/Projects/klesh/cyrus-sasl-xoauth2
+        ./autogen.sh
+        ./configure
+        sed -i 's%pkglibdir = ${CYRUS_SASL_PREFIX}/lib/sasl2%pkglibdir = ${CYRUS_SASL_PREFIX}/lib/x86_64-linux-gnu/sasl2%' Makefile
+        make
+        sudo make install
 esac
 
 
