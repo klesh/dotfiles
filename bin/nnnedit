@@ -1,8 +1,10 @@
 #!/bin/sh
 
-MIMETYPE=$(xdg-mime query filetype "$1")
-case "$MIMETYPE" in
-    image/*)
+case "$1" in
+    *.jpg)
+    *.jpeg)
+    *.png)
+    *.gif)
         gimp "$1"
         ;;
     *)
