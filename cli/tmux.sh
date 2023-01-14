@@ -8,7 +8,7 @@ log 'Setting up tmux'
 
 case "$PM" in
     apt)
-        TMUX_VER=3.2a
+        TMUX_VER=3.3a
         if ! has_cmd tmux || [ "$(tmux -V)" != "tmux $TMUX_VER" ]; then
             sudo apt install libevent-dev libncurses5-dev bison autoconf bc -y
             TMUX_SRC_URL=https://github.com/tmux/tmux/releases/download/$TMUX_VER/tmux-$TMUX_VER.tar.gz
@@ -16,7 +16,7 @@ case "$PM" in
                 #TMUX_SRC_URL="https://gitee.com/klesh/tmux/repository/archive/$TMUX_VER?format=tar.gz"
             #fi
             if [ ! -f /tmp/tmux.tar.gz ]; then
-                curl -L "$TMUX_SRC_URL" -o /tmp/tmux.tar.gz
+                HTTPS_PROXY="$GITHUB_PROXY" curl -vv -L "$TMUX_SRC_URL" -o /tmp/tmux.tar.gz
             fi
             rm -rf /tmp/tmux
             mkdir -p /tmp/tmux
