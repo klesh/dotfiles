@@ -11,7 +11,7 @@ check() {
     # Get files information
     METAFILE=$WORKDIR/meta
     if [ ! -f "$METAFILE" ]; then
-        curl $URL | grep -oP 'href="\K(apache.+?)(?=")' > "$METAFILE"
+        curl -L $URL | grep -oP 'href="\K(apache.+?)(?=")' > "$METAFILE"
         cat "$METAFILE"
     fi
 
@@ -79,13 +79,13 @@ check() {
     echo "** CHECK ASF HEADER **"
     HEADER="$(cat $SRC/.golangci-goheader.template)"
     test -n "$HEADER"
-    for FN in $(find -name '*.go'); do
+    for FN in $(find "$SRC" -name '*.go'); do
         if ! grep -qF "$HEADER" $FN; then
             echo $FN has no ASF header
             exit -1
         fi
     done
-    for FN in $(find -name '*.js' -not -path './config-ui/node_modules/*'); do
+    for FN in $(find "$SRC" -name '*.js' -not -path './config-ui/node_modules/*'); do
         if ! cut -c4- $FN | grep -qF "$HEADER"; then
             echo $FN has no ASF header
             exit -1
