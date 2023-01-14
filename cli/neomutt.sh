@@ -13,28 +13,34 @@ case "$PM" in
         ;;
     apt)
         sudo apt install -y  gettext libgettextpo-dev libxml2-utils xsltproc libidn11-dev libsasl2-dev liblmdb-dev \
-            perl libssl-dev libnotmuch-dev msmtp lynx urlscan
+            perl libssl-dev libnotmuch-dev msmtp lynx urlscan libtool notmuch
 
         # neomutt
-        git clone git@github.com:neomutt/neomutt.git ~/Projects/klesh/neomutt
-        cd ~/Projects/klesh/neomutt
-        ./configure --disable-doc --sasl --with-lmdb=/usr/lib
-        make
-        sudo make install
+        if ! command -v neomutt; then
+            git clone https://github.com/neomutt/neomutt ~/Projects/klesh/neomutt
+            cd ~/Projects/klesh/neomutt
+            ./configure --disable-doc --sasl --with-lmdb=/usr/lib
+            make
+            sudo make install
+        fi
 
         # mutt-wizard
-        git clone git@github.com:LukeSmithxyz/mutt-wizard.git ~/Projects/klesh/mutt-wizard
-        cd ~/Projects/klesh/mutt-wizard
-        sudo make install
-        git clone git clone https://git.code.sf.net/p/isync/isync isync-isync ~/Project/klesh/isync-isync
+        if ! command -v mailsync; then
+            git clone https://github.com/LukeSmithxyz/mutt-wizard ~/Projects/klesh/mutt-wizard
+            cd ~/Projects/klesh/mutt-wizard
+            sudo make install
+        fi
 
         # isync
-        sudo cpan install Date::Parse
-        cd ~/Projects/klesh/isync-isync
-        ./autogen.sh
-        ./configure
-        make
-        sudo make install
+        if ! command -v mbsync; then
+            sudo cpan install Date::Parse
+            git clone https://git.code.sf.net/p/isync/isync ~/Projects/klesh/isync
+            cd ~/Projects/klesh/isync
+            ./autogen.sh
+            ./configure
+            make
+            sudo make install
+        fi
 
         # isync xoauth2
         git clone https://github.com/moriyoshi/cyrus-sasl-xoauth2.git ~/Projects/klesh/cyrus-sasl-xoauth2
