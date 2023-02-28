@@ -9,6 +9,12 @@ format_date() {
     date -d "$1" +%Y-%m-%d
 }
 
+X_OPEN=yes
+if [ "$1" = "-n" ]; then
+    shift
+    X_OPEN=no
+fi
+
 THIS_DATE=$1
 if [ "$THIS_DATE" -eq "$THIS_DATE" ] 2>/dev/null; then # pure number, enter workday offsetting mode
     COUNT=$THIS_DATE
@@ -43,5 +49,7 @@ if [ ! -f $LOGPATH ]; then
     echo >> $LOGPATH
     echo $NEXT_DATE >> $LOGPATH
 fi
-x-open $LOGPATH
+if [ "$X_OPEN" = "yes" ]; then
+    x-open $LOGPATH
+fi
 #Typora $LOGPATH
