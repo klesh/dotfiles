@@ -9,13 +9,13 @@ try:
     import yaml
     # import clipboard
 except:
-    print("please install PyYAML/clipboard first", file=sys.stderr)
+    print("please install PyYAML first", file=sys.stderr)
     print("sudo pip install PyYAML", file=sys.stderr)
     sys.exit(-1)
 
 
 def halt_with_help():
-    print("Usage: kc-import <YAML_FILE_PATH>", file=sys.stderr)
+    print("Usage: kube-import <YAML_FILE_PATH>", file=sys.stderr)
     print("   pipe from stdin is not supported because user input is needed", file=sys.stderr)
     print(file=sys.stderr)
     sys.exit(-1)
