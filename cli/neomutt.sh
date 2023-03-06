@@ -50,6 +50,11 @@ case "$PM" in
         sed -i 's%pkglibdir = ${CYRUS_SASL_PREFIX}/lib/sasl2%pkglibdir = ${CYRUS_SASL_PREFIX}/lib/x86_64-linux-gnu/sasl2%' Makefile
         make
         sudo make install
+
+        # lynx with gbk support
+        if ! grep "ASSUME_UNREC_CHARSET:euc-cn" /etc/lynx/lynx.cfg; then
+            echo "ASSUME_UNREC_CHARSET:euc-cn" | sudo tee -a /etc/lynx/lynx.cfg 
+        fi
 esac
 
 
