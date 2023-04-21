@@ -5,12 +5,13 @@ set -e
 # push current branch to ORIGIN and create a PR on UPSTREAM
 # UPSTREAM must be a https github url 
 if [ -n "$PROXY_HOST" ] && [ -n "$PROXY_PORT" ]; then
-    export HTTP_PROXYS=http://$PROXY_HOST:$PROXY_PORT
-    echo HTTP_PROXYS=$HTTP_PROXYS
+    export HTTP_PROXY=http://$PROXY_HOST:$PROXY_PORT
+    echo HTTP_PROXY=$HTTP_PROXY
+    echo HTTPS_PROXY=$HTTP_PROXY
 fi
 
 BRANCH=$(git branch --show-current)
-UPSTREAM_BRANCH=$(HTTP_PROXYS=$HTTP_PROXYS git remote show upstream | grep -oP 'HEAD branch: \K\w+')
+UPSTREAM_BRANCH=$(HTTPS_PROXY=$HTTP_PROXY git remote show upstream | grep -oP 'HEAD branch: \K\w+')
 ORIGIN_URL=$(git remote get-url origin)
 case "$ORIGIN_URL" in
     git@github.com:*)
