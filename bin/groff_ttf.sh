@@ -14,6 +14,10 @@ if [ "$#" -lt 2 ]; then
     echo " bold italic  : $CMD sarasa-ui-sc-bolditalic.ttf BI"
     echo
     echo "note: the suffix of groff_name (R/I/B/BI) is essential!"
+    echo
+    echo "List of font families from /usr/share/groff/site-font/devpdf :"
+    echo $(ls -1 /usr/share/groff/site-font/devpdf | grep "R$" | sed 's/R$//') $(ls -1 ${GROFF_FONT_PATH:-/usr/share/groff/site-font}/devpdf| grep "R$" | sed 's/R$//') | tr ' ' '\n' | sort -u
+
 fi
 
 FONTPATH=$(readlink -f "$1")
@@ -32,7 +36,7 @@ case "$STYLE" in
         ;;
 esac
 GROFF_CURRENT=$(readlink -f /usr/share/groff/current)
-GROFF_SITEFONT=/usr/share/groff/site-font
+GROFF_SITEFONT="${GROFF_FONT_PATH:-/usr/share/groff/site-font}"
 
 # conversion
 TMPDIR="$(mktemp -d)"
@@ -60,19 +64,19 @@ echo "internalname  : $INA"
 
 # installation
 echo "Copying to $GROFF_SITEFONT"
-sudo mkdir -p $GROFF_SITEFONT/devps
-sudo mkdir -p $GROFF_SITEFONT/devpdf
-sudo cp "$T42" "$GROFFNAME" "$GROFF_SITEFONT/devps"
-sudo ln -sf "$GROFF_SITEFONT/devps/$T42" "$GROFF_SITEFONT/devpdf/$T42"
-sudo ln -sf "$GROFF_SITEFONT/devps/$GROFFNAME" "$GROFF_SITEFONT/devpdf/$GROFFNAME"
+mkdir -p $GROFF_SITEFONT/devps
+mkdir -p $GROFF_SITEFONT/devpdf
+cp "$T42" "$GROFFNAME" "$GROFF_SITEFONT/devps"
+ln -sf "$GROFF_SITEFONT/devps/$T42" "$GROFF_SITEFONT/devpdf/$T42"
+ln -sf "$GROFF_SITEFONT/devps/$GROFFNAME" "$GROFF_SITEFONT/devpdf/$GROFFNAME"
 
-echo "Adding font to downloadable list"
-if ! grep "$T42" "$GROFF_CURRENT/font/devps/download" ; then
-    printf '%s\t%s\n' "$INA" "$T42" | sudo tee -a "$GROFF_CURRENT/font/devps/download" >/dev/null
-fi
-if ! grep "$T42"  "$GROFF_CURRENT/font/devpdf/download" ; then
-    printf '\t%s\t%s\n' "$INA" "$T42" | sudo tee -a "$GROFF_CURRENT/font/devpdf/download" >/dev/null
-fi
+#echo "Adding font to downloadable list"
+#if ! grep "$T42" "$GROFF_CURRENT/font/devps/download" ; then
+#    printf '%s\t%s\n' "$INA" "$T42" | tee -a "$GROFF_CURRENT/font/devps/download" >/dev/null
+#fi
+#if ! grep "$T42"  "$GROFF_CURRENT/font/devpdf/download" ; then
+#    printf '\t%s\t%s\n' "$INA" "$T42" | tee -a "$GROFF_CURRENT/font/devpdf/download" >/dev/null
+#fi
 
 # print result and tips
 echo
