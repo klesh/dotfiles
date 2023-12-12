@@ -18,8 +18,8 @@ log 'Setting up vim'
 
 # install vim
 export VIM=vim
-case "$PM" in
-    apt)
+case "$UNAMEA" in
+    *Ubuntu*)
         # gui-common is required for clipboard integration
         # sudo add-apt-repository ppa:jonathonf/vim -y -n
         # pm_update
@@ -31,7 +31,10 @@ case "$PM" in
         sudo apt-get update
         sudo apt-get install neovim ripgrep
         ;;
-    pacman)
+    *Debian*)
+	sudo apt install vim
+        ;;
+    *arch*)
         #sudo pacman -S --noconfirm --needed neovim ripgrep
         #git clone --depth 1 https://github.com/wbthomason/packer.nvim \
          #~/.local/share/nvim/site/pack/packer/start/packer.nvim
@@ -46,8 +49,8 @@ case "$PM" in
         ;;
 esac
 
-git clone --depth 1 https://github.com/wbthomason/packer.nvim\
- ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+#git clone --depth 1 https://github.com/wbthomason/packer.nvim\
+# ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 
 echo "For lua"
 echo Download archive from  https://github.com/sumneko/lua-language-server/releases and extract the 'lua-language-server' and setup the PATH accordingly
@@ -57,8 +60,8 @@ echo "Insall the 'clang'(language server) and 'bear'(generate compile_commands.j
 
 # symlink configuration
 #sudo ln -sf "$(command -v vim)" /usr/bin/v
-lnsf "$DIR/vim/neovim/init.lua" "$XDG_CONFIG_HOME/nvim/init.lua"
-lnsf "$DIR/vim/neovim/lua" "$XDG_CONFIG_HOME/nvim/lua"
+#lnsf "$DIR/vim/neovim/init.lua" "$XDG_CONFIG_HOME/nvim/init.lua"
+#lnsf "$DIR/vim/neovim/lua" "$XDG_CONFIG_HOME/nvim/lua"
 lnsf "$DIR/vim/vim/vimrc" "$HOME/.vimrc"
-lnsf "$DIR/vim/coc-settings.json" "$XDG_CONFIG_HOME/nvim/coc-settings.json"
-lnsf "$DIR/vim/coc-settings.json" "$HOME/.vim/coc-settings.json"
+#lnsf "$DIR/vim/coc-settings.json" "$XDG_CONFIG_HOME/nvim/coc-settings.json"
+#lnsf "$DIR/vim/coc-settings.json" "$HOME/.vim/coc-settings.json"
