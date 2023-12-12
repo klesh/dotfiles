@@ -18,14 +18,13 @@ install_wqy_microhei() {
 }
 
 case "$UNAMEA" in
-    *Ubuntu*)
+    *Ubuntu*|*Debian*)
         # fonts
         sudo apt install -y \
             fonts-urw-base35 \
-            fonts-cascadia-code \
-            fonts-wqy-microhei \
             fonts-symbola \
             fonts-dejavu-core \
+            fonts-noto-cjk \
             gucharmap
         ;;
     *artix*)
@@ -66,18 +65,23 @@ install_nerdfont Agave agave v2.1.0
 #sudo cp "$DIR/font/freetype2.sh" "/etc/profile.d/freetype2.sh"
 
 
-install_googlefont() {
+install_font() {
     NAME=$1
-    PATT=$2
+    URL=$2
+    PATT=$3
     FONTS=~/.local/share/fonts
-    mkdir "$FONTS"
-    wget -O "/tmp/$NAME.zip" "$URL"
+    mkdir -p "$FONTS"
+    #wget -O "/tmp/$NAME.zip" "$URL"
+    curl -o "/tmp/$NAME.zip" "$URL"
     unzip -d "$FONTS" "/tmp/$NAME.zip" "$PATT"
     rm "/tmp/$NAME.zip"
 }
 
-install_googlefont lato "https://fonts.google.com/download?family=Lato"
-install_googlefont besley "https://fonts.google.com/download?family=Besley" "static/*"
+install_font lato "https://fonts.google.com/download?family=Lato" "*"
+install_font besley "https://fonts.google.com/download?family=Besley" "static/*"
+install_font sourcehans "https://github.com/adobe-fonts/source-han-sans/releases/download/2.004R/SourceHanSansCN.zip" '*'
+install_font sourcehans "https://github.com/adobe-fonts/source-han-serif/releases/download/2.002R/14_SourceHanSerifCN.zip" '*'
+
 
 # configuration
 lnsf "$DIR/font/fonts.conf" "$XDG_CONFIG_HOME/fontconfig/fonts.conf"
