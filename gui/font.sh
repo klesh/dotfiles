@@ -79,8 +79,8 @@ install_font() {
 
 install_font lato "https://fonts.google.com/download?family=Lato" "*"
 install_font besley "https://fonts.google.com/download?family=Besley" "static/*"
-install_font sourcehans "https://github.com/adobe-fonts/source-han-sans/releases/download/2.004R/SourceHanSansCN.zip" '*'
-install_font sourcehans "https://github.com/adobe-fonts/source-han-serif/releases/download/2.002R/14_SourceHanSerifCN.zip" '*'
+#install_font sourcehans "https://github.com/adobe-fonts/source-han-sans/releases/download/2.004R/SourceHanSansCN.zip" '*'
+#install_font sourcehans "https://github.com/adobe-fonts/source-han-serif/releases/download/2.002R/14_SourceHanSerifCN.zip" '*'
 
 
 # configuration
