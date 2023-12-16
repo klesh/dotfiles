@@ -29,6 +29,7 @@ is_holiday() {
 }
 
 # automatically update if file didn't exist
+[ -z "$(cat $HOLIDAY)" ] && rm "$HOLIDAY"
 [ ! -f "$HOLIDAY" ] && update_holiday
 
 case "$1" in
