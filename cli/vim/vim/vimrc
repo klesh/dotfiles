@@ -81,11 +81,12 @@ xnoremap <leader>r :s///g<left><left>
 
 
 function! GetXCopyCmd()
-    let l:status = system("command -v termux-clipboard-set")
-    if len(l:status) > 0
-        return "termux-clipboard-set"
-    endif
-    return "xclip -selection clipboard"
+    "let l:status = system("command -v termux-clipboard-set")
+    "if len(l:status) > 0
+        "return "termux-clipboard-set"
+    "endif
+    "return "xclip -selection clipboard"
+    return "xsel -b"
 endfunction
 
 let g:xcopy = GetXCopyCmd()
@@ -382,10 +383,13 @@ autocmd BufEnter,BufRead commitmsg.md :set colorcolumn=100
 " ==== nerdtree ====
 nnoremap <leader>t :NERDTreeToggle<CR>
 
-" go organize import on save
-" ==== golang ====
-command! -nargs=0 OR :call CocAction('runCommand', 'editor.action.organizeImport')
-autocmd BufWritePre *.go :OR
+
+if $VIM_MODE == 'enhanced'
+    " go organize import on save
+    " ==== golang ====
+    command! -nargs=0 OR :call CocAction('runCommand', 'editor.action.organizeImport')
+    autocmd BufWritePre *.go :OR
+endif
 
 " ==== floaterm ====
 nnoremap <leader>tt :FloatermNew nnn<CR>
