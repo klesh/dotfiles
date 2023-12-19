@@ -76,7 +76,6 @@ if status is-interactive
         ~/.yarn/bin \
         ~/.config/yarn/global/node_modules/.bin \
         ~/dotfiles/bin \
-        ~/dotfiles/devops/bin \
         ~/basicfiles/bin \
         /usr/local/go/bin
     source_files /usr/share/autojump/autojump.fish /usr/local/share/autojump/autojump.fish \
