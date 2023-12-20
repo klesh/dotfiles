@@ -33,7 +33,7 @@ function move_file(folder)
       local path, name, work_dir = get_path_info()
       local dest_dir = utils.join_path(work_dir, folder)
       local dest_path = utils.join_path(dest_dir, name)
-      os.execute('mkdir "' .. dest_dir .. '"')
+      os.execute('mkdir -p "' .. dest_dir .. '"')
       if package.config:sub(1,1) == '\\' then
          utils.subprocess({ args={'cmd', '/c', 'move', path, dest_path}, cancellable=false})
       else
