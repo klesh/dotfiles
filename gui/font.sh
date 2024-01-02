@@ -72,7 +72,7 @@ install_font() {
     FONTS=~/.local/share/fonts
     mkdir -p "$FONTS"
     #wget -O "/tmp/$NAME.zip" "$URL"
-    curl -o "/tmp/$NAME.zip" "$URL"
+    HTTPS_PROXY=$GITHUB_PROXY curl -o "/tmp/$NAME.zip" "$URL"
     unzip -d "$FONTS" "/tmp/$NAME.zip" "$PATT"
     rm "/tmp/$NAME.zip"
 }

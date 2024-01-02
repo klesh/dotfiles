@@ -11,7 +11,7 @@ if [ -n "$PROXY_HOST" ] && [ -n "$PROXY_PORT" ]; then
 fi
 
 BRANCH=$(git branch --show-current)
-UPSTREAM_BRANCH=$(HTTPS_PROXY=$HTTP_PROXY git remote show upstream | grep -oP 'HEAD branch: \K\w+')
+UPSTREAM_BRANCH=$(HTTPS_PROXY=$HTTP_PROXY git remote show origin | grep -oP 'HEAD branch: \K\w+')
 ORIGIN_URL=$(git remote get-url origin)
 case "$ORIGIN_URL" in
     git@github.com:*)

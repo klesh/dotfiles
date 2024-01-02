@@ -7,6 +7,8 @@ gsettings set org.gnome.desktop.peripherals.mouse middle-click-emulation true
 # disable tapping super key to activate the gnome-shell-activies-overlay
 gsettings set org.gnome.mutter overlay-key ""
 
+gsettings set org.gnome.desktop.wm.keybindings minimize []
+
 echo
 echo install fcitx5 which can also enter emoji by pressing "super+;", and "ctrl+u" for a clipboard history
 sudo apt install fcitx5 fcitx5-table fcitx5-skin-nord
