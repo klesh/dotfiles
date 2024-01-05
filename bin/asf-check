@@ -79,8 +79,10 @@ check() {
     echo "** CHECK ASF HEADER **"
     HEADER="$(cat $SRC/backend/.golangci-goheader.template)"
     test -n "$HEADER"
+    IFS='
+'
     for FN in $(find "$SRC" -name '*.go'); do
-        if ! grep -qF "$HEADER" $FN; then
+        if ! grep -qF "$HEADER" "$FN"; then
             echo $FN has no ASF header
             exit -1
         fi
