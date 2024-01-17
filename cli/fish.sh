@@ -6,7 +6,7 @@ DIR=$(dirname "$(readlink -f "$0")")
 
 log 'Setting up shell'
 
-case "$UNAMEA" in
+case "$DISTRIB_ID" in
     *Ubuntu*)
         if ! has_cmd fish; then
             sudo add-apt-repository ppa:fish-shell/release-3 -y -n

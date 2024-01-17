@@ -44,14 +44,14 @@ if status is-interactive
     # === fish git prompt configuration
     # tune git icon for nerdfont
     set -g __fish_git_prompt_showuntrackedfiles true
-    set -g __fish_git_prompt_char_upstream_ahead '>'
-    set -g __fish_git_prompt_char_upstream_behind '<'
+    set -g __fish_git_prompt_char_upstream_ahead '⏩'
+    set -g __fish_git_prompt_char_upstream_behind '⏪'
     set -g __fish_git_prompt_char_upstream_prefix ''
-    set -g __fish_git_prompt_char_stagedstate '●'
-    set -g __fish_git_prompt_char_dirtystate '*'
-    set -g __fish_git_prompt_char_untrackedfiles '+'
-    set -g __fish_git_prompt_char_conflictedstate 'x'
-    set -g __fish_git_prompt_char_cleanstate '✔ '
+    set -g __fish_git_prompt_char_stagedstate '🟡'
+    set -g __fish_git_prompt_char_dirtystate '🌟'
+    set -g __fish_git_prompt_char_untrackedfiles '➕'
+    set -g __fish_git_prompt_char_conflictedstate '❌'
+    set -g __fish_git_prompt_char_cleanstate '✔️'
 
     # === alias
     alias k="kubectl"
@@ -113,5 +113,9 @@ if status is-interactive
        #end
     #end
     #readenv
+
+    if command -v podman.exe >/dev/null 2>&1 and not command -v podman  >/dev/null 2>&1
+        alias podman=podman.exe
+    end
 end
 
