@@ -113,9 +113,5 @@ if status is-interactive
        #end
     #end
     #readenv
-
-    if command -v podman.exe >/dev/null 2>&1 and not command -v podman  >/dev/null 2>&1
-        alias podman=podman.exe
-    end
 end
 
