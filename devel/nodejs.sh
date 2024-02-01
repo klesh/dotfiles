@@ -20,7 +20,8 @@ export NPM_BIN
 log "Setting up nodejs"
 
 lspkgs() {
-    curl -s $NODE_URL/index.json \
+    echo $NODE_URL/index.json
+    curl -Ls $NODE_URL/index.json \
         | jq '.[] | "\(.version) \(if .lts then "(lts)" else "" end)"' -r
 }
 

@@ -14,8 +14,13 @@ UNAMEA=$(uname -a)
 RUNIT=$(command -v runit || true)
 
 in_china() {
-    ! [ -f $TMPDIR/myip_full ] && curl -s myip.ipip.net > $TMPDIR/myip_full
-    grep -qF '中国' $TMPDIR/myip_full
+    if ! [ -f $TMPDIR/myip_full ] || ! [ -s $TMPDIR/myip_full ]; then
+        curl -s myip.ipip.net > $TMPDIR/myip_full
+    fi
+    if grep -qF '中国' $TMPDIR/myip_full >/dev/null; then
+    else
+        return 1
+    fi
 }
 
 lnsf() {
