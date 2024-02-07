@@ -69,7 +69,7 @@ install() {
 configure_nodejs() {
     if in_china; then
         echo "registry=$NPM_CONFIG_REGISTRY" > ~/.npmrc
-        ! has_cmd yarnpkg && sudo npm install -g yarn
+        ! has_cmd yarnpkg && sudo npm install -g yarn --registry=$NPM_CONFIG_REGISTRY
         yarnpkg config set registry $NPM_CONFIG_REGISTRY --global
         #yarnpkg config set disturl https://npm.taobao.org/dist --global
         #yarnpkg config set sass_binary_site https://npm.taobao.org/mirrors/node-sass --global

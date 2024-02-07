@@ -13,14 +13,17 @@ TMPDIR=${TMPDIR-"/tmp"}
 UNAMEA=$(uname -a)
 RUNIT=$(command -v runit || true)
 
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+elif uname -a | grep artix; then
+    ID=artix
+fi
+
 in_china() {
     if ! [ -f $TMPDIR/myip_full ] || ! [ -s $TMPDIR/myip_full ]; then
         curl -s myip.ipip.net > $TMPDIR/myip_full
     fi
-    if grep -qF '中国' $TMPDIR/myip_full >/dev/null; then
-    else
-        return 1
-    fi
+    grep -qF '中国' $TMPDIR/myip_full >/dev/null
 }
 
 lnsf() {
@@ -144,6 +147,12 @@ if [ -f /etc/lsb-release ]; then
     set +a
     export DISTRIB_RELEASE_MAJOR=${DISTRIB_RELEASE%.*}
     export DISTRIB_RELEASE_MINOR=${DISTRIB_RELEASE#.*}
+elif [ -f /etc/os-release ]; then
+    set -a
+    . /etc/os-release
+    set +a
+    export DISTRIB_ID=$ID
+    export DISTRIB_RELEASE_MAJOR=$VERSION_ID
 fi
 
 log "Environments"

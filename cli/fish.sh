@@ -6,6 +6,7 @@ DIR=$(dirname "$(readlink -f "$0")")
 
 log 'Setting up shell'
 
+echo DISTRIB_ID $DISTRIB_ID
 case "$DISTRIB_ID" in
     *Ubuntu*)
         if ! has_cmd fish; then
@@ -21,13 +22,16 @@ case "$DISTRIB_ID" in
         fi
         sudo ln -sf /usr/bin/batcat /usr/bin/bat
         intorepo https://github.com/junegunn/fzf.git "$HOME/.fzf"
+        export HTTPS_PROXY=$GITHUB_PROXY
         ./install --all
         exitrepo
         ;;
-    *Debian*)
-        if ! has_cmd fish; then
-            sudo apt install fish
-        fi
+    *debian*)
+        sudo apt install fish bat
+        intorepo https://github.com/junegunn/fzf.git "$HOME/.fzf"
+        export HTTPS_PROXY=$GITHUB_PROXY
+        ./install --all
+        exitrepo
         ;;
     *artix*)
         sudo pacman -S --noconfirm --needed fish dash fzf bat the_silver_searcher
@@ -103,7 +107,7 @@ set -U fish_pager_color_progress brwhite --background=cyan
 ' > /dev/null
 
 # only for local machine with gui
-if [ -z "$SSH_CLIENT" ] && has_cmd dash; then
+if [ -z "$SSH_CLIENT" ] && [ -z "$WSL" ] && has_cmd dash; then
     log 'Setting up dash as default shell'
     sudo /usr/bin/ln -sfT $(command -v dash) /usr/bin/sh
 
