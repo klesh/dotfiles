@@ -13,6 +13,12 @@ function get_path_info()
       final_path = utils.join_path(work_dir, file_path)
       final_name = file_path
    end
+   if work_dir:lower() == 'c:\\windows\\system32' then
+      work_dir, _ = utils.split_path(final_path)
+   end
+   mp.msg.info("final_path " .. final_path)
+   mp.msg.info("final_name " .. final_name)
+   mp.msg.info("work_dir " .. work_dir)
    return final_path, final_name, work_dir
 end
 
@@ -33,9 +39,13 @@ function move_file(folder)
       local path, name, work_dir = get_path_info()
       local dest_dir = utils.join_path(work_dir, folder)
       local dest_path = utils.join_path(dest_dir, name)
-      os.execute('mkdir -p "' .. dest_dir .. '"')
+      mp.msg.info("path " .. path)
+      mp.msg.info("dest_dir " .. dest_dir)
+      if not utils.file_info(dest_dir).is_dir then
+         os.execute('mkdir "' .. dest_dir .. '"')
+      end
       if package.config:sub(1,1) == '\\' then
-         utils.subprocess({ args={'cmd', '/c', 'move', path, dest_path}, cancellable=false})
+         utils.subprocess({ args={'cmd', '/c', 'move', path, dest_dir}, cancellable=false})
       else
          os.rename(path, dest_path)
       end
