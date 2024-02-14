@@ -27,6 +27,8 @@ set clipboard=unnamedplus  " system clipboard as default register. for vim to wo
 set mouse=a
 set spell
 set scrolloff=8
+set backspace=indent,eol,start
+set t_Co=256
 filetype plugin indent on
 syntax on
 au! BufWritePost $MYVIMRC source %
